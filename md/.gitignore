@@ -1,0 +1,14 @@
+.vscode
+
+.data/reference/
+
+*/__pycache__/
+
+compss*
+App_Profile.json
+COMPSs_RO-Crate*
+
+.COMPSs
+.checkpoints
+
+backup*/
