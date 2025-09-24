@@ -31,8 +31,8 @@ export NODES=$2
 export CPUS_PER_NODE=$3
 
 #========= Setup envs and paths =========#
-THIS_SCRIPT_PARENT_PATH=$(dirname "$(realpath "$0")")
-ROOT_PATH=$(dirname "$THIS_SCRIPT_PARENT_PATH")
+export THIS_SCRIPT_PARENT_PATH=$(dirname "$(realpath "$0")")
+export ROOT_PATH=$(dirname "$THIS_SCRIPT_PARENT_PATH")
 
 # Prepare module env
 . $THIS_SCRIPT_PARENT_PATH/module_setup.sh

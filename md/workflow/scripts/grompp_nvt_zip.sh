@@ -11,8 +11,3 @@ wait
 $GMXBIN_NAME grompp -f $NVT_MDP -c $PROTEIN_EQ -r $PROTEIN_EQ -p $TOPOLOGY -o $NVT_TPR
 wait
 zip -r ${TOPOLOGY}.zip *.itp
-
-# =========================
-# USAGE
-# see grompp_ions_zip.sh
-# =========================
