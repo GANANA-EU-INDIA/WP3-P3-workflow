@@ -2,6 +2,9 @@
 
 data/reference/
 data/charmm36-jul2022.ff/
+data/output/
+data/tmp*
+data/reference
 
 */__pycache__/
 
