@@ -8,6 +8,7 @@ module use --append /leonardo/pub/userinternal/lsalicar/spack-0.22.2-06/modules
 ml gromacs/2024.6--openmpi--4.1.6--gcc--12.2.0-cuda-12.2
 export GMXBIN_NAME="gmx_mpi"
 # custom FF path location
+# https://manual.gromacs.org/2024.6/onlinehelp/gmx-pdb2gmx.html#description
 export GMXLIB=$ROOT_PATH/data
 
 # Flags for GPU usage of gromacs
