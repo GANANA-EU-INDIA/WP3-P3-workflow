@@ -61,7 +61,7 @@ EX_FILE=$WF_PATH/${1}.py
 # Give at least 5 minute
 EXEC_TIME_SEC=$((echo "$EXEC_TIME * 60") | bc)
 TO_SUBSTRACT_SEC=$((echo "$EXEC_TIME_SEC * 5/100") | bc)
-if ["$TO_SUBSTRACT_SEC" -lt 300 ]; then
+if [ "$TO_SUBSTRACT_SEC" -lt 300 ]; then
     TO_SUBSTRACT_SEC=300
 fi
 WALL_CLOCK_LIMIT=$((echo "$EXEC_TIME_SEC - $TO_SUBSTRACT_SEC") | bc)
