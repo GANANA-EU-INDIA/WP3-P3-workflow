@@ -75,8 +75,8 @@ enqueue_compss \
     --gpus_per_node=1 \
     --queue=${QUEUE} \
     --qos=${QOS} \
-    --extra_submit_flag=--account#${ACCOUNT} \
     --wall_clock_limit=$WALL_CLOCK_LIMIT \
+    --project=$WF_PATH/project.xml \
     --log_dir=$DATA_PATH \
     --master_working_dir=$DATA_PATH \
     --worker_working_dir=$DATA_PATH \

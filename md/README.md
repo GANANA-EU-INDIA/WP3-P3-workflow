@@ -48,6 +48,7 @@ Makefile
 
 Other COMPSs specific config files are:
 - The queue config file (by defaul stored in `$COMPSS_HOME/Runtime/scripts/queues/supercomputers/default.cfg`)
+- [The project config xml](./workflow/project.xml)
 - The provenance config file
 More info can be found in the [official COMPSs documentation](https://compss-doc.readthedocs.io/en/stable/Sections/01_Installation/06_Configuration_files.html#configuration-files).
 

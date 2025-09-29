@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Project>
+    <!-- Description for Master Node -->
+    <MasterNode></MasterNode>
+
+    <!--Description for a physical node-->
+    <ComputeNode Name="localhost">
+        <InstallDir>/leonardo/pub/userinternal/lsalicar/compss/COMPSs_3.3.3_default_installation</InstallDir>
+        <WorkingDir>/tmp/COMPSsWorker/</WorkingDir>
+        <!-- The maximum number of tasks that can be simultaneously scheduled to a resource -->
+        <LimitOfTasks>4</LimitOfTasks>
+    </ComputeNode>
+</Project>
