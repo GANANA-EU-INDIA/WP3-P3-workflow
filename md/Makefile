@@ -1,10 +1,11 @@
 WORKFLOWNAME = md
 NODES = 2
 CPUS_PER_NODE = 32
+EXEC_TIME = 20
 
 # Usage: make (for more info, see .script/enqueue_submit.sh --help)
 md:
-	./scripts/enqueue_submit.sh $(WORKFLOWNAME) $(NODES) $(CPUS_PER_NODE)
+	./scripts/enqueue_submit.sh $(WORKFLOWNAME) $(NODES) $(CPUS_PER_NODE) $(EXEC_TIME)
 
 clean:
 	rm -f compss*

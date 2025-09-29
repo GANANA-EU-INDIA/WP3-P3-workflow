@@ -2,15 +2,16 @@
 
 #========= Arguments =========#
 usage() {
-    echo "Usage: $0 WORKFLOWNAME NODES CPU_PER_NODE"
+    echo "Usage: $0 WORKFLOWNAME NODES CPU_PER_NODE EXEC_TIME"
     echo
     echo "Arguments (arguments follows Slurm terminology):"
-    echo "  WORKFLOWNAME   Name of the workflow (e.g., md)"
-    echo "  NODES          Number of nodes to use"
-    echo "  CPUS_PER_NODE   Number of CPUs per node"
+    echo "  WORKFLOWNAME        Name of the workflow (e.g., md)"
+    echo "  NODES               Number of nodes to use"
+    echo "  CPUS_PER_NODE       Number of CPUs per node"
+    echo "  EXEC_TIME           Time before terminating execution (in minutes, Slurm directive). COMPSs will terminate tasks in 5% less time (or at least 5 minutes) compare to EXEC_TIME, to allow COMPSs to save all data."
     echo
     echo "Example:"
-    echo "  $0 md 2 32"
+    echo "  $0 md 2 32 20"
 }
 
 # If first argument is --help, show usage and exit
@@ -20,7 +21,7 @@ if [[ "$1" == "--help" ]]; then
 fi
 
 # Check if correct number of arguments provided
-if [[ $# -ne 3 ]]; then
+if [[ $# -ne 4 ]]; then
     echo "Error: Invalid number of arguments."
     usage
     exit 1
@@ -29,6 +30,7 @@ fi
 WORKFLOWNAME=$1
 export NODES=$2
 export CPUS_PER_NODE=$3
+export EXEC_TIME=$4
 
 #========= Setup envs and paths =========#
 export THIS_SCRIPT_PARENT_PATH=$(dirname "$(realpath "$0")")
@@ -47,23 +49,34 @@ export ROOT_PATH=$(dirname "$THIS_SCRIPT_PARENT_PATH")
 WF_PATH=$ROOT_PATH/workflow
 DATA_PATH=$ROOT_PATH/data
 
-# TODO: to be removed after update from zip files to directories track
 # Add script dir into path
 export PATH=$PATH:$WF_PATH/scripts
 
 EX_FILE=$WF_PATH/${1}.py
 
+# convert EXEC_TIME into seconds and remove 5%
+# This ensure that COMPSs terminates the tasks before the
+# allocated time from Slurms ends.
+# https://compss-doc.readthedocs.io/en/stable/Sections/03_Execution_Environments/03_Deployments/01_Master_worker/02_Supercomputers/01_Executing.html#compss-job-submission
+# Give at least 5 minute
+EXEC_TIME_SEC=$((echo "$EXEC_TIME * 60") | bc)
+TO_SUBSTRACT_SEC=$((echo "$EXEC_TIME_SEC * 5/100") | bc)
+if ["$TO_SUBSTRACT_SEC" -lt 300 ]; then
+    TO_SUBSTRACT_SEC=300
+fi
+WALL_CLOCK_LIMIT=$((echo "$EXEC_TIME_SEC - $TO_SUBSTRACT_SEC") | bc)
+
 # Slurm arguments first, then COMPSs ones
 enqueue_compss \
     --job_name=${WORKFLOWNAME} \
-    --exec_time=20 \
+    --exec_time=${EXEC_TIME} \
     --num_nodes=${NODES} \
     --cpus_per_node=${CPUS_PER_NODE} \
     --gpus_per_node=1 \
     --queue=${QUEUE} \
     --qos=${QOS} \
     --extra_submit_flag=--account#${ACCOUNT} \
-    --wall_clock_limit=1100 \
+    --wall_clock_limit=$WALL_CLOCK_LIMIT \
     --log_dir=$DATA_PATH \
     --master_working_dir=$DATA_PATH \
     --worker_working_dir=$DATA_PATH \
@@ -92,3 +105,4 @@ enqueue_compss \
     # The following is a Policy that passes the compss tests
     # --checkpoint=es.bsc.compss.checkpoint.policies.CheckpointPolicyInstantiatedGroup \
     # --checkpoint_params=instantiated.group:20 \
+
