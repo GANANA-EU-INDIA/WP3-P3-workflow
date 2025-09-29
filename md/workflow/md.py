@@ -7,7 +7,6 @@ from pycompss.api.binary import binary
 from pycompss.api.constraint import constraint
 from pycompss.api.mpi import mpi
 from pycompss.api.parameter import (
-    DIRECTORY_OUT,
     FILE_IN,
     FILE_IN_STDIN,
     FILE_INOUT,
@@ -18,6 +17,9 @@ from pycompss.api.parameter import (
 )
 from pycompss.api.task import task
 
+# =========== ====================== =========== #
+# ===========     GLOBAL ARGUMENTS   =========== #
+# =========== ====================== =========== #
 # if compss has been installed (or loaded) the COMPSS_HOME
 COMPSS_HOME = os.environ["COMPSS_HOME"]
 GMXBIN_NAME = os.environ["GMXBIN_NAME"]
@@ -25,6 +27,9 @@ GMXBIN_NAME = os.environ["GMXBIN_NAME"]
 # TODO: can I reuse slurm envs?
 NODES = os.environ["NODES"]
 CPUS_PER_NODE = os.environ["CPUS_PER_NODE"]
+
+# Arguments to control OpenMP threads etc.
+OPENMP_THREADS = 16
 
 
 parser = argparse.ArgumentParser()
@@ -64,17 +69,14 @@ def remove_heteratom(pdb_original, pdb_protein_only) -> None:
     args=" {{protein}} {{structure}} {{topology}}",
 )
 @task(protein=FILE_IN, structure=FILE_OUT, topology=FILE_OUT)
-def generate_topology(
-    protein=None,
-    structure=None,
-    topology=None
-) -> None:
+def generate_topology(protein=None, structure=None, topology=None) -> None:
     """
     1. calls: GMXBIN_NAME pdb2gmx -f ${PROTEIN} -o ${STRUCTURE} -p ${TOPOLOGY} -ignh -ff charmm27 -water tip3p
     2. substitute external itp's (created when multiple chains are
     present in the same pdb) into .top file
     """
     pass
+
 
 @binary(
     binary=GMXBIN_NAME,
@@ -160,11 +162,12 @@ def emin_preprocess(
     pass
 
 
-@constraint(computing_units=CPUS_PER_NODE)
-@mpi(
-    runner="mpirun",
+# Note that computing units here are used to specify
+# the number of cores available for the task (< than the available CPUS_PER_NODE).
+# In this case, it is use to specify the number of OpenMP threads
+@constraint(computing_units=OPENMP_THREADS)
+@binary(
     binary=GMXBIN_NAME,
-    processes_per_node=1,
     args="mdrun -s {{emin_tpr}} -c {{protein_emin}} -ntomp {{omp}} -g {{log}} -e {{energy_file}}",
 )
 @task(
@@ -173,7 +176,7 @@ def emin_preprocess(
 def enmin(
     emin_tpr=None,
     protein_emin=None,
-    omp=CPUS_PER_NODE,
+    omp=OPENMP_THREADS,
     log=None,
     energy_file=None,
 ) -> None:
@@ -191,9 +194,7 @@ def enmin(
     topology=FILE_INOUT,
     nvt_tpr=FILE_OUT,
 )
-def nvt_preprocess(
-    nvt_mdp=None, protein_eq=None, topology=None, nvt_tpr=None
-) -> None:
+def nvt_preprocess(nvt_mdp=None, protein_eq=None, topology=None, nvt_tpr=None) -> None:
     """Preprocess for NVT equilibratrion simulation"""
     pass
 
@@ -247,7 +248,10 @@ def eq_nvt(
     npt_tpr=FILE_OUT,
 )
 def npt_preprocess(
-    npt_mdp=None, protein_eq=None, topology=None, npt_tpr=None,
+    npt_mdp=None,
+    protein_eq=None,
+    topology=None,
+    npt_tpr=None,
 ) -> None:
     """Preprocess for NPT equilibratrion simulation"""
     pass
@@ -319,9 +323,7 @@ def main() -> None:
         topology = str(output_subdir / "topology.top")
         structure_processed = str(output_subdir / "structure_processed.gro")
         generate_topology(
-            protein=pdb_protein_only,
-            topology=topology,
-            structure=structure_processed
+            protein=pdb_protein_only, topology=topology, structure=structure_processed
         )
 
         # +++++++++++ Solvation
@@ -346,7 +348,7 @@ def main() -> None:
             ions=str(ions_mdp),
             protein_solvated=protein_solvated,
             topology=topology,
-            ions_tpr=ions_tpr
+            ions_tpr=ions_tpr,
         )
         group_file = output_subdir / "genions.group"
         with open(group_file, "w") as gf:
