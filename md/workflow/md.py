@@ -201,7 +201,7 @@ def nvt_preprocess(nvt_mdp=None, protein_eq=None, topology=None, nvt_tpr=None) -
 
 @constraint(
     processors=[
-        {"processorType": "CPU", "computingUnits": CPUS_PER_NODE},
+        {"processorType": "CPU", "computingUnits": OPENMP_THREADS},
         {"processorType": "GPU", "computingUnits": "1"},
     ]
 )
@@ -221,7 +221,7 @@ def nvt_preprocess(nvt_mdp=None, protein_eq=None, topology=None, nvt_tpr=None) -
 )
 def eq_nvt(
     nvt_tpr=None,
-    omp=CPUS_PER_NODE,
+    omp=OPENMP_THREADS,
     log=None,
     protein_nvt=None,
     nvt_cpt=None,
@@ -253,7 +253,7 @@ def npt_preprocess(
 
 @constraint(
     processors=[
-        {"processorType": "CPU", "computingUnits": CPUS_PER_NODE},
+        {"processorType": "CPU", "computingUnits": OPENMP_THREADS},
         {"processorType": "GPU", "computingUnits": "1"},
     ]
 )
@@ -273,7 +273,7 @@ def npt_preprocess(
 )
 def npt(
     npt_tpr=None,
-    omp=CPUS_PER_NODE,
+    omp=OPENMP_THREADS,
     log=None,
     protein_npt=None,
     npt_cpt=None,

@@ -77,6 +77,7 @@ enqueue_compss \
     --gpus_per_node=${GRES_GPUS} \
     --queue=${QUEUE} \
     --qos=${QOS} \
+    --extra_submit_flag=--account#${ACCOUNT} \
     --wall_clock_limit=$WALL_CLOCK_LIMIT \
     --log_dir=$DATA_PATH \
     --master_working_dir=$DATA_PATH \
@@ -99,7 +100,7 @@ enqueue_compss \
 # - lang, despite the documentation saying that the program infers it, it fails. Probably due to the arguments
 # - be very careful with trailing white spaces after the escape char \, they cause bash to not read the following line
 # - in --extra_submit_flag, spaces has to be translated into "#"
-# - keep_workingdir keeps the temp directories used by the workers 
+# - keep_workingdir keeps the temp directories used by the workers
 
 # Parking space for probabily useful arguments
     # --provenance \
