@@ -48,9 +48,8 @@ Makefile
 
 Other COMPSs specific config files are:
 - The queue config file (by defaul stored in `$COMPSS_HOME/Runtime/scripts/queues/supercomputers/default.cfg`)
-- [The project config xml](./workflow/project.xml)
 - The provenance config file
-More info can be found in the [official COMPSs documentation](https://compss-doc.readthedocs.io/en/stable/Sections/01_Installation/06_Configuration_files.html#configuration-files).
+More info can be found in the [official COMPSs documentation](https://compss-doc.readthedocs.io/en/stable/Sections/01_Installation/06_Configuration_files.html#configuration-files). Note that there are other config file that can be used to control the behavior of COMPSs during execution. These are the resource and project xml files. In this project, we try to explicitely define the needed arguments in the `enqueue_compss` call, leaving these config files in their deafult state (see your COMPSs installation).
 
 ### Preparation: modules, environments and paths
 

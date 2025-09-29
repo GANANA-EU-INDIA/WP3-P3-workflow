@@ -9,9 +9,10 @@ usage() {
     echo "  NODES               Number of nodes to use"
     echo "  CPUS_PER_NODE       Number of CPUs per node"
     echo "  EXEC_TIME           Time before terminating execution (in minutes, Slurm directive). COMPSs will terminate tasks in 5% less time (or at least 5 minutes) compare to EXEC_TIME, to allow COMPSs to save all data."
+    echo "  GRES_GPUS           Number of GPUs per node"
     echo
     echo "Example:"
-    echo "  $0 md 2 32 20"
+    echo "  $0 md 2 32 20 1"
 }
 
 # If first argument is --help, show usage and exit
@@ -21,7 +22,7 @@ if [[ "$1" == "--help" ]]; then
 fi
 
 # Check if correct number of arguments provided
-if [[ $# -ne 4 ]]; then
+if [[ $# -ne 5 ]]; then
     echo "Error: Invalid number of arguments."
     usage
     exit 1
@@ -31,6 +32,7 @@ WORKFLOWNAME=$1
 export NODES=$2
 export CPUS_PER_NODE=$3
 export EXEC_TIME=$4
+export GRES_GPUS=$5
 
 #========= Setup envs and paths =========#
 export THIS_SCRIPT_PARENT_PATH=$(dirname "$(realpath "$0")")
@@ -72,11 +74,10 @@ enqueue_compss \
     --exec_time=${EXEC_TIME} \
     --num_nodes=${NODES} \
     --cpus_per_node=${CPUS_PER_NODE} \
-    --gpus_per_node=1 \
+    --gpus_per_node=${GRES_GPUS} \
     --queue=${QUEUE} \
     --qos=${QOS} \
     --wall_clock_limit=$WALL_CLOCK_LIMIT \
-    --project=$WF_PATH/project.xml \
     --log_dir=$DATA_PATH \
     --master_working_dir=$DATA_PATH \
     --worker_working_dir=$DATA_PATH \

@@ -199,12 +199,6 @@ def nvt_preprocess(nvt_mdp=None, protein_eq=None, topology=None, nvt_tpr=None) -
     pass
 
 
-# FIXME: Note that the infrastructure
-# pecularities has to be set in the resources.xml file.
-# This is useful cause specifying GPU instruct COMPSs to log
-# about the assigned GPU through the COMPSS_BINDED_GPUS,
-# CUDA_VISIBLE_DEVICES and GPU_DEVICE_ORDINAL environment variables
-# We need to update this file for leonardo
 @constraint(
     processors=[
         {"processorType": "CPU", "computingUnits": CPUS_PER_NODE},
