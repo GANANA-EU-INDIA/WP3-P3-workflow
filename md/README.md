@@ -63,7 +63,7 @@ Bash variables that mirrors rarely changing Slurm arguments such as account name
 This file containes a subset of Slurm arguments that are complemented by those handled by `make` (that forwards it to `enqueue_submit.sh`).
 To have more details use `enqueue_submit.sh --help`.
 > WARNING: not all Slurm arguments are wrapped.
->
+
 > WARNING: all arguments that has not been set either in `make` nor `slurm_config.sh` uses the default values as expressed in the COMPSs queue config file `$COMPSS_HOME/Runtime/scripts/queues/supercomputers/default.cfg`
 
 ### Submit a workflow
