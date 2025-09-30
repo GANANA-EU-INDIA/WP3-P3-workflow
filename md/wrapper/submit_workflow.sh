@@ -1,6 +1,15 @@
 #!/bin/bash -e
 
-#========= Arguments =========#
+# This is a thin wrapper around the COMPSs program
+# enqueue_compss
+# This is the one tha actualy submit the workflow
+# to Slurm and the COMPSs runtime.
+# This scripts serves to prepare the shell of an HPC
+# before running COMPSs.
+
+# =========== ====================== =========== #
+# ===========       ARGUMENTS        =========== #
+# =========== ====================== =========== #
 usage() {
     echo "Usage: $0 WORKFLOWNAME NODES CPU_PER_NODE EXEC_TIME"
     echo
@@ -28,45 +37,25 @@ if [[ $# -ne 5 ]]; then
     exit 1
 fi
 
-WORKFLOWNAME=$1
+export WORKFLOWNAME=$1
 export NODES=$2
 export CPUS_PER_NODE=$3
 export EXEC_TIME=$4
 export GRES_GPUS=$5
 
-#========= Setup envs and paths =========#
+# =========== ====================== =========== #
+# ===========     ENVS and PATHS     =========== #
+# =========== ====================== =========== #
 export THIS_SCRIPT_PARENT_PATH=$(dirname "$(realpath "$0")")
 export ROOT_PATH=$(dirname "$THIS_SCRIPT_PARENT_PATH")
 
-# Prepare module env
-. $THIS_SCRIPT_PARENT_PATH/module_setup.sh
+# Setup shell environement for workflow execution.
+# See the file for more info and configurations.
+. $THIS_SCRIPT_PARENT_PATH/env_config.sh
 
-# Source python env
-. $(dirname "$ROOT_PATH")/envs/md/bin/activate
-
-# Source slurm configs
-. $THIS_SCRIPT_PARENT_PATH/slurm_config.sh
-
-# Paths to files
-WF_PATH=$ROOT_PATH/workflow
-DATA_PATH=$ROOT_PATH/data
-
-# Add script dir into path
-export PATH=$PATH:$WF_PATH/scripts
-
-EX_FILE=$WF_PATH/${1}.py
-
-# convert EXEC_TIME into seconds and remove 5%
-# This ensure that COMPSs terminates the tasks before the
-# allocated time from Slurms ends.
-# https://compss-doc.readthedocs.io/en/stable/Sections/03_Execution_Environments/03_Deployments/01_Master_worker/02_Supercomputers/01_Executing.html#compss-job-submission
-# Give at least 5 minute
-EXEC_TIME_SEC=$((echo "$EXEC_TIME * 60") | bc)
-TO_SUBSTRACT_SEC=$((echo "$EXEC_TIME_SEC * 5/100") | bc)
-if [ "$TO_SUBSTRACT_SEC" -lt 300 ]; then
-    TO_SUBSTRACT_SEC=300
-fi
-WALL_CLOCK_LIMIT=$((echo "$EXEC_TIME_SEC - $TO_SUBSTRACT_SEC") | bc)
+# =========== ====================== =========== #
+# =========== CALL to ENQUEUE_COMPSS =========== #
+# =========== ====================== =========== #
 
 # Slurm arguments first, then COMPSs ones
 enqueue_compss \
@@ -94,7 +83,7 @@ enqueue_compss \
     --monitoring=1000 \
     --summary \
     --keep_workingdir \
-    $EX_FILE -d $DATA_PATH/input -o $DATA_PATH/output
+    $WORKFLOW_FILE -d $DATA_PATH/input -o $DATA_PATH/output
 
 # COMMENTS
 # - lang, despite the documentation saying that the program infers it, it fails. Probably due to the arguments

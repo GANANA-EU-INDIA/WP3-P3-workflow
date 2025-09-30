@@ -26,4 +26,4 @@ clean:
 	rm -rf data/tmp*
 	rm -rf data/.checkpoints
 
-.PHONY: clean, md, help
+.PHONY: help, $(WORKFLOWNAME), clean
