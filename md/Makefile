@@ -4,7 +4,13 @@ CPUS_PER_NODE = 32
 EXEC_TIME = 20
 GRES_GPUS = 1
 
-# Usage: make (for more info, see .script/enqueue_submit.sh --help)
+# Usage: make
+help:
+	@echo ""
+	@echo "To execute the workflow, just type \"make ${WORKFLOWNAME}\". Other arguments:"
+	@echo ""
+	@./scripts/enqueue_submit.sh --help
+
 md:
 	./scripts/enqueue_submit.sh $(WORKFLOWNAME) $(NODES) $(CPUS_PER_NODE) $(EXEC_TIME) $(GRES_GPUS)
 
@@ -20,4 +26,4 @@ clean:
 	rm -rf data/tmp*
 	rm -rf data/.checkpoints
 
-.PHONY: clean, md
+.PHONY: clean, md, help
