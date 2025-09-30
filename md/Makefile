@@ -11,7 +11,7 @@ help:
 	@echo ""
 	@./scripts/enqueue_submit.sh --help
 
-md:
+$(WORKFLOWNAME):
 	./scripts/enqueue_submit.sh $(WORKFLOWNAME) $(NODES) $(CPUS_PER_NODE) $(EXEC_TIME) $(GRES_GPUS)
 
 clean:
