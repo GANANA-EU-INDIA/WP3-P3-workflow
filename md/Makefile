@@ -9,10 +9,10 @@ help:
 	@echo ""
 	@echo "To execute the workflow, just type \"make ${WORKFLOWNAME}\". Other arguments:"
 	@echo ""
-	@./scripts/enqueue_submit.sh --help
+	@./wrapper/submit_workflow.sh --help
 
 $(WORKFLOWNAME):
-	./scripts/enqueue_submit.sh $(WORKFLOWNAME) $(NODES) $(CPUS_PER_NODE) $(EXEC_TIME) $(GRES_GPUS)
+	./wrapper/submit_workflow.sh $(WORKFLOWNAME) $(NODES) $(CPUS_PER_NODE) $(EXEC_TIME) $(GRES_GPUS)
 
 clean:
 	rm -f compss*
