@@ -6,9 +6,9 @@ Features:
 - PyCOMPSs as Workflow Management System
 - integration with Slurm (using alla available resourses)
 - checkpoints for resilience against failures and re-runs
+- data provenance
 
 Todo:
-- data provenance
 - explicit specification in case of failed run
 
 
@@ -24,57 +24,71 @@ NOTE: the environment name has to match the name of the root directory in which 
 
 For the (Py)COMPSs installataion, see [the installation docs](../docs/).
 
+
 ## Usage
-
-> **tl;dr How to control workflow execution**
-> - Slurm arguments as `make` variables (see `enqueue_submit.sh --help`)
-> - Other Slurm arguments in `slurm_config.sh`
-> - Environment in `module_setup.sh`
-> - PyCOMPSs config files for hardware specification
-> - PyCOMPSs config file for Data Provenance
->
-
-In this setup, the workflow is managed through a `Makefile`.
-The arguments that change often (such as num of core per task, workflow file etc) are passed directly to `make` while other rarely changes arguments are configured with the scripts inside the `./scripts` directive.
-
-The "chain of calls" is the following:
-```bash
-Makefile
-└── scripts/enqueue_submit.sh
-    ├── scripts/module_setup.sh
-    └── scripts/slurm_config.sh
-```
-`module_setup` prepares the supercomputer environment to execute COMPSs by loading the required modules. `slurm_config` containes arguments to submit jobs with the Slurm scheduler.
-
-Other COMPSs specific config files are:
-- The queue config file (by defaul stored in `$COMPSS_HOME/Runtime/scripts/queues/supercomputers/default.cfg`)
-- The provenance config file
-More info can be found in the [official COMPSs documentation](https://compss-doc.readthedocs.io/en/stable/Sections/01_Installation/06_Configuration_files.html#configuration-files). Note that there are other config file that can be used to control the behavior of COMPSs during execution. These are the resource and project xml files. In this project, we try to explicitely define the needed arguments in the `enqueue_compss` call, leaving these config files in their deafult state (see your COMPSs installation).
-
-### Preparation: modules, environments and paths
-
-#### `./scripts/module_setup.sh`
-
-Loads required modules to execute (Py)COMPSs and Gromacs.
-Here we define some environmental variables required by these programs.
-
-#### `./scripts/slurm_config.sh`
-
-Bash variables that mirrors rarely changing Slurm arguments such as account name and the like.
-This file containes a subset of Slurm arguments that are complemented by those handled by `make` (that forwards it to `enqueue_submit.sh`).
-To have more details use `enqueue_submit.sh --help`.
-> WARNING: not all Slurm arguments are wrapped.
-
-> WARNING: all arguments that has not been set either in `make` nor `slurm_config.sh` uses the default values as expressed in the COMPSs queue config file `$COMPSS_HOME/Runtime/scripts/queues/supercomputers/default.cfg`
-
 ### Submit a workflow
-
 Using default arguments:
 ```bash
-make
+make name-workflow
 ```
 
 Using custom arguments:
 ```bash
 NODES=4 make
 ```
+Just type `make` to have more info.
+
+### Remove produced files
+```bash
+make clean
+```
+
+## Configuration
+
+| level | file                            | description                                                                                                                                                      | For more info  | Target                           |
+|-------|---------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------|----------------------------------|
+| 0     | `Makefile`                      | Interface to easily handle workflow submission. Arguments that changes often can be passed directly to `make`                                                    | type `make`    | Wrapper                          |
+| 1     | `./wrapper/submit_workflow.sh`  | Wrapper to the `enqueue_compss` program.                                                                                                                         | type `make`    | Shell environment, Slurm, COMPSs |
+| 1     | `./wrapper/env_config.sh`       | Configuration file sourced by `submit_workflow.sh`. Here you change arguments that tends to remain stable across workflow executions. This is the one to modify. | Check the file | Shell environment, Slurm, COMPSs |
+| 2     | `./workflow/md.py`              | Implementation of the tasks and pipeline. This is the file controlling the whole workflow.                                                                       | Check the file | Workflow                         |
+| 3     | `./workflow/md-provenance.yaml` | Configuration for Data Provenance.                                                                                                                               | Check the file | Workflow                         |
+
+In this setup, the workflow is managed through a `Makefile`.
+The arguments that change often (such as number of core per task, workflow name etc) are passed directly to `make` while other rarely changes arguments are configured in `./wrapper`.
+The main files for the workflow specification are store inside `./workflow`.
+
+The "chain of calls" is the following:
+```bash
+Makefile
+└── wrapper/submit_workflow.sh
+    ├── wrapper/env_config.sh
+    └── enqueue_compss
+```
+> [!WARNING]
+> Currently, not all Slurm/COMMPs arguments are wrapped.
+
+> [!WARNING]
+> All arguments that are not set either in `make` nor `env_config.sh` use the default values as expressed in the COMPSs queue config file `$COMPSS_HOME/Runtime/scripts/queues/supercomputers/default.cfg`
+
+Files related to COMPSs and workflow configuration:
+- The queue config file (by defaul stored in `$COMPSS_HOME/Runtime/scripts/queues/supercomputers/default.cfg`)
+- The provenance config file
+More info can be found in the [official COMPSs documentation](https://compss-doc.readthedocs.io/en/stable/Sections/01_Installation/06_Configuration_files.html#configuration-files). Note that there are other config file that can be used to control the behavior of COMPSs during execution. These are the resource and project xml files. In this project, we try to explicitely define the needed arguments in the `enqueue_compss` call, leaving these config files in their deafult state (see your COMPSs installation).
+
+## Development
+
+The development environment is the same as the one used to submit and execute the workflows.
+In the [configuration](#configuration) section an explanation of the general structure of the software is detailed.
+Below some common dev topics.
+
+### Implement new COMPSs arguments
+Firstly, decide whether the argument is specified in the `Makefile` or in the `env_config.sh`
+
+`Makefile`
+1. Update the `Makefile` adding the argument on top and on the wrapper call
+2. Modify `submit_workflow.sh` to catch the new argument from the command line (attention to the sanity checks), add description and add it to the other variables
+3. In the same file, add the argument to the `enqueue_compss` call
+
+`env_config.sh`
+1. update the file in the relevant section
+2. In `submit_workflow.sh`, add the argument to the `enqueue_compss` call
