@@ -18,17 +18,14 @@ from pycompss.api.parameter import (
 from pycompss.api.task import task
 
 # =========== ====================== =========== #
-# ===========     GLOBAL ARGUMENTS   =========== #
+# ===========     GLOBAL VARIABLES   =========== #
 # =========== ====================== =========== #
-# if compss has been installed (or loaded) the COMPSS_HOME
+# Load environmental variables
 COMPSS_HOME = os.environ["COMPSS_HOME"]
 GMXBIN_NAME = os.environ["GMXBIN_NAME"]
 
-# TODO: can I reuse slurm envs?
-NODES = os.environ["NODES"]
-CPUS_PER_NODE = os.environ["CPUS_PER_NODE"]
-
 # Arguments to control OpenMP threads etc.
+# NOTE: it can be changed in the Worflow, placed here for convinience
 OPENMP_THREADS = 16
 
 

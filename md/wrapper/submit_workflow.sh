@@ -80,6 +80,7 @@ enqueue_compss \
     --checkpoint_folder=$DATA_PATH/.checkpoints/ \
     --graph \
     --summary \
+    --provenance=$WF_PATH/md-provenance.yaml \
     --monitoring=1000 \
     --keep_workingdir \
     --debug \
@@ -92,7 +93,6 @@ enqueue_compss \
 # - keep_workingdir keeps the temp directories used by the workers
 
 # Parking space for probabily useful arguments
-    # --provenance=$WF_PATH/md-provenance.yaml \
     # The following is a Policy that passes the compss tests
     # --checkpoint=es.bsc.compss.checkpoint.policies.CheckpointPolicyInstantiatedGroup \
     # --checkpoint_params=instantiated.group:20 \
