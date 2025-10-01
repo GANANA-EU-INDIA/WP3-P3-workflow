@@ -3,9 +3,9 @@
 # This is a thin wrapper around the COMPSs program
 # enqueue_compss
 # This is the one tha actualy submit the workflow
-# to Slurm and the COMPSs runtime.
-# This scripts serves to prepare the shell of an HPC
-# before running COMPSs.
+# to Slurm and execute the COMPSs runtime.
+# This scripts serves to prepare the shell in a HPC
+# environment to run COMPSs.
 
 # =========== ====================== =========== #
 # ===========       ARGUMENTS        =========== #
