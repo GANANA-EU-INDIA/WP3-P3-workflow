@@ -64,25 +64,25 @@ enqueue_compss \
     --num_nodes=${NODES} \
     --cpus_per_node=${CPUS_PER_NODE} \
     --gpus_per_node=${GRES_GPUS} \
+    --extra_submit_flag=--account#${ACCOUNT} \
     --queue=${QUEUE} \
     --qos=${QOS} \
-    --extra_submit_flag=--account#${ACCOUNT} \
     --wall_clock_limit=$WALL_CLOCK_LIMIT \
-    --log_dir=$DATA_PATH \
-    --master_working_dir=$DATA_PATH \
-    --worker_working_dir=$DATA_PATH \
-    --scheduler=es.bsc.compss.scheduler.lookahead.successors.fifo.FifoTS \
     --lang=python \
     --pythonpath=$WF_PATH \
     --classpath=$WF_PATH \
+    --master_working_dir=$DATA_PATH \
+    --worker_working_dir=$DATA_PATH \
+    --log_dir=$DATA_PATH \
+    --scheduler=es.bsc.compss.scheduler.lookahead.successors.fifo.FifoTS \
     --checkpoint=es.bsc.compss.checkpoint.policies.CheckpointPolicyFinishedTasks \
     --checkpoint_params=finished.tasks:1 \
     --checkpoint_folder=$DATA_PATH/.checkpoints/ \
     --graph \
-    --debug \
-    --monitoring=1000 \
     --summary \
+    --monitoring=1000 \
     --keep_workingdir \
+    --debug \
     $WORKFLOW_FILE -d $DATA_PATH/input -o $DATA_PATH/output
 
 # COMMENTS
@@ -92,7 +92,7 @@ enqueue_compss \
 # - keep_workingdir keeps the temp directories used by the workers
 
 # Parking space for probabily useful arguments
-    # --provenance \
+    # --provenance=$WF_PATH/md-provenance.yaml \
     # The following is a Policy that passes the compss tests
     # --checkpoint=es.bsc.compss.checkpoint.policies.CheckpointPolicyInstantiatedGroup \
     # --checkpoint_params=instantiated.group:20 \

@@ -1,13 +1,13 @@
 COMPSs Workflow Information:
-  name: MD-proteins-in-water
-  description: Setup and MD simulations of a NVT ensemble of a small peptide in water. From the PDB to the trajectory analysis. Based on the GROMACS official tutorial on simple MD simulation. Original authors are Cathrine Bergh, Maryam Majdolhosseini and Alessandra Villa.
+  name: md
+  description: Setup and MD simulations of a NVT ensemble. Based on the GROMACS official tutorial on simple MD simulation. Original authors are Cathrine Bergh, Maryam Majdolhosseini and Alessandra Villa.
   license: Attribution 4.0 International
-  sources: [relative_path_to/dir_2/]
-  data_persistence: False # this avoids copying inputs and outputs in teh ro file
+  sources: [/leonardo/home/userinternal/lsalicar/workflow/md/]
+  data_persistence: False # this avoids copying inputs and outputs into the RO file
   trace_persistence: False # is related to copying the traces for the BSC software
   software:
-    - name: md-tutorial-gromacs
-      version: v3
+    - name: md
+      version: v1
       url: https://zenodo.org/records/14803238
 
 Authors:
@@ -16,7 +16,7 @@ Authors:
     orcid: https://orcid.org/0000-0001-7540-5887 # orcid is necessary to define an author
   - name: Maryam Majdolhosseini
     organisation_name: KTH
-    orcid: https://orcid.org/0009-0001-6312-345X 
+    orcid: https://orcid.org/0009-0001-6312-345X
   - name: Alessandra Villa
     organisation_name: KTH
     orcid: https://orcid.org/0000-0002-9573-0326
