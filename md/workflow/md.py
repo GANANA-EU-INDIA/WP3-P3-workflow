@@ -297,7 +297,6 @@ def main() -> None:
 
     pdb_files = list(dataset.glob("*.pdb"))
     print(f"PDBs found:\n{pdb_files}")
-    # create an output subdirectory per pdb
 
     out = {}
 
@@ -330,7 +329,7 @@ def main() -> None:
 
         # +++++++++++ Add Ions
         # Prepocess:
-        #   Here we just need the binary tor file to forward to genions
+        # Here we just need the binary tpr file to forward to genions
         # Create an empty mdp file for the ions, no settings are required
         ions_mdp = output_subdir / "ions.mdp"
         ions_mdp.touch()
