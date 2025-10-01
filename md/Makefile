@@ -14,10 +14,9 @@ help:
 $(WORKFLOWNAME):
 	./wrapper/submit_workflow.sh $(WORKFLOWNAME) $(NODES) $(CPUS_PER_NODE) $(EXEC_TIME) $(GRES_GPUS)
 
-clean:
+clean-except-rocrate:
 	rm -f compss*
 	rm -f App_Profile.json
-	rm -f -r COMPSs_RO-Crate*
 	rm -rf data/output/*
 	rm -rf .COMPSs/*
 	rm -rf .COMPSs
@@ -26,4 +25,7 @@ clean:
 	rm -rf data/tmp*
 	rm -rf data/.checkpoints
 
-.PHONY: help, $(WORKFLOWNAME), clean
+clean: clean-except-rocrate
+	rm -f -r COMPSs_RO-Crate*
+
+.PHONY: help, $(WORKFLOWNAME), clean-except-rocrate, clean
