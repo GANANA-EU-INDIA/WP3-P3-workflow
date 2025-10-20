@@ -1,6 +1,7 @@
 import argparse
 import os
 from pathlib import Path
+import shutil
 
 from pycompss.api.api import compss_barrier, compss_snapshot
 from pycompss.api.binary import binary
@@ -77,7 +78,7 @@ def generate_topology(protein=None, structure=None, topology=None, ff=None, wate
 
 @binary(
     binary=GMXBIN_NAME,
-    args="editconf -f {{structure_processed}} -o {{structure_box}} -c -d 1.0 -bt dodecahedron",
+    args="editconf -f {{structure_processed}} -o {{structure_box}} -c -d 1.0 -bt triclinic",
 )
 @task(structure_processed=FILE_IN, structure_box=FILE_OUT)
 def define_box(structure_processed=None, structure_box=None) -> None:
@@ -295,162 +296,143 @@ def main() -> None:
     if not output_dir.exists():
         output_dir.mkdir(parents=True, exist_ok=True)
 
-    pdb_files = list(dataset.glob("*.pdb"))
-    print(f"PDBs found:\n{pdb_files}")
+    # Full name of the complex gerated by HADDOCK
+    # type: PathPosix
+    pdb = list(dataset.glob("*.pdb"))[0]
 
-    out = {}
+    # create sub-directory for each protein
+    output_subdir = output_dir / pdb.stem
+    output_subdir.mkdir(parents=True, exist_ok=True)
 
-    for pdb in pdb_files:
-        # create sub-directory for each protein
-        output_subdir = output_dir / pdb.stem
-        output_subdir.mkdir(parents=True, exist_ok=True)
+    # +++++++++++ Copy pre-processed file in output directory
+    topology = str(output_subdir / "topology.top")
+    shutil.copy((pdb.parent / "topology.top"), topology)
+    structure_processed = str(output_subdir / "structure_processed.gro")
+    shutil.copy((pdb.parent / "structure_processed.gro"), structure_processed)
 
-        # +++++++++++ Cleaning input structures
-        pdb_protein_only = str(output_subdir / "protein_only.pdb")
-        remove_heteratom(str(pdb), pdb_protein_only)
+    # +++++++++++ Solvation
+    structure_box = str(output_subdir / "structure_box.gro")
+    define_box(structure_processed=structure_processed, structure_box=structure_box)
 
-        # +++++++++++ Generate Topology files
-        topology = str(output_subdir / "topology.top")
-        structure_processed = str(output_subdir / "structure_processed.gro")
-        generate_topology(
-            protein=pdb_protein_only, topology=topology, structure=structure_processed, ff="charmm36-jul2022", water="tip3p"
-        )
+    protein_solvated = str(output_subdir / "protein_solvated.gro")
+    solvate(
+        structure_box=structure_box,
+        protein_solvated=protein_solvated,
+        topology=topology,
+    )
 
-        # +++++++++++ Solvation
-        structure_box = str(output_subdir / "structure_box.gro")
-        define_box(structure_processed=structure_processed, structure_box=structure_box)
+    # +++++++++++ Add Ions
+    # Prepocess:
+    # Here we just need the binary tpr file to forward to genions
+    # Create an empty mdp file for the ions, no settings are required
+    ions_mdp = output_subdir / "ions.mdp"
+    ions_mdp.touch()
+    ions_tpr = str(output_subdir / "ions.tpr")
+    ions_preprocess(
+        ions=str(ions_mdp),
+        protein_solvated=protein_solvated,
+        topology=topology,
+        ions_tpr=ions_tpr,
+    )
+    group_file = output_subdir / "genions.group"
+    with open(group_file, "w") as gf:
+        gf.write("SOL\n")
+    protein_neutralized = str(output_subdir / "protein_ions.gro")
+    ions_substitution(
+        ions_tpr=ions_tpr,
+        protein_ions=protein_neutralized,
+        topology=topology,
+        ion_type_selection=str(group_file),
+    )
 
-        protein_solvated = str(output_subdir / "protein_solvated.gro")
-        solvate(
-            structure_box=structure_box,
-            protein_solvated=protein_solvated,
-            topology=topology,
-        )
+    # +++++++++++ Energy Minimization
+    emin_mdp = str(dataset / "emin-charmm.mdp")
+    emin_tpr = str(output_subdir / "em.tpr")
+    emin_preprocess(
+        emin_mdp=emin_mdp,
+        protein_ions=protein_neutralized,
+        topology=topology,
+        emin_tpr=emin_tpr,
+    )
+    protein_emin = str(output_subdir / "protein_emin.gro")
+    emin_log = str(output_subdir / "emin_log.log")
+    emin_file = str(output_subdir / "emin.edr")
+    enmin(
+        emin_tpr=emin_tpr,
+        protein_emin=protein_emin,
+        log=emin_log,
+        energy_file=emin_file,
+    )
 
-        # +++++++++++ Add Ions
-        # Prepocess:
-        # Here we just need the binary tpr file to forward to genions
-        # Create an empty mdp file for the ions, no settings are required
-        ions_mdp = output_subdir / "ions.mdp"
-        ions_mdp.touch()
-        ions_tpr = str(output_subdir / "ions.tpr")
-        ions_preprocess(
-            ions=str(ions_mdp),
-            protein_solvated=protein_solvated,
-            topology=topology,
-            ions_tpr=ions_tpr,
-        )
-        group_file = output_subdir / "genions.group"
-        with open(group_file, "w") as gf:
-            gf.write("SOL\n")
-        protein_neutralized = str(output_subdir / "protein_ions.gro")
-        ions_substitution(
-            ions_tpr=ions_tpr,
-            protein_ions=protein_neutralized,
-            topology=topology,
-            ion_type_selection=str(group_file),
-        )
+    # +++++++++++ Energy Minimization Analysis
 
-        # +++++++++++ Energy Minimization
-        emin_mdp = str(dataset / "emin-charmm.mdp")
-        emin_tpr = str(output_subdir / "em.tpr")
-        emin_preprocess(
-            emin_mdp=emin_mdp,
-            protein_ions=protein_neutralized,
-            topology=topology,
-            emin_tpr=emin_tpr,
-        )
-        protein_emin = str(output_subdir / "protein_emin.gro")
-        emin_log = str(output_subdir / "emin_log.log")
-        emin_file = str(output_subdir / "emin.edr")
-        enmin(
-            emin_tpr=emin_tpr,
-            protein_emin=protein_emin,
-            log=emin_log,
-            energy_file=emin_file,
-        )
+    # +++++++++++ Equilibration run
+    # NVT
+    nvt_mdp = str(dataset / "nvt-charmm.mdp")
+    nvt_tpr = str(output_subdir / "nvt.tpr")
+    nvt_preprocess(
+        nvt_mdp=nvt_mdp,
+        protein_eq=protein_emin,
+        topology=topology,
+        nvt_tpr=nvt_tpr,
+    )
 
-        # +++++++++++ Energy Minimization Analysis
+    nvt_log = str(output_subdir / "nvt_log.log")
+    protein_nvt = str(output_subdir / "protein_nvt.gro")
+    nvt_cpt = str(output_subdir / "nvt_traj.cpt")
+    nvt_energy = str(output_subdir / "nvt_energy.edr")
+    eq_nvt(
+        nvt_tpr=nvt_tpr,
+        log=nvt_log,
+        protein_nvt=protein_nvt,
+        nvt_cpt=nvt_cpt,
+        nvt_energy=nvt_energy,
+    )
 
-        # +++++++++++ Equilibration run
-        # NVT
-        nvt_mdp = str(dataset / "nvt-charmm.mdp")
-        nvt_tpr = str(output_subdir / "nvt.tpr")
-        nvt_preprocess(
-            nvt_mdp=nvt_mdp,
-            protein_eq=protein_emin,
-            topology=topology,
-            nvt_tpr=nvt_tpr,
-        )
+    # NPT
+    npt_mdp = str(dataset / "npt-charmm.mdp")
+    npt_tpr = str(output_subdir / "npt.tpr")
+    npt_preprocess(
+        npt_mdp=npt_mdp,
+        protein_eq=protein_nvt,
+        topology=topology,
+        npt_tpr=npt_tpr,
+    )
 
-        nvt_log = str(output_subdir / "nvt_log.log")
-        protein_nvt = str(output_subdir / "protein_nvt.gro")
-        nvt_cpt = str(output_subdir / "nvt_traj.cpt")
-        nvt_energy = str(output_subdir / "nvt_energy.edr")
-        eq_nvt(
-            nvt_tpr=nvt_tpr,
-            log=nvt_log,
-            protein_nvt=protein_nvt,
-            nvt_cpt=nvt_cpt,
-            nvt_energy=nvt_energy,
-        )
+    npt_log = str(output_subdir / "npt_log.log")
+    protein_npt = str(output_subdir / "protein_npt.gro")
+    npt_cpt = str(output_subdir / "npt_traj.cpt")
+    npt_energy = str(output_subdir / "npt_energy.edr")
+    npt(
+        npt_tpr=npt_tpr,
+        log=npt_log,
+        protein_npt=protein_npt,
+        npt_cpt=npt_cpt,
+        npt_energy=npt_energy,
+    )
 
-        # NPT
-        npt_mdp = str(dataset / "npt-charmm.mdp")
-        npt_tpr = str(output_subdir / "npt.tpr")
-        npt_preprocess(
-            npt_mdp=npt_mdp,
-            protein_eq=protein_nvt,
-            topology=topology,
-            npt_tpr=npt_tpr,
-        )
+    # # +++++++++++ Production run
+    # # Note: same structure and functions as eq
+    # prod_npt_mdp = str(dataset / "md-charmm.mdp")
+    # prod_npt_tpr = str(output_subdir / "prod_npt.tpr")
+    # npt_preprocess(
+    #     npt_mdp=prod_npt_mdp,
+    #     protein_eq=protein_npt,
+    #     topology=topology,
+    #     npt_tpr=prod_npt_tpr,
+    # )
 
-        npt_log = str(output_subdir / "npt_log.log")
-        protein_npt = str(output_subdir / "protein_npt.gro")
-        npt_cpt = str(output_subdir / "npt_traj.cpt")
-        npt_energy = str(output_subdir / "npt_energy.edr")
-        npt(
-            npt_tpr=npt_tpr,
-            log=npt_log,
-            protein_npt=protein_npt,
-            npt_cpt=npt_cpt,
-            npt_energy=npt_energy,
-        )
-
-        # save out variables
-        out[pdb.stem] = [topology, protein_npt]
-
-    compss_barrier()
-    compss_snapshot()
-
-    # for pdb in pdb_files:
-    #     output_subdir = output_dir / pdb.stem
-
-    #     topology = out[pdb.stem][0]
-    #     protein_npt = out[pdb.stem][1]
-
-    #     # +++++++++++ Production run
-    #     # Note: same structure and functions as eq
-    #     prod_npt_mdp = str(dataset / "md-charmm.mdp")
-    #     prod_npt_tpr = str(output_subdir / "prod_npt.tpr")
-    #     npt_preprocess(
-    #         npt_mdp=prod_npt_mdp,
-    #         protein_eq=protein_npt,
-    #         topology=topology,
-    #         npt_tpr=prod_npt_tpr,
-    #     )
-
-    #     prod_npt_log = str(output_subdir / "prod_npt_log.log")
-    #     protein_prod_npt = str(output_subdir / "protein_prod_npt.gro")
-    #     prod_npt_cpt = str(output_subdir / "prod_npt_traj.cpt")
-    #     prod_npt_energy = str(output_subdir / "prod_npt_energy.edr")
-    #     npt(
-    #         npt_tpr=prod_npt_tpr,
-    #         log=prod_npt_log,
-    #         protein_npt=protein_prod_npt,
-    #         npt_cpt=prod_npt_cpt,
-    #         npt_energy=prod_npt_energy,
-    #     )
+    # prod_npt_log = str(output_subdir / "prod_npt_log.log")
+    # protein_prod_npt = str(output_subdir / "protein_prod_npt.gro")
+    # prod_npt_cpt = str(output_subdir / "prod_npt_traj.cpt")
+    # prod_npt_energy = str(output_subdir / "prod_npt_energy.edr")
+    # npt(
+    #     npt_tpr=prod_npt_tpr,
+    #     log=prod_npt_log,
+    #     protein_npt=protein_prod_npt,
+    #     npt_cpt=prod_npt_cpt,
+    #     npt_energy=prod_npt_energy,
+    # )
 
 
 if __name__ == "__main__":

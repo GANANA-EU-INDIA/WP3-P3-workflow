@@ -5,13 +5,14 @@
 # These usually tend to remain unchanged between runs.
 # Those that change between different execution of the
 # workflow are handled by the Makefile/submit_workflow
-ACCOUNT=cin_staff
+ACCOUNT=GNANA_IMM_PRED
 QUEUE=boost_usr_prod
 QOS=boost_qos_dbg
 
 # =========== ====================== =========== #
 # ===========    HPC modules load    =========== #
 # =========== ====================== =========== #
+ml purge
 #  COMPSs
 module use --append /leonardo/pub/userinternal/lsalicar/modules
 ml compss/3.3.3

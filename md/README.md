@@ -2,6 +2,8 @@
 
 Workflow for a MD simulation based on the official [GROMACS introductory MD tutorial](https://tutorials.gromacs.org/docs/md-intro-tutorial.html), [zenodo link](https://zenodo.org/records/14803238).
 
+Branch `example-3vxm-kth` contains an example of workflow starting from a single structure already preprocessed with pdb2gmx due to a problme in selecting charged protein chains ends.
+
 Features:
 - PyCOMPSs as Workflow Management System
 - integration with Slurm (using alla available resourses)
