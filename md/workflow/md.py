@@ -411,16 +411,16 @@ def main() -> None:
         npt_energy=npt_energy,
     )
 
-    # # +++++++++++ Production run
-    # # Note: same structure and functions as eq
-    # prod_npt_mdp = str(dataset / "md-charmm.mdp")
-    # prod_npt_tpr = str(output_subdir / "prod_npt.tpr")
-    # npt_preprocess(
-    #     npt_mdp=prod_npt_mdp,
-    #     protein_eq=protein_npt,
-    #     topology=topology,
-    #     npt_tpr=prod_npt_tpr,
-    # )
+    # +++++++++++ Production run
+    # Note: same structure and functions as eq
+    prod_npt_mdp = str(dataset / "md-charmm.mdp")
+    prod_npt_tpr = str(output_subdir / "prod_npt.tpr")
+    npt_preprocess(
+        npt_mdp=prod_npt_mdp,
+        protein_eq=protein_npt,
+        topology=topology,
+        npt_tpr=prod_npt_tpr,
+    )
 
     # prod_npt_log = str(output_subdir / "prod_npt_log.log")
     # protein_prod_npt = str(output_subdir / "protein_prod_npt.gro")

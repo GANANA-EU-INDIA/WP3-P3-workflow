@@ -5,6 +5,9 @@ data/charmm36-jul2022.ff/
 data/output/
 data/tmp*
 data/reference
+data/input/*.itp
+data/input/*.top
+data/input/*.gro
 
 */__pycache__/
 
