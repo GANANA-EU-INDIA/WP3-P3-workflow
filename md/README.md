@@ -14,6 +14,9 @@ Todo:
 
 ## Installation
 
+> [!NOTE]
+> Tested on Python 3.11.7
+
 For the Python packages required, create a Python virtual env using (within a cluster, a Python module is assumed to be loaded):
 ```bash
 python -m venv ../envs/md
@@ -26,6 +29,10 @@ For the (Py)COMPSs installataion, see [the installation docs](../docs/).
 
 
 ## Usage
+
+> [!NOTE]
+> Tested on Python 3.11.7
+
 ### Submit a workflow
 Using default arguments:
 ```bash
