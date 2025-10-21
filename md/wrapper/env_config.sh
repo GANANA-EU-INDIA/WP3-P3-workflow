@@ -13,11 +13,10 @@ QOS=boost_qos_dbg
 # ===========    HPC modules load    =========== #
 # =========== ====================== =========== #
 #  COMPSs
-module use --append /leonardo/pub/userinternal/lsalicar/modules
-ml compss/3.3.3
+module use --append /leonardo/pub/userinternal/lsalicar/spack-0.22.2-06/modules
+ml compss/3.3.3--gcc--12.2.0
 
 #  GROMACS
-module use --append /leonardo/pub/userinternal/lsalicar/spack-0.22.2-06/modules
 # add gmx_mpi bin path to PATH
 ml gromacs/2024.6--openmpi--4.1.6--gcc--12.2.0-cuda-12.2
 # Flags for GPU usage of gromacs

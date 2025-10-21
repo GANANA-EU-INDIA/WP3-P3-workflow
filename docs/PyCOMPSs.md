@@ -89,7 +89,29 @@ To test out the installation, run `enqueue_compss -h`.
 
 ### Installation through Spack
 
-TODO
+> [!WARNING]
+> Installation to be tested. WIP
+
+References:
+- [Environments in Spack](https://spack-tutorial.readthedocs.io/en/latest/tutorial_environments.html)
+- Reference files in directory [spack](./spack/)
+
+These steps assume that Spack binary is available in the shell. It might be loaded in a HPC environment, for example using `module load spack`.
+1. Create repo:
+    ```bash
+    spack repo create path/to/root/.../repos workflow
+    spack repo add path/to/root/.../repos/workflow
+    ```
+2. Add COMPSs `package.py` to the repo. A working example is the one in `./spack/compss`. Copy it inside the repo:
+    ```bash
+    cp -r workflow/docs/spack/compss path/to/root/.../repos/workflow
+    ```
+    Modify the necessary envs!
+3. Create a Spack env in which concretize recipies.
+4. Activate the environment using: `spack env activate -p /path/to/env`
+5. `spack concretize -f`
+6. `spack install compss`
+7. Generate the module with `spack module tcl refresh -y`
 
 ## [Infrastructure configuration](https://compss-doc.readthedocs.io/en/stable/Sections/01_Installation/04_Supercomputers.html#configuration)
 
