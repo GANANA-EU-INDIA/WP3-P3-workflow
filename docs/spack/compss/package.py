@@ -1,17 +1,12 @@
-# Copyright 2013-2022 Lawrence Livermore National Security, LLC and other
+# Copyright 2013-2024 Lawrence Livermore National Security, LLC and other
 # Spack Project Developers. See the top-level COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 #
-#     spack install compss
-#
-# You can edit this file again by typing:
-#
-#     spack edit compss
-#
+# File for Spack <= 0.22
 import os
 
-from docs.spack.compss.package import *
+from spack.package import *
 
 class Compss(Package):
     """COMP Superscalar (COMPSs)/pyCOMPSs is a task-based programming model which aims to ease the development of applications for distributed infrastructures, such as large High-Performance clusters (HPC), clouds and container managed clusters. COMPSs provides a programming interface for the development of the applications and a runtime system that exploits the inherent parallelism of applications at execution time."""
@@ -35,21 +30,20 @@ class Compss(Package):
     depends_on('python@3.11')
     depends_on('openjdk')
 
-    variant('supercomputer_cfg', values=str, description='Configuration file of the supercomputer where to install')
-
-    def setup_build_environment(self, env, spec):
-        env.set("BOOST_CPPFLAGS", "-std=c++11 -pthread -O2 -s")
-        env.set("JAVA_HOME", self.spec["openjdk"].prefix)
-
     def install(self, spec, prefix):
-        if 'supercomputer_cfg' not in spec.variants or spec.variants['supercomputer_cfg'].value is None:
-            raise InstallError('Variant "supercomputer_cfg" must be specified with +supercomputer_cfg=<value> on the command line')
-        selected_cfg = spec.variants['supercomputer_cfg'].value
+        # FIXME: modify BOOST_CPPFLAGS if your installation differs from this
+        os.environ['BOOST_CPPFLAGS'] = '-std=c++11 -pthread -O2 -s'
+        os.environ['JAVA_HOME'] = self.spec["openjdk"].prefix
+
+        selected_cfg = os.environ.get('COMPSS_SUPERCOMPUTER_CFG', "")
+        if not selected_cfg:
+            raise InstallError('Environment variable COMPSS_SUPERCOMPUTER_CFG must be set to the config filename')
         install_script = Executable('./install')
         install_script(
             '-T',
             prefix.compss,
-            os.path.join(prefix.compss, "Runtime/scripts/queues/supercomputers", selected_cfg))
+            selected_cfg
+        )
 
     def setup_run_environment(self, env):
         env.from_sourcing_file(os.path.join(self.prefix.compss, "compssenv"))
