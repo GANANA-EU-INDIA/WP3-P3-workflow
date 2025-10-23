@@ -13,8 +13,9 @@ QOS=boost_qos_dbg
 # ===========    HPC modules load    =========== #
 # =========== ====================== =========== #
 #  COMPSs
-module use --append /leonardo/pub/userinternal/lsalicar/spack-0.22.2-06/modules
 ml compss/3.3.3--gcc--12.2.0
+# FIX FOR LEONARDO CLUSTER
+COMPSS_HOME=$COMPSS_HOME/compss
 
 #  GROMACS
 # add gmx_mpi bin path to PATH

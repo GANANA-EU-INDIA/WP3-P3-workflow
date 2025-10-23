@@ -90,7 +90,7 @@ To test out the installation, run `enqueue_compss -h`.
 ### Installation through Spack
 
 > [!NOTE]
-> Tested on Spack `<= 0.22.x`
+> Tested with Spack `<= 0.22.x` on Leonardo
 
 References:
 - [Add a package to Spack](https://spack-tutorial.readthedocs.io/en/latest/tutorial_packaging.html#package-creation-tutorial)
@@ -107,24 +107,38 @@ If you already have a Spack custom repo (in this example, the namespace is calle
     This will create a new repository, and a namespace, where to add recipies for softwares called `workflow`.
 2. Add COMPSs to the repo:
     ```bash
-    spack create --name compss -N workflow https://compss.bsc.es/repo/sc/stable/COMPSs_3.3.3.tar.gz
+    spack create --name compss -N workflow
     ```
-    This will prompt you all available version of COMPSs, select the latest (option `n`ew or `e`dit) and then select `c`hecksum.
-    Then you will be prompt with the defaulot editor to update the `package.py` of COMPSs. This file can be found inb `$SPACK_HOME/repos/workflow/compss` or by typing `spack edit compss`.
-    Copy the content of `.spack/compss/package.py` of this repo, or:
+    Then you will be prompt with the default editor to update the `package.py` of COMPSs that you can close.
+    Overwrite the content of `spack edit compss` with `.spack/compss/package.py` of this repo:
     ```bash
     cp -r workflow/docs/spack/compss/package $SPACK_HOME/repos/workflow/compss/
     ```
-3. Download the chosen supercomputer `cfg` file from [the COMPSs repo](https://github.com/bsc-wdc/compss/tree/stable/compss/runtime/scripts/queues/supercomputers).
-3. Create the spec: `spack spec -Il compss`. Finally, install it specifying the `cfg` through the environmental variable `COMPSS_SUPERCOMPUTER_CFG` (Note: use the absolute path to the file):
+3. Create the spec: `spack spec -Il compss`. Finally, install COMPSs specifying the `cfg` through the environmental variable `COMPSS_SUPERCOMPUTER_CFG` (only the file name):
     ```bash
-    COMPSS_SUPERCOMPUTER_CFG=absolute/path/to/leonardo.cfg spack install compss
+    COMPSS_SUPERCOMPUTER_CFG=leonardo.cfg spack install compss
     ```
 4. To load environmental variables and add binaries to `PATH` at convenience, generate the module with:
     ```
     spack module tcl refresh -y
     ```
-    After this, you will need to add to your `~/.bashrc` the line `moduele add --append $SPACK_HOME/modules/`. Through this, you will be able to load COMPSs by running: `ml compss`.
+    Then you can load COMPSs binaries using:
+    ```
+    ml compss
+    ```
+    which full name is something like `compss/3.3.3--gcc--12.2.0`. Alternatively, you can directly use:
+    ```
+    spack load compss
+    ```
+
+To test the installation just type `enqueue_compss --version`.
+
+> [!NOTE]
+> If you cannot find the `compss` module, you need to add to your `~/.bashrc` the line `module use --append $SPACK_HOME/modules/`.
+
+> [!NOTE]
+> If binaries are available, because they path appear in the `PATH` variable, but they do not work, inspect the module file generated with `ml show compss`. A common problem is the correct set of the `COMPSS_HOME` environmental variable.
+
 
 ## [Infrastructure configuration](https://compss-doc.readthedocs.io/en/stable/Sections/01_Installation/04_Supercomputers.html#configuration)
 

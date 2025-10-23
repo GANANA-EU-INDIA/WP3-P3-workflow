@@ -39,11 +39,25 @@ class Compss(Package):
         if not selected_cfg:
             raise InstallError('Environment variable COMPSS_SUPERCOMPUTER_CFG must be set to the config filename')
         install_script = Executable('./install')
+        # We need to specify as target dir (the second argument below)
+        # the path: `os.path.join(prefix, "compss")`
+        # We cannot install in `prefix` because the current COMPSs
+        # install.sh script does a `rm -r` and recreate that directory.
+        # This causes Spack to remove that directory at the end of the
+        # installation, invalidating the whole installation.
         install_script(
             '-T',
-            prefix.compss,
+            os.path.join(prefix, "compss"),
             selected_cfg
         )
 
     def setup_run_environment(self, env):
-        env.from_sourcing_file(os.path.join(self.prefix.compss, "compssenv"))
+        compss_home = os.path.join(self.prefix, "compss")
+        env.append_path('PATH', os.path.join(compss_home, 'Runtime/scripts/user'))
+        env.append_path('PATH', os.path.join(compss_home, 'Runtime/scripts/utils'))
+        env.append_path('PATH', os.path.join(compss_home, 'CLI'))
+        env.append_path('PATH', os.path.join(compss_home, 'Bindings/c/bin'))
+        env.append_path('CLASSPATH', os.path.join(compss_home, 'Runtime/compss-engine.jar'))
+        env.append_path('PYTHONPATH', os.path.join(compss_home, 'Bindings/python/'))
+
+        env.set("COMPSS_HOME", compss_home)
