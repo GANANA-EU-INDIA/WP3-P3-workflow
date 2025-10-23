@@ -137,7 +137,7 @@ To test the installation just type `enqueue_compss --version`.
 > If you cannot find the `compss` module, you need to add to your `~/.bashrc` the line `module use --append $SPACK_HOME/modules/`.
 
 > [!NOTE]
-> If binaries are available, because they path appear in the `PATH` variable, but they do not work, inspect the module file generated with `ml show compss`. A common problem is the correct set of the `COMPSS_HOME` environmental variable.
+> If binaries are available, because they path appear in the `PATH` variable, but they do not work, inspect the module file generated with `ml show compss`. A common problem is the incorrect set of the `COMPSS_HOME` environmental variable.
 
 
 ## [Infrastructure configuration](https://compss-doc.readthedocs.io/en/stable/Sections/01_Installation/04_Supercomputers.html#configuration)

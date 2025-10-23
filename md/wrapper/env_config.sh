@@ -14,7 +14,7 @@ QOS=boost_qos_dbg
 # =========== ====================== =========== #
 #  COMPSs
 ml compss/3.3.3--gcc--12.2.0
-# FIX FOR LEONARDO CLUSTER
+# FIX FOR LEONARDO CLUSTER (spack installation)
 COMPSS_HOME=$COMPSS_HOME/compss
 
 #  GROMACS
