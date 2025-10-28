@@ -12,26 +12,50 @@ Todo:
 - explicit specification in case of failed run
 
 
-## Installation
+## How to use this repo
+
+1. Fork this repo:
+    ```bash
+    git clone https://github.com/GANANA-EU-INDIA/WP3-P3-md-workflow.git
+    ```
+2. Install [(Py)COMPSs](./../docs/PyCOMPSs.md) and the required [Python environment](#setup-python-environment) in the HPC system
+3. [Adapt the workflow](#adapt-the-workflow) and [the configuration files according](#configuration) to your needs
+4. [Run the workflow](#usage)
+
+
+## Setup Python environment
 
 > [!NOTE]
 > Tested on Python 3.11.x
 
-For the Python packages required, create a Python virtual env using (within a cluster, a Python module is assumed to be loaded):
+Firstly, you need (Py)COMPSs installated. For a detailed installation procedue see [the installation docs](./../docs/PyCOMPSs.md).
+
+Then, create a Python virtual env using (within a cluster, a Python module is assumed to be loaded or, in any case, the interpreter being available):
 ```bash
 python -m venv ../envs/md
 . ../envs/md/bin/activate
 python -m pip install -r requirements.txt
 ```
-NOTE: the environment name has to match the name of the root directory in which this readme is in.
+> [!NOTE]
+> The environment name has to match the name of the workflow you want to run. This helps keep the envs separated and it is assumed by the `./wrapper/env_config.sh` that, ultimetly, can be modified.
+In this environment you need to install all Python packages needed for you workflow to run.
+Conda environments can be used instead to handle different programs and Python versions, although this is yet to be tested.
 
-For the (Py)COMPSs installataion, see [the installation docs](../docs/).
+
+## Adapt the workflow
+
+References:
+- [PyCOMPSs quickstart](https://compss-doc.readthedocs.io/en/stable/Sections/00_Quickstart.html)
+- [PyCOMPSs application development](https://compss-doc.readthedocs.io/en/stable/Sections/02_App_Development/02_Python.html)
+- [Example of a Lysozyme in water MD simulation setup with PyCOMPSs](https://compss-doc.readthedocs.io/en/stable/Sections/07_Sample_Applications/02_Python/05_Lysozyme_in_water.html)
+
+The central file to describe the Workflow is the Python script(s) inside `./workflow`.
+To start developing your pipeline, modify this file describing the task to be executed through Python functions and PyCOMPSs decorators and develop the logic of your workflow.
+
+The [configuration section](#configuration) describes the other files used to control and execute the workflow.
 
 
 ## Usage
-
-> [!NOTE]
-> Tested on Python 3.11.x
 
 ### Submit a workflow
 Using default arguments:
@@ -50,6 +74,7 @@ Just type `make` to have more info.
 make clean
 ```
 
+
 ## Configuration
 
 | level | file                            | description                                                                                                                                                      | For more info  | Target                           |
@@ -59,6 +84,8 @@ make clean
 | 1     | `./wrapper/env_config.sh`       | Configuration file sourced by `submit_workflow.sh`. Here you change arguments that tends to remain stable across workflow executions. This is the one to modify. | Check the file | Shell environment, Slurm, COMPSs |
 | 2     | `./workflow/md.py`              | Implementation of the tasks and pipeline. This is the file controlling the whole workflow.                                                                       | Check the file | Workflow                         |
 | 3     | `./workflow/md-provenance.yaml` | Configuration for Data Provenance.                                                                                                                               | Check the file | Workflow                         |
+
+In the above table, the higher the level the deep in the tree of calls is the file. Ideally, the end user has to modify only the Python workflow script (level 2) and the files related to this (such as the provenance, level 3).
 
 In this setup, the workflow is managed through a `Makefile`.
 The arguments that change often (such as number of core per task, workflow name etc) are passed directly to `make` while other rarely changes arguments are configured in `./wrapper`.
@@ -82,13 +109,8 @@ Files related to COMPSs and workflow configuration:
 - The provenance config file
 More info can be found in the [official COMPSs documentation](https://compss-doc.readthedocs.io/en/stable/Sections/01_Installation/06_Configuration_files.html#configuration-files). Note that there are other config file that can be used to control the behavior of COMPSs during execution. These are the resource and project xml files. In this project, we try to explicitely define the needed arguments in the `enqueue_compss` call, leaving these config files in their deafult state (see your COMPSs installation).
 
-## Development
 
-The development environment is the same as the one used to submit and execute the workflows.
-In the [configuration](#configuration) section an explanation of the general structure of the software is detailed.
-Below some common dev topics.
-
-### Implement new COMPSs arguments
+### Example on how to modify level `<= 1`: implement new COMPSs arguments
 Firstly, decide whether the argument is specified in the `Makefile` or in the `env_config.sh`
 
 `Makefile`
