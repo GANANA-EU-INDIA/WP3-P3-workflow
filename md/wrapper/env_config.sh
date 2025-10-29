@@ -13,6 +13,7 @@ QOS=boost_qos_dbg
 # ===========    HPC modules load    =========== #
 # =========== ====================== =========== #
 #  COMPSs
+module use --append $PUBLIC/spack-0.22.2-06/modules
 ml compss/3.3.3--gcc--12.2.0
 # FIX FOR LEONARDO CLUSTER (spack installation)
 COMPSS_HOME=$COMPSS_HOME/compss
