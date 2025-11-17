@@ -65,7 +65,7 @@ make name-workflow
 
 Using custom arguments:
 ```bash
-NODES=4 make
+make NODES=4
 ```
 Just type `make` to have more info.
 
