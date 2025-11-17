@@ -1,4 +1,6 @@
 WORKFLOWNAME = md
+INPUT_DIR = examples/pdb/inputs
+OUTPUT_DIR = examples/pdb/output
 NODES = 1
 CPUS_PER_NODE = 32
 EXEC_TIME = 20
@@ -12,18 +14,18 @@ help:
 	@./wrapper/submit_workflow.sh --help
 
 $(WORKFLOWNAME):
-	./wrapper/submit_workflow.sh $(WORKFLOWNAME) $(NODES) $(CPUS_PER_NODE) $(EXEC_TIME) $(GRES_GPUS)
+	./wrapper/submit_workflow.sh $(WORKFLOWNAME) $(INPUT_DIR) $(OUTPUT_DIR) $(NODES) $(CPUS_PER_NODE) $(EXEC_TIME) $(GRES_GPUS)
 
 clean-except-rocrate:
 	rm -f compss*
 	rm -f App_Profile.json
-	rm -rf data/output/*
+	rm -rf $(OUTPUT_DIR)/*
 	rm -rf .COMPSs/*
 	rm -rf .COMPSs
-	rm -rf data/.COMPSs
+	rm -rf $(OUTPUT_DIR)/.COMPSs
 	rm -rf tmp*
-	rm -rf data/tmp*
-	rm -rf data/.checkpoints
+	rm -rf $(OUTPUT_DIR)/tmp*
+	rm -rf $(OUTPUT_DIR)/.checkpoints
 
 clean: clean-except-rocrate
 	rm -f -r COMPSs_RO-Crate*
