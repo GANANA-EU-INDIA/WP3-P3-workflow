@@ -1,0 +1,37 @@
+# How to contribute to the project
+
+## Open issues
+If you find bugs or have feature requests, please [open an issue](https://github.com/GANANA-EU-INDIA/WP3-P3-md-workflow/issues). We provide issue templates to guide the process.
+
+## Contribute to the code (a.k.a. open a Pull Request)
+To contribute code improvements or new features, follow these steps:
+
+1. Fork the repository to your GitHub account.
+2. Clone your fork locally:
+   ```bash
+   git clone https://github.com/your-username/WP3-P3-md-workflow.git
+   ```
+3. Create a new branch for your work:
+   ```bash
+   git switch -c feat-branch-name
+   ```
+4. Make your changes and commit them with clear messages:
+   ```bash
+   git add .
+   git commit -m "Describe your changes"
+   ```
+5. Push your branch to your fork:
+   ```bash
+   git push origin feat-branch-name
+   ```
+6. Open a Pull Request (PR) to the [main repo’s default branch](https://github.com/GANANA-EU-INDIA/WP3-P3-md-workflow/pulls).
+7. Wait for a review before merge.
+
+### Python style
+Python code uses the [`ruff` linter and formatter](https://docs.astral.sh/ruff/) in its defauilt configuration. This can be installed, used through a supported IDE, used with a container etc.
+
+To ensure uniform style, format your code using:
+```bash
+ruff format path/to/file.py
+```
+to format `file.py`.
