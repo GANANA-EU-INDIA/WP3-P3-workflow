@@ -7,14 +7,14 @@ assignees: ''
 
 ---
 
-**Describe the bug**
+### Describe the bug
 A clear and concise description of what the bug is. Ideally, a minimally working example to reproduce it.
 
-**Logs/Screenshots**
+### Logs/Screenshots
 If applicable, add screenshots or logs to help explain your problem.
 COMPSs logs are usually save in the `.COMPSs` directory.
 
-**Software details**
+### Software details
 - PyCOMPSs version: ...
 - PyCOMPSs installation method: ...
 Any other useful information (`pip list`, COMPSs config files, etc.)

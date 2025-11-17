@@ -14,7 +14,7 @@ Documentation related to softwares, their installation and usage.
 Workflow for a MD simulation based on the official [GROMACS introductory MD tutorial](https://tutorials.gromacs.org/docs/md-intro-tutorial.html).
 
 ## How to contribute
-WIP
+
 
 ## Authors
 
