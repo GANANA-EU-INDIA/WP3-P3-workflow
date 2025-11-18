@@ -1,5 +1,7 @@
 # How to contribute to the project
 
+There are two possible ways to exploit this repo. The first one is to fork, i.e. copy, this repo and use it as a template or starting point to generate your workflow. On the other hand, if you want to improve it, you can copy, modify it and then open a Pull Request to the original repo.
+
 ## Open issues
 If you find bugs or have feature requests, please [open an issue](https://github.com/GANANA-EU-INDIA/WP3-P3-md-workflow/issues). We provide issue templates to guide the process.
 
