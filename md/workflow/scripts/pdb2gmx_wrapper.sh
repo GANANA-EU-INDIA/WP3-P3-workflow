@@ -23,7 +23,6 @@ $GMXBIN_NAME pdb2gmx -f ${PROTEIN} -o ${STRUCTURE} -p ${TOPOLOGY} -ff ${FF} -wat
 sed_include() {
     # Substitute itp's content inside .top file
     for source_itp in *.itp; do
-        echo "DEBUGGG: ${source_itp}"
         tmp_file=$(mktemp)
 
         target_string="#include[[:space:]]*\"${source_itp}\"[[:space:]]*"
