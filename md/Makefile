@@ -26,6 +26,7 @@ clean-except-rocrate:
 	rm -rf tmp*
 	rm -rf $(OUTPUT_DIR)/tmp*
 	rm -rf $(OUTPUT_DIR)/.checkpoints
+	rm -f $(INPUT_DIR)/*.{itp,gro,top}
 
 clean: clean-except-rocrate
 	rm -f -r COMPSs_RO-Crate*

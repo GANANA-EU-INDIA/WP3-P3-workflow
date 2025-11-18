@@ -3,6 +3,9 @@
 data/charmm36-jul2022.ff/
 
 examples/*/output
+examples/*/input/*.itp
+examples/*/input/*.top
+examples/*/input/*.gro
 
 */__pycache__/
 

@@ -77,7 +77,7 @@ def generate_topology(protein=None, structure=None, topology=None, ff=None, wate
 
 @binary(
     binary=GMXBIN_NAME,
-    args="editconf -f {{structure_processed}} -o {{structure_box}} -c -d 1.0 -bt dodecahedron",
+    args="editconf -f {{structure_processed}} -o {{structure_box}} -c -d 1.0 -bt triclinic",
 )
 @task(structure_processed=FILE_IN, structure_box=FILE_OUT)
 def define_box(structure_processed=None, structure_box=None) -> None:
