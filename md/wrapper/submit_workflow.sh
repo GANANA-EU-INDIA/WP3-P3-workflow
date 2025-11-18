@@ -11,7 +11,7 @@
 # ===========       ARGUMENTS        =========== #
 # =========== ====================== =========== #
 usage() {
-    echo "Usage: $0 WORKFLOWNAME NODES CPU_PER_NODE EXEC_TIME"
+    echo "Usage: $0 WORKFLOWNAME INPUT_DIR OUTPUT_DIR NODES CPU_PER_NODE EXEC_TIME"
     echo
     echo "Arguments (arguments follows Slurm terminology):"
     echo "  WORKFLOWNAME        Name of the workflow (e.g., md)"

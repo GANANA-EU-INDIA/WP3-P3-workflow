@@ -1,4 +1,5 @@
 WORKFLOWNAME = md
+# Prefer absolute paths
 INPUT_DIR = examples/pdb/inputs
 OUTPUT_DIR = examples/pdb/output
 NODES = 1
