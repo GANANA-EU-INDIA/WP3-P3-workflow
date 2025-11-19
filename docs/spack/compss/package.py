@@ -3,7 +3,7 @@
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 #
-# File for Spack <= 0.22
+# File for Spack > 1.0
 import os
 
 from spack.package import *
