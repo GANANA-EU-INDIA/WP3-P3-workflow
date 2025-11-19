@@ -13,13 +13,14 @@ Workflow for a MD simulation based on the official [GROMACS introductory MD tuto
 
 
 ## Use this repo as a template
-To use the implemented workflows as starting point for your workflow, follow these steps (`git` is required):
+To use the implemented workflows as starting point for your workflow, follow these steps (`git` and the possibility to clone from your GitHub account are required, see [contribution](./docs/contribution.md) for more info):
 
-1. Clone this repo locally:
+1. [Fork this repository](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo?tool=webui) to your GitHub account.
+2. Clone your fork locally:
    ```bash
    git clone https://github.com/your-username/WP3-P3-md-workflow.git
    ```
-2. (Optional) Create a new branch for your work:
+3. (Optional) Create a new branch for your work:
    ```bash
    git switch -c feat-branch-name
    ```

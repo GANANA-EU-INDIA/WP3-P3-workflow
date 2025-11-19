@@ -6,9 +6,12 @@ There are two possible ways to exploit this repo. The first one is to fork, i.e.
 If you find bugs or have feature requests, please [open an issue](https://github.com/GANANA-EU-INDIA/WP3-P3-md-workflow/issues). We provide issue templates to guide the process.
 
 ## Contribute to the code (a.k.a. open a Pull Request)
+> [!NOTE]
+> This guide assumes that you are able to clone repositories from your GitHub account. One way to do this is by means of [ssh keys](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent#generating-a-new-ssh-key), however other [ways are possible](https://docs.github.com/en/authentication).
+
 To contribute code improvements or new features, follow these steps:
 
-1. Fork the repository to your GitHub account.
+1. [Fork this repository](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo?tool=webui) to your GitHub account.
 2. Clone your fork locally:
    ```bash
    git clone https://github.com/your-username/WP3-P3-md-workflow.git
