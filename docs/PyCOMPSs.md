@@ -112,7 +112,7 @@ If you already have a Spack custom repo (in this example, the namespace is calle
     Then you will be prompt with the default editor to update the `package.py` of COMPSs that you can close.
     Overwrite the content of `spack edit compss` with `.spack/compss/package.py` of this repo:
     ```bash
-    cp -r workflow/docs/spack/compss/package $SPACK_HOME/repos/workflow/compss/
+    cp -r workflow/docs/spack/compss/package path/to/root/.../repos/workflow/compss/
     ```
 3. Create the spec: `spack spec -Il compss`. Finally, install COMPSs specifying the `cfg` through the environmental variable `COMPSS_SUPERCOMPUTER_CFG` (only the file name):
     ```bash
