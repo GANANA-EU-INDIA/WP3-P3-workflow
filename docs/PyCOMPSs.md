@@ -114,8 +114,9 @@ If you already have a Spack custom repo (in this example, the namespace is calle
     ```bash
     cp -r workflow/docs/spack/compss/package path/to/root/.../repos/workflow/compss/
     ```
-3. Create the spec: `spack spec -Il compss`. Finally, install COMPSs specifying the `cfg` through the environmental variable `COMPSS_SUPERCOMPUTER_CFG` (only the file name):
+3. Concretize the spec and, finally, install COMPSs specifying the `cfg` through the environmental variable `COMPSS_SUPERCOMPUTER_CFG` (only the file name):
     ```bash
+    spack spec -Il compss
     COMPSS_SUPERCOMPUTER_CFG=leonardo.cfg spack install compss
     ```
 4. To load environmental variables and add binaries to `PATH` at convenience, generate the module with:
