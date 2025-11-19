@@ -1,7 +1,7 @@
 - [Installation on HPC](#installation-on-hpc)
     - [Manual installation](#manual-installation)
-    - [Installation on CINECA's Leonardo](#installation-on-cinecas-leonardo)
     - [Installation through Spack](#installation-through-spack)
+    - [Installation on CINECA's Leonardo](#installation-on-cinecas-leonardo)
 - [Infrastructure configuration](#infrastructure-configuration)
     - [Queue system (scheduler)](#queue-system-scheduler)
     - [Supercomputer](#supercomputer)
@@ -26,6 +26,79 @@ The bird's-eye view of the installation steps is the following:
 You can refer to [COMPSs official documentation](https://compss-doc.readthedocs.io/en/stable/Sections/01_Installation/04_Supercomputers.html) for a generic step-by-step guide to install COMPSs, that has to be adapted for the HPC in use.
 Here examples for some clusters are provided together with some insights.
 A convinient installation using Spack is also provided.
+
+### Installation through Spack
+
+> [!NOTE]
+> `0_22/compss/package.py` has been tested with Spack `<= 0.22.x` on Leonardo.
+>
+> `1_00/compss/package.py` has been tested with Spack `1.0 <= <= 1.2`.
+
+> [!WARNING]
+> PyCOMPSs installation require C++ based compilation. As for `COMPSs@3.3.3`, you might encounter some errors while compiling the Python bindings with `gcc@13` and later. To solve this issue use `gcc@12`. To ensure this you can specify a [compilation preference](https://spack.readthedocs.io/en/latest/frequently_asked_questions.html#specific-compiler-for-all-packages) (for transitive dependencies, because COMPSs does not depend on `gcc` directly) to Spack 1.0 or later by adding to Spack's `package.yaml`, findable with:
+> ```
+> spack config edit packages
+> ```
+> the following:
+> ```
+> packages:
+>   c:
+>     prefer:
+>     - gcc@12
+>   cxx:
+>     prefer:
+>     - gcc@12
+> ```
+> Be sure to use the `package.py` for Spack 1.0 or later.
+
+References:
+- [Add a package to Spack](https://spack-tutorial.readthedocs.io/en/latest/tutorial_packaging.html#package-creation-tutorial)
+- [Advance packaging tutorial](https://spack-tutorial.readthedocs.io/en/latest/tutorial_advanced_packaging.html)
+- Reference files in directory [spack](./spack/)
+
+These steps assume that Spack binary is available in the shell. It might be loaded in a HPC environment, for example using `module load spack`.
+If you already have a Spack custom repo (in this example, the namespace is called `workflow`), skip to 2, otherwise create a custom repo (this is required because most probably you won't have the permission to add software to the main repo of the cluster).
+1. Create a repo:
+    ```bash
+    spack repo create path/to/root/.../repos workflow
+    spack repo add path/to/root/.../repos/workflow
+    ```
+    This will create a new repository, and a namespace, where to add recipies for softwares called `workflow`.
+2. Add COMPSs to the repo:
+    ```bash
+    spack create --name compss -N workflow
+    ```
+    Then you will be prompt with the default editor to update the `package.py` of COMPSs that you can close.
+    Overwrite the content of `spack edit compss` with `.spack/compss/package.py` of this repo:
+    ```bash
+    cp -r workflow/docs/spack/compss/package path/to/root/.../repos/workflow/compss/
+    ```
+3. Concretize the spec and, finally, install COMPSs specifying the `cfg` through the environmental variable `COMPSS_SUPERCOMPUTER_CFG` (only the file name):
+    ```bash
+    spack spec -Il compss
+    COMPSS_SUPERCOMPUTER_CFG=leonardo.cfg spack install compss
+    ```
+4. To load environmental variables and add binaries to `PATH` at convenience, generate the module with:
+    ```
+    spack module tcl refresh -y
+    ```
+    Then you can load COMPSs binaries using:
+    ```
+    ml compss
+    ```
+    which full name is something like `compss/3.3.3--gcc--12.2.0`. Alternatively, you can directly use:
+    ```
+    spack load compss
+    ```
+
+To test the installation just type `enqueue_compss --version`.
+
+> [!NOTE]
+> If you cannot find the `compss` module, you need to add to your `~/.bashrc` the line `module use --append $SPACK_HOME/modules/`.
+
+> [!NOTE]
+> If binaries are available, because they path appear in the `PATH` variable, but they do not work, inspect the module file generated with `ml show compss`. A common problem is the incorrect set of the `COMPSS_HOME` environmental variable.
+
 
 ### Installation on [CINECA's Leonardo](https://www.hpc.cineca.it/systems/hardware/leonardo/)
 
@@ -85,60 +158,6 @@ We assume to be connected to the cluster.
     ```
 
 To test out the installation, run `enqueue_compss -h`.
-
-
-### Installation through Spack
-
-> [!NOTE]
-> Tested with Spack `<= 0.22.x` on Leonardo
-
-References:
-- [Add a package to Spack](https://spack-tutorial.readthedocs.io/en/latest/tutorial_packaging.html#package-creation-tutorial)
-- [Advance packaging tutorial](https://spack-tutorial.readthedocs.io/en/latest/tutorial_advanced_packaging.html)
-- Reference files in directory [spack](./spack/)
-
-These steps assume that Spack binary is available in the shell. It might be loaded in a HPC environment, for example using `module load spack`.
-If you already have a Spack custom repo (in this example, the namespace is called `workflow`), skip to 2, otherwise create a custom repo (this is required because most probably you won't have the permission to add software to the main repo of the cluster).
-1. Create a repo:
-    ```bash
-    spack repo create path/to/root/.../repos workflow
-    spack repo add path/to/root/.../repos/workflow
-    ```
-    This will create a new repository, and a namespace, where to add recipies for softwares called `workflow`.
-2. Add COMPSs to the repo:
-    ```bash
-    spack create --name compss -N workflow
-    ```
-    Then you will be prompt with the default editor to update the `package.py` of COMPSs that you can close.
-    Overwrite the content of `spack edit compss` with `.spack/compss/package.py` of this repo:
-    ```bash
-    cp -r workflow/docs/spack/compss/package path/to/root/.../repos/workflow/compss/
-    ```
-3. Concretize the spec and, finally, install COMPSs specifying the `cfg` through the environmental variable `COMPSS_SUPERCOMPUTER_CFG` (only the file name):
-    ```bash
-    spack spec -Il compss
-    COMPSS_SUPERCOMPUTER_CFG=leonardo.cfg spack install compss
-    ```
-4. To load environmental variables and add binaries to `PATH` at convenience, generate the module with:
-    ```
-    spack module tcl refresh -y
-    ```
-    Then you can load COMPSs binaries using:
-    ```
-    ml compss
-    ```
-    which full name is something like `compss/3.3.3--gcc--12.2.0`. Alternatively, you can directly use:
-    ```
-    spack load compss
-    ```
-
-To test the installation just type `enqueue_compss --version`.
-
-> [!NOTE]
-> If you cannot find the `compss` module, you need to add to your `~/.bashrc` the line `module use --append $SPACK_HOME/modules/`.
-
-> [!NOTE]
-> If binaries are available, because they path appear in the `PATH` variable, but they do not work, inspect the module file generated with `ml show compss`. A common problem is the incorrect set of the `COMPSS_HOME` environmental variable.
 
 
 ## [Infrastructure configuration](https://compss-doc.readthedocs.io/en/stable/Sections/01_Installation/04_Supercomputers.html#configuration)
