@@ -57,23 +57,26 @@ References:
 - Reference files in directory [spack](./spack/)
 
 These steps assume that Spack binary is available in the shell. It might be loaded in a HPC environment, for example using `module load spack`.
-If you already have a Spack custom repo (in this example, the namespace is called `workflow`), skip to 2, otherwise create a custom repo (this is required because most probably you won't have the permission to add software to the main repo of the cluster).
+If you already have a Spack custom repo (in this example, the namespace is called `<repo name>`), skip to 2, otherwise create a custom repo (this is required because most probably you won't have the permission to add software to the main repo of your cluster).
 1. Create a repo:
     ```bash
-    spack repo create path/to/root/.../repos workflow
-    spack repo add path/to/root/.../repos/workflow
+    spack repo create path/to/root/repos <repo name>
+    spack repo add path/to/root/repos/<repo name>
     ```
-    This will create a new repository, and a namespace, where to add recipies for softwares called `workflow`.
+    This will create a new repository, and a namespace, where to add recipies for softwares called `<repo name>`.
+    > [!NOTE]
+    > If this operation results in permission errors in your cluster, probably the user is not allowed to have a personal `repo.yaml` file.
+    > Please, contact your system administrator about it. A possible solution could be [re-enable the user to perform such operation](https://spack.readthedocs.io/en/latest/configuration.html#overriding-local-configuration) specifying `unset SPACK_DISABLE_LOCAL_CONFIG`
 2. Add COMPSs to the repo:
     ```bash
-    spack create --name compss -N workflow
+    spack create --name compss -N <repo name>
     ```
     Then you will be prompt with the default editor to update the `package.py` of COMPSs that you can close.
-    Overwrite the content of `spack edit compss` with `.spack/compss/package.py` of this repo:
+    Overwrite the content of `spack edit compss` with the `package.py` of this repo:
     ```bash
-    cp -r workflow/docs/spack/<version>/compss/package path/to/root/.../repos/workflow/compss/
+    cp <this repo>/docs/spack/<version>/compss/package.py path/to/root/repos/<repo name>/compss/
     ```
-3. Concretize the spec and, finally, install COMPSs specifying the `cfg` through the environmental variable `COMPSS_SUPERCOMPUTER_CFG` (only the file name):
+3. Concretize the spec and, finally, install COMPSs specifying the `cfg` through the environmental variable `COMPSS_SUPERCOMPUTER_CFG` (only the file name), for example:
     ```bash
     spack spec -Il compss
     COMPSS_SUPERCOMPUTER_CFG=leonardo.cfg spack install compss
@@ -86,7 +89,7 @@ If you already have a Spack custom repo (in this example, the namespace is calle
     ```
     ml compss
     ```
-    which full name is something like `compss/3.3.3--gcc--12.2.0`. Alternatively, you can directly use:
+    which full name is something like `compss/3.3.3--gcc--12.2.0`. *Alternatively*, you can directly use:
     ```
     spack load compss
     ```
