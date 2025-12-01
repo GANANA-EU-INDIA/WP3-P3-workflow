@@ -74,13 +74,14 @@ If you already have a Spack custom repo (in this example, the namespace is calle
     Then you will be prompt with the default editor to update the `package.py` of COMPSs that you can close.
     Overwrite the content of `spack edit compss` with the `package.py` of this repo:
     ```bash
-    cp <this repo>/docs/spack/<version>/compss/package.py path/to/root/repos/<repo name>/compss/
+    cp <this repo>/docs/spack/<version>/compss/package.py path/to/root/repos/<repo name>/packages/compss/
     ```
 3. Concretize the spec and, finally, install COMPSs specifying the `cfg` through the environmental variable `COMPSS_SUPERCOMPUTER_CFG` (only the file name), for example:
     ```bash
     spack spec -Il compss
     COMPSS_SUPERCOMPUTER_CFG=leonardo.cfg spack install compss
     ```
+    Wait the full installation to complete, if errors occour please [open an issue](https://github.com/GANANA-EU-INDIA/WP3-P3-workflow/issues) copying the error output.
 4. To load environmental variables and add binaries to `PATH` at convenience, generate the module with:
     ```
     spack module tcl refresh -y
