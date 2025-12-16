@@ -14,7 +14,9 @@ class Compss(Package):
     homepage = "https://compss.bsc.es"
     url = "https://compss.bsc.es/repo/sc/stable/COMPSs_3.3.3.tar.gz"
 
-    maintainers("lsalicar")
+    maintainers("loscati")
+
+    license("Apache-2.0")
 
     version("3.3.3", sha256="7b0e52e275b3890aa59f5b5ae40e13b49701269c8d1b2ff76c0aed27d30d6239")
 
