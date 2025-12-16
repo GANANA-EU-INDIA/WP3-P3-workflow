@@ -26,20 +26,22 @@ Todo:
 ## Setup Python environment
 
 > [!NOTE]
-> Tested on Python 3.11.x
+> Tested with Python 3.11.x
 
-Firstly, you need (Py)COMPSs installated. For a detailed installation procedue see [the installation docs](./../docs/PyCOMPSs.md).
+Firstly, you need PyCOMPSs installated, see [installation docs](./../docs/PyCOMPSs.md).
 
-Then, create a Python virtual env using (within a cluster, a Python module is assumed to be loaded or, in any case, the interpreter being available):
+Secontly, create a Python virtual environment usint the specification file [`requirements.txt`](./requirements.txt) using the built-in `venv` or [`uv`](https://github.com/astral-sh/uv); `conda` or its forks can be used but you are required to modify `wrapper/env_config.sh` to activate it. Within a cluster, a Python module is assumed to be loaded or, in any case, the interpreter being available.
+
+An example using the Python stanrdard library:
 ```bash
-python -m venv ../envs/md
-. ../envs/md/bin/activate
+# pwd -> WP3-P3-workflow/md
+python -m venv ./md_env
+. ./md_env/bin/activate # choose your shell of use
 python -m pip install -r requirements.txt
 ```
 > [!NOTE]
-> The environment name has to match the name of the workflow you want to run. This helps keep the envs separated and it is assumed by the `./wrapper/env_config.sh` that, ultimetly, can be modified.
-In this environment you need to install all Python packages needed for you workflow to run.
-Conda environments can be used instead to handle different programs and Python versions, although this is yet to be tested.
+> When launching a workflow, Python environment activation is controlled by `wrapper/env_config.sh`. The name and location suggested above are the default ones that can be found in the latter bash file.
+> If you use non-default name or location, be sure to update the bash script accordingly.
 
 
 ## Adapt the workflow
