@@ -37,7 +37,7 @@ export GMXLIB=$ROOT_PATH/data
 # =========== ====================== =========== #
 # ===========   Python environment   =========== #
 # =========== ====================== =========== #
-. $(dirname "$ROOT_PATH")/envs/${WORKFLOWNAME}/bin/activate
+. $ROOT_PATH/${WORKFLOWNAME}_env/bin/activate
 
 # =========== ====================== =========== #
 # =========== DATA and WORKFLOW PATH =========== #
