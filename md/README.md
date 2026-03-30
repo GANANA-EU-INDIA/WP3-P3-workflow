@@ -8,10 +8,6 @@ Features:
 - checkpoints for resilience against failures and re-runs
 - data provenance
 
-Todo:
-- explicit specification in case of failed run
-
-
 ## Use this repo
 
 This guide assumes that you have [PyCOMPSs installed](./../docs/PyCOMPSs.md).
