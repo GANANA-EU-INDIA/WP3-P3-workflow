@@ -14,10 +14,12 @@ QOS=boost_qos_dbg
 # =========== ====================== =========== #
 ml purge
 #  COMPSs
-module use --append $PUBLIC/spack-0.22.2-06/modules
-ml compss/3.3.3--gcc--12.2.0
+module use --append $PUBLIC/spack/share/spack/modules/linux-rhel8-icelake
+ml compss/3.4-gcc-12.2.0
 # FIX FOR LEONARDO CLUSTER (spack installation)
-COMPSS_HOME=$COMPSS_HOME/compss
+if [[ "$(uname -n)" == *"leonardo"* ]]; then
+    COMPSS_HOME=$COMPSS_HOME/compss
+fi
 
 #  GROMACS
 # add gmx_mpi bin path to PATH
