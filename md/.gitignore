@@ -17,3 +17,6 @@ COMPSs_RO-Crate*
 .checkpoints
 
 backup*/
+
+*_env
+envs/*
