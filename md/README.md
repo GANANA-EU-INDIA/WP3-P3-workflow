@@ -65,7 +65,7 @@ make name-workflow
 
 Using custom arguments:
 ```bash
-make NODES=4
+make NODES=4 INPUT_DIR=./data/inputs
 ```
 Just type `make` to have more info.
 
