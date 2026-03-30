@@ -1,4 +1,6 @@
 dill
+guppy3
+numpy
 pyyaml
 rocrate
 pytz
