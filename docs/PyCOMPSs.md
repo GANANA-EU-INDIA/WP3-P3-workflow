@@ -32,9 +32,9 @@ The bird's-eye view of the installation steps is the following:
 This is the raccomanded method, which automatize the steps described in the [overview](#overview) [^1].
 
 [^1]: Some reference if you are not used to Spack:
-  - [Add a package to Spack](https://spack-tutorial.readthedocs.io/en/latest/tutorial_packaging.html#package-creation-tutorial)
-  - [Advance packaging tutorial](https://spack-tutorial.readthedocs.io/en/latest/tutorial_advanced_packaging.html)
-  - Reference files in directory [spack](./spack/)
+      - [Add a package to Spack](https://spack-tutorial.readthedocs.io/en/latest/tutorial_packaging.html#package-creation-tutorial)
+      - [Advance packaging tutorial](https://spack-tutorial.readthedocs.io/en/latest/tutorial_advanced_packaging.html)
+      - Reference files in directory [spack](./spack/)
 
 > [!NOTE]
 > This repository contains two `package.py` depending on the Spack version. `0_22/compss/package.py` has been tested with Spack `<= 0.22.x`. `1_00/compss/package.py` has been tested with Spack `1.0 > <= 1.2`.
