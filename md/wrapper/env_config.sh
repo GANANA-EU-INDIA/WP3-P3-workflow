@@ -15,7 +15,7 @@ QOS=boost_qos_dbg
 ml purge
 #  COMPSs
 module use --append $PUBLIC/spack/share/spack/modules/linux-rhel8-icelake
-ml compss/3.4-gcc-12.2.0
+ml compss
 # FIX FOR LEONARDO CLUSTER (spack installation)
 if [[ "$(uname -n)" == *"leonardo"* ]]; then
     COMPSS_HOME=$COMPSS_HOME/compss
@@ -23,7 +23,7 @@ fi
 
 #  GROMACS
 # add gmx_mpi bin path to PATH
-ml gromacs/2025.4--openmpi--4.1.6--gcc--12.2.0-cuda-12.2
+ml gromacs
 # Flags for GPU usage of gromacs
 export GMX_GPU_DD_COMMS=true  # not require from Gromacs 2025 onward. Kept for retrocompatibility
 export GMX_GPU_PME_PP_COMMS=true
