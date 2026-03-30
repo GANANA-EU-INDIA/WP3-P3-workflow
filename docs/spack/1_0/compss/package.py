@@ -19,7 +19,6 @@ class Compss(Package):
 
     maintainers("lsalicar")
 
-    print("REGISTER 3.4")
     version("3.4", sha256="32dd2b2dc8be4a0a08705f9c2c86508ba491d32addcee2d961504defeb569af4")
     version("3.3.3", sha256="7b0e52e275b3890aa59f5b5ae40e13b49701269c8d1b2ff76c0aed27d30d6239")
 
@@ -42,10 +41,11 @@ class Compss(Package):
     depends_on('openjdk@:21', type=('build', 'link', 'run'))
     # Optional dipendencies
     # https://compss-doc.readthedocs.io/en/3.4/Sections/01_Installation_Configuration/01_Dependencies/02_Supercomputer.html#optional-dependencies
+    # WARNING: the guppy3 package is missing, hence if you are using the
+    # @local decorator, please add it to your Python env
     depends_on('py-dill', type='run')
-    depends_on('py-guppy3', type='run')
     depends_on('py-numpy', type='run')
-    # Needed for Provenance reports
+    # # Needed for Provenance reports
     depends_on('py-pyyaml', type='run')
     depends_on('py-rocrate', type='run')
     depends_on('py-pytz', type='run')
