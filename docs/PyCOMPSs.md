@@ -1,72 +1,57 @@
 - [Installation on HPC](#installation-on-hpc)
-    - [Manual installation](#manual-installation)
-    - [Installation through Spack](#installation-through-spack)
-    - [Installation on CINECA's Leonardo](#installation-on-cinecas-leonardo)
+  - [Overview](#overview)
+  - [Installation using Spack](#installation-using-spack)
+    - [Troubleshoot](#troubleshoot)
+  - [Example of manual installation on CINECA's Leonardo](#example-of-manual-installation-on-cinecas-leonardo)
 - [Infrastructure configuration](#infrastructure-configuration)
-    - [Queue system (scheduler)](#queue-system-scheduler)
-    - [Supercomputer](#supercomputer)
+  - [Queue system (scheduler)](#queue-system-scheduler)
+  - [Supercomputer](#supercomputer)
 - [Usage](#usage)
-    - [Miscellaneous notes](#miscellaneous-notes)
+  - [Miscellaneous notes](#miscellaneous-notes)
 
 
 ## Installation on HPC
 
-References:
-- [COMPSs documentation for installing on HPC](https://compss-doc.readthedocs.io/en/stable/Sections/01_Installation/04_Supercomputers.html).
-- [COMPSs documentation on dependencies](https://compss-doc.readthedocs.io/en/stable/Sections/01_Installation/01_Dependencies.html)
+This documentation guides the user on installing COMPSs, and its Python bindings PyCOMPSs, using the spack recepie.
+The COMPSs documentation provides already a good overview of the process and the user is adviced to read it before-hand to understand what is installed and solve possible issues.
 
-### Manual installation
+- [Installation overview](https://compss-doc.readthedocs.io/en/stable/Sections/01_Installation_Configuration.html)
+- [COMPSs documentation on dependencies](https://compss-doc.readthedocs.io/en/stable/Sections/01_Installation_Configuration/01_Dependencies/02_Supercomputer.html)
+- [COMPSs documentation on HPC installation](https://compss-doc.readthedocs.io/en/stable/Sections/01_Installation_Configuration/02_Installation/03_Supercomputers.html).
+
+### Overview
 
 The bird's-eye view of the installation steps is the following:
-1. Satisfy dependencies and environmental variables
-2. Download binaries and install them (use the included bash script to select the appropiate destination directory)
-3. Make COMPSs available in the CLI (thourgh, for example, modules)
-4. [Configure](#infrastructure-configuration) COMPSs to work in the cluster
+1. Satisfy dependencies and set environmental variables
+2. Download the provided binaries and use the included bash script to install them in the target directory
+3. [Configure the COMPSs installation](#infrastructure-configuration) to work in the cluster
+4. Make COMPSs available on the shell (thourgh, for example, modules)
 
-You can refer to [COMPSs official documentation](https://compss-doc.readthedocs.io/en/stable/Sections/01_Installation/04_Supercomputers.html) for a generic step-by-step guide to install COMPSs, that has to be adapted for the HPC in use.
-Here examples for some clusters are provided together with some insights.
-A convinient installation using Spack is also provided.
+### Installation using Spack
 
-### Installation through Spack
+This is the raccomanded method, which automatize the steps described in the [overview](#overview) [^1].
+
+[^1]: Some reference if you are not used to Spack:
+  - [Add a package to Spack](https://spack-tutorial.readthedocs.io/en/latest/tutorial_packaging.html#package-creation-tutorial)
+  - [Advance packaging tutorial](https://spack-tutorial.readthedocs.io/en/latest/tutorial_advanced_packaging.html)
+  - Reference files in directory [spack](./spack/)
 
 > [!NOTE]
-> `0_22/compss/package.py` has been tested with Spack `<= 0.22.x` on Leonardo.
->
-> `1_00/compss/package.py` has been tested with Spack `1.0 <= <= 1.2`.
+> This repository contains two `package.py` depending on the Spack version. `0_22/compss/package.py` has been tested with Spack `<= 0.22.x`. `1_00/compss/package.py` has been tested with Spack `1.0 > <= 1.2`.
 
-> [!WARNING]
-> PyCOMPSs installation require C++ based compilation. As for `COMPSs@3.3.3`, you might encounter some errors while compiling the Python bindings with `gcc@13` and later. To solve this issue use `gcc@12`. To ensure this you can specify a [compilation preference](https://spack.readthedocs.io/en/latest/frequently_asked_questions.html#specific-compiler-for-all-packages) (for transitive dependencies, because COMPSs does not depend on `gcc` directly) to Spack 1.0 or later by adding to Spack's `package.yaml`, findable with:
-> ```
-> spack config edit packages
-> ```
-> the following:
-> ```
-> packages:
->   c:
->     prefer:
->     - gcc@12
->   cxx:
->     prefer:
->     - gcc@12
-> ```
-> Be sure to use the `package.py` for Spack 1.0 or later.
+> [!NOTE]
+> If you encounter any issues in the process, read the [troubleshoot section](#troubleshoot) before open an issue.
 
-References:
-- [Add a package to Spack](https://spack-tutorial.readthedocs.io/en/latest/tutorial_packaging.html#package-creation-tutorial)
-- [Advance packaging tutorial](https://spack-tutorial.readthedocs.io/en/latest/tutorial_advanced_packaging.html)
-- Reference files in directory [spack](./spack/)
+These steps assume that Spack is available in your shell. It might be loaded in your HPC environment, for example using `module load spack`.
 
-These steps assume that Spack binary is available in the shell. It might be loaded in a HPC environment, for example using `module load spack`.
-If you already have a Spack custom repo (in this example, the namespace is called `<repo name>`), skip to 2, otherwise create a custom repo (this is required because most probably you won't have the permission to add software to the main repo of your cluster).
-1. Create a repo:
+If you already have a Spack custom repo (in this example, the namespace is called `<repo name>`), skip to step 2, otherwise start from 1 creating a custom repo [^2].
+
+1. Create a personal repo:
     ```bash
     spack repo create path/to/root/repos <repo name>
     spack repo add path/to/root/repos/<repo name>
     ```
     This will create a new repository, and a namespace, where to add recipies for softwares called `<repo name>`.
-    > [!NOTE]
-    > If this operation results in permission errors in your cluster, probably the user is not allowed to have a personal `repo.yaml` file.
-    > Please, contact your system administrator about it. A possible solution could be [re-enable the user to perform such operation](https://spack.readthedocs.io/en/latest/configuration.html#overriding-local-configuration) specifying `unset SPACK_DISABLE_LOCAL_CONFIG`
 2. Add COMPSs to the repo:
     ```bash
     spack create --name compss -N <repo name>
@@ -74,40 +59,97 @@ If you already have a Spack custom repo (in this example, the namespace is calle
     Then you will be prompt with the default editor to update the `package.py` of COMPSs that you can close.
     Overwrite the content of `spack edit compss` with the `package.py` of this repo:
     ```bash
-    cp <this repo>/docs/spack/<version>/compss/package.py path/to/root/repos/<repo name>/packages/compss/
+    cp <this repo>/docs/spack/<spack_version>/compss/package.py path/to/root/repos/<repo name>/packages/compss/
     ```
 3. Concretize the spec and, finally, install COMPSs specifying the `cfg` through the environmental variable `COMPSS_SUPERCOMPUTER_CFG` (only the file name), for example:
     ```bash
     spack spec -Il compss
+    ```
+    ```bash
     COMPSS_SUPERCOMPUTER_CFG=leonardo.cfg spack install compss
     ```
-    Wait the full installation to complete, if errors occour please [open an issue](https://github.com/GANANA-EU-INDIA/WP3-P3-workflow/issues) copying the error output.
 4. To load environmental variables and add binaries to `PATH` at convenience, generate the module with:
     ```
     spack module tcl refresh -y
     ```
-    Then you can load COMPSs binaries using:
-    ```
-    ml compss
-    ```
-    which full name is something like `compss/3.3.3--gcc--12.2.0`. *Alternatively*, you can directly use:
-    ```
-    spack load compss
-    ```
+
+Now, you can load, in the current shell, COMPSs using:
+```
+module load compss
+```
+which full name is something like `compss/3.3.3--gcc--12.2.0`. *Alternatively*, you can directly use:
+```
+spack load compss
+```
 
 To test the installation just type `enqueue_compss --version`.
 
-> [!NOTE]
-> If you cannot find the `compss` module, you need to add to your `~/.bashrc` the line `module use --append $SPACK_HOME/modules/`.
+[^2]: Custom repos are required because most probably you won't have the permission to add software to the main repo of your cluster
+
+
+#### Troubleshoot
+
+<details>
+<summary>The user cannot create a personal repo in the cluster</summary>
+
+If this operation results in permission errors in your cluster, probably the user is not allowed to have a personal `repo.yaml` file.
+In this case, contact your system administrator. A possible solution could be [re-enable the user to perform such operation](https://spack.readthedocs.io/en/latest/configuration.html#overriding-local-configuration) specifying `unset SPACK_DISABLE_LOCAL_CONFIG`
+</details>
+
+<details>
+<summary>COMPSs cannot be found when creating the Spack spec</summary>
+
+In a cluster, is customary to have a system Spack repository called `builtin`. This can be checked using:
+```bash
+$ spack repo list
+[+] builtin     v2.2    /path/to/builtin
+[+] <repo name>    v2.4    /path/to/<repo name>
+```
+If `builtin` is higher than you personal `<repo name>`, as in the above output, Spack might not find `compss` because it search for it in `builtins`. To solve this, you can specify the namespace from which the package should be installed:
+```bash
+spack spec -Il <repo name>.compss
+```
+and similarly when installing it.
+</details>
+
+<details>
+<summary>Problems installing COMPSs with gcc 13 or later</summary>
+
+COMPSs/PyCOMPSs installation requires C++ compilers. For `COMPSs@3.4` and earlier, you might encounter errors while compiling with `gcc@13` and later. To solve this issue, use `gcc@12`. To ensure this you can specify a [compilation preference](https://spack.readthedocs.io/en/latest/frequently_asked_questions.html#specific-compiler-for-all-packages) (for transitive dependencies, because COMPSs does not depend on `gcc` directly). On Spack 1.0 or later, find Spack's `package.yaml` with:
+```bash
+spack config edit packages
+```
+and add:
+```bash
+packages:
+  c:
+    prefer:
+    - gcc@12
+  cxx:
+    prefer:
+    - gcc@12
+```
+</details>
+
+<details>
+<summary>No module compss when using module load</summary>
+
+If you cannot find the `compss` module, you need to issue first (or append to your shell config file, e.g. `~/.bashrc`, to make it permanent) `module use --append $SPACK_HOME/modules/`.
+</details>
+
+<details>
+<summary>enqueue_compss runs but it cannot find other binaries</summary>
+
+If binaries like `enqueue_compss` or related are in the `PATH` variable, but do not work when invokate, inspect the module file generated with `ml show compss`. A common problem is an incorrect `COMPSS_HOME` environmental variable.
+
+To fix this, you need to modify accordingly to the error the `package.py` file in the `env.set("COMPSS_HOME", compss_home)` line.
+</details>
+
+
+### Example of manual installation on [CINECA's Leonardo](https://www.hpc.cineca.it/systems/hardware/leonardo/)
 
 > [!NOTE]
-> If binaries are available, because they path appear in the `PATH` variable, but they do not work, inspect the module file generated with `ml show compss`. A common problem is the incorrect set of the `COMPSS_HOME` environmental variable.
-
-
-### Installation on [CINECA's Leonardo](https://www.hpc.cineca.it/systems/hardware/leonardo/)
-
-> [!NOTE]
-> Last tested on 2025/10/20
+> Tested on 2025/10/20. This test is reported only as test case example in case the Spack installation fails. Please, refer to COMPSs documentation for more info and guidance on your cluster.
 
 We assume to be connected to the cluster.
 
@@ -164,21 +206,23 @@ We assume to be connected to the cluster.
 To test out the installation, run `enqueue_compss -h`.
 
 
-## [Infrastructure configuration](https://compss-doc.readthedocs.io/en/stable/Sections/01_Installation/04_Supercomputers.html#configuration)
+## Infrastructure configuration
+
+See the [COMPSs documentation](https://compss-doc.readthedocs.io/en/stable/Sections/01_Installation_Configuration/03_Configuration/02_Supercomputer.html) for reference.
 
 ### Queue system (scheduler)
 
-The cfg files contain a set of bash variables which are used by the other scripts. On the one hand, the queue system cfgs contain the variables to indicate the commands used by the system to submit and spawn processes, the commands or variables to get the allocated nodes and the directives to indicate the number of nodes, processes, etc.
+The cfg files contain a set of bash variables which are used by the other scripts. On one hand, the queue system cfgs contain variables to indicate the commands used by the system to submit and spawn processes, the commands or variables to get the allocated nodes and the directives to indicate the number of nodes, processes, etc.
 These are container in `$COMPSS_HOME/Runtime/scripts/queues/queue_systems/`.
 
-Most probably, these config files should have already all necessary variable set and *the user is not required to change them*.
+*The user is advice to not change them*.
 
 ### Supercomputer
 
-On the other hand, the supercomputers cfg files contains a set of variables to indicate the queue system used by a supercomputer, paths where the shared disk is mounted.
+Supercomputers cfg files contains a set of variables to indicate the queue system used by a supercomputer, paths where the shared disk is mounted, etc.
 These files are contained in `$COMPSS_HOME/Runtime/scripts/queues/supercomputers/`.
 
-Let's make the example oyu run on Leonardo. you can rename the cfg file for Leonardo (multiple HPCs are distributed with COMPSs) as `default.cfg` and COMPSs will use it by default.
+Let's take CINECA's cluster Leonardo as an example. You can rename the cfg file for Leonardo (multiple HPCs are distributed with COMPSs) as `default.cfg` and COMPSs will use it by default.
 At the top of the supercomputer file, you can set the queue system, for example Slurm, that uses the queue system cfg file, indeed the `slurm.cfg`.
 
 If your cluster is already present, there is a good chance that the cfg file has been already tested on the infrastructure. Otherwise, the user might customized it to fit its needs.
@@ -187,6 +231,9 @@ If your cluster is already present, there is a good chance that the cfg file has
 ## Usage
 
 ### Miscellaneous notes
+
+> [!NOTE]
+> These are some notes for version 3.3.3 for edge cases or non-standard behaviors.
 
 - the `bin` argument `working_dir` can lead to problems even if the file passed as arguments of the function are described by absolute paths. The example is using `pdb_delhetatom`, in which specifying the working dir as the parent to the input and output directories, messes up the paths eventhough in the `main` function these are passed as `str` of the absolute, resolved, path. (still don't know why).
 - the explicitely defined arguments to a binary inside the `binary` decorator is cleaner, hence it is best practive, than defining arguments through the python function arguments.
