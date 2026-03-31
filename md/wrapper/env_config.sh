@@ -16,10 +16,6 @@ ml purge
 #  COMPSs
 module use --append $PUBLIC/spack/share/spack/modules/linux-rhel8-icelake
 ml compss
-# FIX FOR LEONARDO CLUSTER (spack installation)
-if [[ "$(uname -n)" == *"leonardo"* ]]; then
-    COMPSS_HOME=$COMPSS_HOME/compss
-fi
 
 #  GROMACS
 # add gmx_mpi bin path to PATH
