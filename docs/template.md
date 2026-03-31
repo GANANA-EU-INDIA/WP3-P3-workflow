@@ -13,6 +13,8 @@ To use the implemented workflows as starting point for your workflow, follow the
    ```
    This is suggested to keep the orginal workflow and update it, through a `git pull`, if necessary.
 
+More details on how to modify a Workflow are described in the [`md` README](../md/README.md).
+
 > TODO
 >
 > FAIR Principles for workflows. We need a registry where to save all generated workflows to make them discoverable. Multiple solutions are possible.
