@@ -20,3 +20,4 @@ backup*/
 
 *_env
 envs/*
+.venv/*

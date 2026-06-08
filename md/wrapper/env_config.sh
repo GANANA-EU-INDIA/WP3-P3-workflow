@@ -37,7 +37,7 @@ export GMXLIB=$ROOT_PATH/data
 # =========== ====================== =========== #
 # ===========   Python environment   =========== #
 # =========== ====================== =========== #
-#. /cfs/klemming/projects/supr/naiss2025-5-614/lsalicar/WP3-P3-workflow/md/.venv/bin/activate
+. /cfs/klemming/projects/supr/naiss2025-5-614/lsalicar/WP3-P3-workflow/md/.venv/bin/activate
 
 # =========== ====================== =========== #
 # =========== DATA and WORKFLOW PATH =========== #
