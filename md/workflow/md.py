@@ -420,8 +420,32 @@ def main() -> None:
         # save out variables
         out[pdb.stem] = [topology, protein_npt]
 
-    compss_barrier()
-    compss_snapshot()
+        # +++++++++++ Production run
+        # Note: same structure and functions as eq
+        prod_npt_mdp = str(dataset / "md-charmm.mdp")
+        prod_npt_tpr = str(output_subdir / "prod_npt.tpr")
+        npt_preprocess(
+            npt_mdp=prod_npt_mdp,
+            protein_eq=protein_npt,
+            topology=topology,
+            npt_tpr=prod_npt_tpr,
+        )
+
+        prod_npt_log = str(output_subdir / "prod_npt_log.log")
+        protein_prod_npt = str(output_subdir / "protein_prod_npt.gro")
+        prod_npt_cpt = str(output_subdir / "prod_npt_traj.cpt")
+        prod_npt_energy = str(output_subdir / "prod_npt_energy.edr")
+        npt(
+            npt_tpr=prod_npt_tpr,
+            log=prod_npt_log,
+            protein_npt=protein_prod_npt,
+            npt_cpt=prod_npt_cpt,
+            npt_energy=prod_npt_energy,
+        )
+
+
+    #compss_barrier()
+    #compss_snapshot()
 
     # for pdb in pdb_files:
     #     output_subdir = output_dir / pdb.stem

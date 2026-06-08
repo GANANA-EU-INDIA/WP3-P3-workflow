@@ -5,29 +5,29 @@
 # These usually tend to remain unchanged between runs.
 # Those that change between different execution of the
 # workflow are handled by the Makefile/submit_workflow
-ACCOUNT=GNANA_IMM_PRED
-QUEUE=boost_usr_prod
-QOS=boost_qos_dbg
+ACCOUNT=naiss2026-3-348
+QUEUE=gpu
 
 # =========== ====================== =========== #
 # ===========    HPC modules load    =========== #
 # =========== ====================== =========== #
-ml purge
 #  COMPSs
-module use --append $PUBLIC/spack/share/spack/modules/linux-rhel8-icelake
+#ml purge
+#export SPACK_USER_PREFIX=/cfs/klemming/projects/supr/naiss2025-5-614/lsalicar/.local/spack
+ml PDC
+ml spack-user
+unset SPACK_DISABLE_LOCAL_CONFIG
+export SPACK_USER_PREFIX=/cfs/klemming/projects/supr/naiss2025-5-614/lsalicar/.local/spack
+module use --prepend /cfs/klemming/projects/supr/naiss2025-5-614/lsalicar/.local/spack/modules/tcl/linux-sles15-zen2
 ml compss
-# FIX FOR LEONARDO CLUSTER (spack installation)
-if [[ "$(uname -n)" == *"leonardo"* ]]; then
-    COMPSS_HOME=$COMPSS_HOME/compss
-fi
 
 #  GROMACS
 # add gmx_mpi bin path to PATH
-ml gromacs
+ml gromacs/2026.1-gpu
 # Flags for GPU usage of gromacs
-export GMX_GPU_DD_COMMS=true  # not require from Gromacs 2025 onward. Kept for retrocompatibility
-export GMX_GPU_PME_PP_COMMS=true
-export GMX_FORCE_UPDATE_DEFAULT_GPU=true
+#export GMX_GPU_DD_COMMS=true  # not require from Gromacs 2025 onward. Kept for retrocompatibility
+#export GMX_GPU_PME_PP_COMMS=true
+#export GMX_FORCE_UPDATE_DEFAULT_GPU=true
 
 export GMXBIN_NAME="gmx_mpi" # This env var is used inside the workflow
 # Custom FF path location
@@ -37,7 +37,7 @@ export GMXLIB=$ROOT_PATH/data
 # =========== ====================== =========== #
 # ===========   Python environment   =========== #
 # =========== ====================== =========== #
-. $ROOT_PATH/${WORKFLOWNAME}_env/bin/activate
+#. /cfs/klemming/projects/supr/naiss2025-5-614/lsalicar/WP3-P3-workflow/md/.venv/bin/activate
 
 # =========== ====================== =========== #
 # =========== DATA and WORKFLOW PATH =========== #
