@@ -26,7 +26,7 @@ GMXBIN_NAME = os.environ["GMXBIN_NAME"]
 
 # Arguments to control OpenMP threads etc.
 # NOTE: it can be changed in the Worflow, placed here for convinience
-OPENMP_THREADS = 16
+OPENMP_THREADS = 8
 
 
 parser = argparse.ArgumentParser()

@@ -2,7 +2,7 @@ WORKFLOWNAME = md
 # Prefer absolute paths
 INPUT_DIR = examples/pdb/input
 OUTPUT_DIR = examples/pdb/output
-NODES = 1
+NODES = 2
 CPUS_PER_NODE = 16
 EXEC_TIME = 120
 GRES_GPUS = 1

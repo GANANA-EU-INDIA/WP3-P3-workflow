@@ -69,6 +69,7 @@ enqueue_compss \
     --queue=${QUEUE} \
     --cpus_per_node=${CPUS_PER_NODE} \
     --wall_clock_limit=$WALL_CLOCK_LIMIT \
+    --gpus_per_node=${GRES_GPUS} \
     --lang=python \
     --pythonpath=$PYTHONPATH \
     --classpath=$WF_PATH \
