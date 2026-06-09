@@ -21,7 +21,7 @@ export SPACK_USER_PREFIX=/cfs/klemming/projects/supr/naiss2025-5-614/lsalicar/.l
 module use --prepend /cfs/klemming/projects/supr/naiss2025-5-614/lsalicar/.local/spack/modules/tcl/linux-sles15-zen2
 ml compss
 
-ml openmpi/5.0.8-gcc12.2.0-multi-node
+ml openmpi
 
 #  GROMACS
 # add gmx_mpi bin path to PATH
