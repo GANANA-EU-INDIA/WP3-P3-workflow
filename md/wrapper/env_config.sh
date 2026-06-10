@@ -15,6 +15,7 @@ QOS=boost_qos_dbg
 ml purge
 #  COMPSs
 module use --append $PUBLIC/spack/share/spack/modules/linux-rhel8-icelake
+module use --append $PUBLIC/spack/share/spack/modules/linux-rhel8-x86_64
 ml compss
 
 #  GROMACS
