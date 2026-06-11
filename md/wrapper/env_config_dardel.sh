@@ -61,7 +61,7 @@ export PATH=$PATH:$WF_PATH/scripts
 # allocated time from Slurms ends.
 # https://compss-doc.readthedocs.io/en/stable/Sections/03_Execution_Environments/03_Deployments/01_Master_worker/02_Supercomputers/01_Executing.html#compss-job-submission
 # Give at least 5 minute
-EXEC_TIME_SEC=$((echo "$EXEC_TIME * 60") | bc)
+EXEC_TIME_SEC=$(echo "$EXEC_TIME * 60" | bc)
 TO_SUBSTRACT_SEC=$((echo "$EXEC_TIME_SEC * 5/100") | bc)
 if [ "$TO_SUBSTRACT_SEC" -lt 300 ]; then
     TO_SUBSTRACT_SEC=300
