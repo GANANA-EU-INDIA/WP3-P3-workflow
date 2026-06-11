@@ -65,7 +65,7 @@ export ROOT_PATH=$(dirname "$THIS_SCRIPT_PARENT_PATH")
 
 # Slurm arguments first, then COMPSs ones
 enqueue_compss \
-    --job_name=compss_{WORKFLOWNAME} \
+    --job_name=compss_${WORKFLOWNAME} \
     --exec_time=${EXEC_TIME} \
     --num_nodes=${NODES} \
     --cpus_per_node=${CPUS_PER_NODE} \
