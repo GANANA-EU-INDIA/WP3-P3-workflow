@@ -23,11 +23,13 @@ This guide assumes that you have [PyCOMPSs installed](./../docs/PyCOMPSs.md).
 
 ### Setup Python environment
 
-Create a Python virtual environment using (within a cluster, a Python module is assumed to be loaded or, in any case, the interpreter has to be available with `venv` and `pip`):
+Load the same Python that was used to install PyCOMPSs; if you followed the Spack recipie, load the compss module with the Python interpreter as dependency. The precise procedure changes from cluster to cluster, it can be as simple as `ml compss`. Then, create a Python virtual environment using:
 ```bash
-python -m venv ../envs/<venv_name>
+python -m venv ../envs/<venv_name> --system-site-packages
 . ../envs/<venv_name>/bin/activate
 ```
+> [!NOTE]
+> `--system-site-packages` is fundamental to make the pycompss package available when the venv is sourced.
 
 Add to the [`requirements.txt` file](./requirements.txt) the Python packages required by your workflow. Then, install them:
 ```bash
