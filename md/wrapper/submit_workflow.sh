@@ -75,8 +75,6 @@ enqueue_compss \
     --lang=python \
     --pythonpath=$WF_PATH \
     --classpath=$WF_PATH \
-    --master_working_dir=$OUTPUT_DIR \
-    --worker_working_dir=$OUTPUT_DIR \
     --log_dir=$OUTPUT_DIR \
     --scheduler=es.bsc.compss.scheduler.lookahead.successors.fifo.FifoTS \
     --checkpoint=es.bsc.compss.checkpoint.policies.CheckpointPolicyFinishedTasks \

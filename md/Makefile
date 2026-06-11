@@ -1,6 +1,6 @@
 WORKFLOWNAME = md
 # Prefer absolute paths
-INPUT_DIR = examples/pdb/inputs
+INPUT_DIR = examples/pdb/input
 OUTPUT_DIR = examples/pdb/output
 NODES = 1
 CPUS_PER_NODE = 32
