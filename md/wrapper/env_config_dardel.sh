@@ -7,6 +7,7 @@
 # workflow are handled by the Makefile/submit_workflow
 ACCOUNT=naiss2026-3-348
 QUEUE=gpu
+QOS=default
 
 # =========== ====================== =========== #
 # ===========    HPC modules load    =========== #

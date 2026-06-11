@@ -15,6 +15,7 @@ usage() {
     echo
     echo "Arguments (arguments follows Slurm terminology):"
     echo "  WORKFLOWNAME        Name of the workflow (e.g., md)"
+    echo "  CLUSTERNAME		Name of the cluster where to run workflow"
     echo "  INPUT_DIR           Input directory"
     echo "  OUTPUT_DIR          Output directory"
     echo "  NODES               Number of nodes to use"
@@ -23,7 +24,7 @@ usage() {
     echo "  GRES_GPUS           Number of GPUs per node"
     echo
     echo "Example:"
-    echo "  $0 md ./input/ ./output/ 2 32 20 1"
+    echo "  $0 md leonardo ./input/ ./output/ 2 32 20 1"
 }
 
 # If first argument is --help, show usage and exit
@@ -33,19 +34,20 @@ if [[ "$1" == "--help" ]]; then
 fi
 
 # Check if correct number of arguments provided
-if [[ $# -ne 7 ]]; then
+if [[ $# -ne 8 ]]; then
     echo "Error: Invalid number of arguments."
     usage
     exit 1
 fi
 
 export WORKFLOWNAME=$1
-export INPUT_DIR=$2
-export OUTPUT_DIR=$3
-export NODES=$4
-export CPUS_PER_NODE=$5
-export EXEC_TIME=$6
-export GRES_GPUS=$7
+export CLUSTERNAME=$2
+export INPUT_DIR=$3
+export OUTPUT_DIR=$4
+export NODES=$5
+export CPUS_PER_NODE=$6
+export EXEC_TIME=$7
+export GRES_GPUS=$8
 
 # =========== ====================== =========== #
 # ===========     ENVS and PATHS     =========== #
@@ -55,7 +57,7 @@ export ROOT_PATH=$(dirname "$THIS_SCRIPT_PARENT_PATH")
 
 # Setup shell environement for workflow execution.
 # See the file for more info and configurations.
-. $THIS_SCRIPT_PARENT_PATH/env_config.sh
+. $THIS_SCRIPT_PARENT_PATH/env_config_$CLUSTERNAME.sh
 
 # =========== ====================== =========== #
 # =========== CALL to ENQUEUE_COMPSS =========== #
@@ -63,13 +65,14 @@ export ROOT_PATH=$(dirname "$THIS_SCRIPT_PARENT_PATH")
 
 # Slurm arguments first, then COMPSs ones
 enqueue_compss \
-    --job_name=${WORKFLOWNAME} \
+    --job_name=compss_{WORKFLOWNAME} \
     --exec_time=${EXEC_TIME} \
     --num_nodes=${NODES} \
-    --queue=${QUEUE} \
     --cpus_per_node=${CPUS_PER_NODE} \
-    --wall_clock_limit=$WALL_CLOCK_LIMIT \
     --gpus_per_node=${GRES_GPUS} \
+    --queue=${QUEUE} \
+    --qos=${QOS} \
+    --wall_clock_limit=$WALL_CLOCK_LIMIT \
     --lang=python \
     --pythonpath=$PYTHONPATH \
     --classpath=$WF_PATH \
@@ -91,15 +94,11 @@ enqueue_compss \
 # - keep_workingdir keeps the temp directories used by the workers
 
 # Parking space for probabily useful arguments
-    # --gpus_per_node=${GRES_GPUS} \
-    #--worker_working_dir=$OUTPUT_DIR \
-    #--master_working_dir=$OUTPUT_DIR \
-#--extra_submit_flag=--account#${ACCOUNT} \
-# --provenance=$WF_PATH/md-provenance.yaml \
-    #--queue=${QUEUE} \
-    #--qos=${QOS} \
-    #--debug \
-    #--keep_workingdir \
+    # --worker_working_dir=$OUTPUT_DIR \
+    # --master_working_dir=$OUTPUT_DIR \
+    # --provenance=$WF_PATH/md-provenance.yaml \
+    # --debug \
+    # --keep_workingdir \
     # The following is a Policy that passes the compss tests
     # --checkpoint=es.bsc.compss.checkpoint.policies.CheckpointPolicyInstantiatedGroup \
     # --checkpoint_params=instantiated.group:20 \
