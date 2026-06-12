@@ -1,13 +1,15 @@
-- [Installation on HPC](#installation-on-hpc)
-  - [Overview](#overview)
-  - [Installation using Spack](#installation-using-spack)
-    - [Troubleshoot](#troubleshoot)
-  - [Example of manual installation on CINECA's Leonardo](#example-of-manual-installation-on-cinecas-leonardo)
-- [Infrastructure configuration](#infrastructure-configuration)
-  - [Queue system (scheduler)](#queue-system-scheduler)
-  - [Supercomputer](#supercomputer)
-- [Usage](#usage)
-  - [Miscellaneous notes](#miscellaneous-notes)
+# PyCOMPSs installation
+
+- [PyCOMPSs installation](#pycompss-installation)
+  - [Installation on HPC](#installation-on-hpc)
+    - [Overview](#overview)
+    - [Installation using Spack](#installation-using-spack)
+      - [**Troubleshoot**](#troubleshoot)
+    - [Example of manual installation on CINECA's Leonardo](#example-of-manual-installation-on-cinecas-leonardo)
+  - [Infrastructure configuration](#infrastructure-configuration)
+    - [Queue system (scheduler)](#queue-system-scheduler)
+    - [Supercomputer](#supercomputer)
+    - [Miscellaneous notes](#miscellaneous-notes)
 
 
 ## Installation on HPC
@@ -87,7 +89,7 @@ To test the installation just type `enqueue_compss --version`.
 [^2]: Custom repos are required because most probably you won't have the permission to add software to the main repo of your cluster
 
 
-#### Troubleshoot
+#### **Troubleshoot**
 
 <details>
 <summary>The user cannot create a personal repo in the cluster</summary>
@@ -113,7 +115,7 @@ and similarly when installing it.
 </details>
 
 <details>
-<summary>Problems installing COMPSs with gcc 13 or later</summary>
+<summary>Problems installing COMPSs 3.3 with gcc 13 or later</summary>
 
 COMPSs/PyCOMPSs installation requires C++ compilers. For `COMPSs@3.4` and earlier, you might encounter errors while compiling with `gcc@13` and later. To solve this issue, use `gcc@12`. To ensure this you can specify a [compilation preference](https://spack.readthedocs.io/en/latest/frequently_asked_questions.html#specific-compiler-for-all-packages) (for transitive dependencies, because COMPSs does not depend on `gcc` directly). On Spack 1.0 or later, find Spack's `package.yaml` with:
 ```bash
@@ -134,7 +136,7 @@ packages:
 <details>
 <summary>No module compss when using module load</summary>
 
-If you cannot find the `compss` module, you need to issue first (or append to your shell config file, e.g. `~/.bashrc`, to make it permanent) `module use --append $SPACK_HOME/modules/`.
+If you cannot find the `compss` module, you need to issue first (or append to your shell config file, e.g. `~/.bashrc`, to make it permanent) `module use --append $SPACK_HOME/modules/` or the location where Spack creates modules.
 </details>
 
 <details>
@@ -212,23 +214,23 @@ See the [COMPSs documentation](https://compss-doc.readthedocs.io/en/stable/Secti
 
 ### Queue system (scheduler)
 
-The cfg files contain a set of bash variables which are used by the other scripts. On one hand, the queue system cfgs contain variables to indicate the commands used by the system to submit and spawn processes, the commands or variables to get the allocated nodes and the directives to indicate the number of nodes, processes, etc.
+The `cfg` files contain a set of variables which are used by the other scripts. On one hand, the queue system `cfg`s contain variables to indicate the commands used by the system to submit and spawn processes, the commands or variables to get the allocated nodes and the directives to indicate the number of nodes, processes, etc.
 These are container in `$COMPSS_HOME/Runtime/scripts/queues/queue_systems/`.
 
 *The user is advice to not change them*.
 
 ### Supercomputer
 
-Supercomputers cfg files contains a set of variables to indicate the queue system used by a supercomputer, paths where the shared disk is mounted, etc.
+Supercomputers `cfg` files contains a set of variables to indicate the queue system used by a supercomputer, paths where the shared disk is mounted, etc.
 These files are contained in `$COMPSS_HOME/Runtime/scripts/queues/supercomputers/`.
 
-Let's take CINECA's cluster Leonardo as an example. You can rename the cfg file for Leonardo (multiple HPCs are distributed with COMPSs) as `default.cfg` and COMPSs will use it by default.
-At the top of the supercomputer file, you can set the queue system, for example Slurm, that uses the queue system cfg file, indeed the `slurm.cfg`.
+These files are provided with the COMPSs installation, aalready tuned for different supercomputers by the BSC team.
+We suggest to take a look at them to have an idea of the default paramenters. If not specified in the `enqueue_compss` flags, the `default.cfg` one is picked.
 
-If your cluster is already present, there is a good chance that the cfg file has been already tested on the infrastructure. Otherwise, the user might customized it to fit its needs.
+> [!NOTE]
+> In the Spack installation, when you set `COMPSS_SUPERCOMPUTER_CFG` the installer copies the selected supercomputed to `default.cfg` for you.
 
-
-## Usage
+For reproducibility, the `cfg` files stored in [`supercomputer_configs`](./supercomputer_configs/) are tested to work with the implementation of the [`md`](./../md/) workflow.
 
 ### Miscellaneous notes
 

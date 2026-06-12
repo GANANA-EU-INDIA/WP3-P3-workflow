@@ -7,16 +7,18 @@ Repository containing workflows and documentation for the [GANANA](https://ganan
 
 ## Workflows
 
-### `md`
-Workflow for MD simulations of the pMHC complex, based on the official [GROMACS introductory MD tutorial](https://tutorials.gromacs.org/docs/md-intro-tutorial.html).
+### [`md`](./md/)
+Workflow for MD simulations of the pMHC-CDR3 complex, based on the official [GROMACS introductory MD tutorial](https://tutorials.gromacs.org/docs/md-intro-tutorial.html).
 
 ## Documentation
 
-[Use this repo as a template](./docs/template.md).
-
-[Contribute to this repo](./docs/contribution.md).
+[Quickstart/Overview](./docs/quickstart.md)
 
 [Install and configure PyCOMPSs on a HPC](./docs/PyCOMPSs.md).
+
+[Workflow setup and usage](./docs/workflow_setup_and_usage.md).
+
+[Contribute to this repo](./docs/contribution.md).
 
 ## Authors
 
