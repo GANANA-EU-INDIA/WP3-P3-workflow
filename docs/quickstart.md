@@ -24,6 +24,9 @@ git switch -c new-branch-name
 
 ## 2. Install PyCOMPSs on HPC
 
+> [!NOTE]
+> More post-installation configurations and troubleshoots can be found in the extended version: [PyCOMPSs installation documentation](./PyCOMPSs.md)
+
 The recommended method is via **Spack**. Make sure Spack is available in your shell (e.g. `module load spack`).
 
 **Step 1 — Create a personal Spack repo** (skip if you already have one):
@@ -63,10 +66,11 @@ Verify the installation:
 enqueue_compss --version
 ```
 
-More post-installation configurations and troubleshoots can be found in [PyCOMPSs installation documentation](./PyCOMPSs.md).
-
 
 ## 4. Set up and run the workflow
+
+> [!NOTE]
+> For a full description, see the extended version: [`workflow setup and usage`](./workflow_setup_and_usage.md).
 
 **Python environment** — create a Python environment for your workflow:
 
@@ -101,9 +105,11 @@ make CLUSTERNAME=dardel NODES=4     # override specific arguments
 make clean
 ```
 
-For a full description of the repository structure and how to wrap additional Slurm/COMPSs arguments, see [`workflow setup and usage`](./workflow_setup_and_usage.md).
 
 ## 5. Contribute back
+
+> [!NOTE]
+> See more info in the [contribution documentation](./contribution.md)
 
 Made an improvement? Open a Pull Request:
 
@@ -116,5 +122,3 @@ git push origin feat-branch-name
 Then open a PR to the [main repository](https://github.com/GANANA-EU-INDIA/WP3-P3-md-workflow/pulls) and wait for review.
 
 For bugs or feature requests, [open an issue](https://github.com/GANANA-EU-INDIA/WP3-P3-md-workflow/issues) using the provided templates.
-
-See more info in the [contribution documentation](./contribution.md)
