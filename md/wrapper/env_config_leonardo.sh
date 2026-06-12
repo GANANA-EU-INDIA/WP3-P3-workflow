@@ -10,6 +10,24 @@ QUEUE=boost_usr_prod
 QOS=boost_qos_dbg
 
 # =========== ====================== =========== #
+# ===========       PyCOMPSs         =========== #
+# =========== ====================== =========== #
+EXTRA_COMPSS_FLAGS=(
+    --extra_submit_flag=--account#${ACCOUNT}
+    --keep_workingdir
+)
+
+# Possible useful flags
+# --worker_working_dir=$OUTPUT_DIR \
+# --master_working_dir=$OUTPUT_DIR \
+# --provenance=$WF_PATH/md-provenance.yaml \
+# --debug \
+# --keep_workingdir \
+# The following is a Policy that passes the compss tests
+# --checkpoint=es.bsc.compss.checkpoint.policies.CheckpointPolicyInstantiatedGroup \
+# --checkpoint_params=instantiated.group:20 \
+
+# =========== ====================== =========== #
 # ===========    HPC modules load    =========== #
 # =========== ====================== =========== #
 ml purge

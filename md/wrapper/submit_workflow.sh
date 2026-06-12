@@ -84,7 +84,7 @@ enqueue_compss \
     --graph \
     --summary \
     --monitoring=1000 \
-    --project_name=${ACCOUNT} \
+    "${EXTRA_COMPSS_FLAGS[@]}" \
     $WORKFLOW_FILE -d $INPUT_DIR -o $OUTPUT_DIR
 
 # COMMENTS
@@ -92,14 +92,4 @@ enqueue_compss \
 # - be very careful with trailing white spaces after the escape char \, they cause bash to not read the following line
 # - in --extra_submit_flag, spaces has to be translated into "#"
 # - keep_workingdir keeps the temp directories used by the workers
-
-# Parking space for probabily useful arguments
-    # --worker_working_dir=$OUTPUT_DIR \
-    # --master_working_dir=$OUTPUT_DIR \
-    # --provenance=$WF_PATH/md-provenance.yaml \
-    # --debug \
-    # --keep_workingdir \
-    # The following is a Policy that passes the compss tests
-    # --checkpoint=es.bsc.compss.checkpoint.policies.CheckpointPolicyInstantiatedGroup \
-    # --checkpoint_params=instantiated.group:20 \
 
