@@ -5,7 +5,7 @@ INPUT_DIR = examples/pdb/input
 OUTPUT_DIR = examples/pdb/output
 NODES = 2
 CPUS_PER_NODE = 16
-EXEC_TIME = 120
+EXEC_TIME = 30
 GRES_GPUS = 1
 
 # Usage: make
