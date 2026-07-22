@@ -1,8 +1,8 @@
 WORKFLOWNAME = md
 CLUSTERNAME = leonardo
 # Prefer absolute paths
-INPUT_DIR = examples/pdb/input
-OUTPUT_DIR = examples/pdb/output
+INPUT_DIR = $(shell pwd)/examples/pdb/input
+OUTPUT_DIR = $(shell pwd)/examples/pdb/output
 NODES = 2
 CPUS_PER_NODE = 16
 EXEC_TIME = 30
