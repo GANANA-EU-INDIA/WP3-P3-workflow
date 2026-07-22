@@ -49,6 +49,11 @@ export GMXBIN_NAME="gmx_mpi" # This env var is used inside the workflow
 # https://manual.gromacs.org/2024.6/onlinehelp/gmx-pdb2gmx.html#description
 export GMXLIB=$ROOT_PATH/data
 
+if [ ! -d "$GMXLIB/charmm36-jul2022.ff" ] || [ -z "$(ls -A $GMXLIB/charmm36-jul2022.ff 2>/dev/null)" ]; then
+    echo "ERROR: $GMXLIB/charmm36-jul2022.ff directory is missing or empty"
+    exit 1
+fi
+
 # =========== ====================== =========== #
 # ===========   Python environment   =========== #
 # =========== ====================== =========== #
