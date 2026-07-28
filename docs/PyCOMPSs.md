@@ -2,7 +2,6 @@
 
 - [PyCOMPSs installation](#pycompss-installation)
   - [Installation on HPC](#installation-on-hpc)
-    - [Overview](#overview)
     - [Installation using Spack](#installation-using-spack)
       - [**Troubleshoot**](#troubleshoot)
     - [Example of manual installation on CINECA's Leonardo](#example-of-manual-installation-on-cinecas-leonardo)
@@ -20,14 +19,6 @@ The COMPSs documentation provides already a good overview of the process and the
 - [Installation overview](https://compss-doc.readthedocs.io/en/stable/Sections/01_Installation_Configuration.html)
 - [COMPSs documentation on dependencies](https://compss-doc.readthedocs.io/en/stable/Sections/01_Installation_Configuration/01_Dependencies/02_Supercomputer.html)
 - [COMPSs documentation on HPC installation](https://compss-doc.readthedocs.io/en/stable/Sections/01_Installation_Configuration/02_Installation/03_Supercomputers.html).
-
-### Overview
-
-The bird's-eye view of the installation steps is the following:
-1. Satisfy dependencies and set environmental variables
-2. Download the provided binaries and use the included bash script to install them in the target directory
-3. [Configure the COMPSs installation](#infrastructure-configuration) to work in the cluster
-4. Make COMPSs available on the shell (thourgh, for example, modules)
 
 ### Installation using Spack
 
@@ -149,6 +140,8 @@ To fix this, you need to modify accordingly to the error the `package.py` file i
 
 
 ### Example of manual installation on [CINECA's Leonardo](https://www.hpc.cineca.it/systems/hardware/leonardo/)
+
+This installation follows the [official one](https://compss-doc.readthedocs.io/en/stable/Sections/01_Installation_Configuration.html).
 
 > [!NOTE]
 > Tested on 2025/10/20. This test is reported only as test case example in case the Spack installation fails. Please, refer to COMPSs documentation for more info and guidance on your cluster.
