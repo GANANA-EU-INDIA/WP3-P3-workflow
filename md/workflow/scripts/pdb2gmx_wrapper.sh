@@ -1,4 +1,4 @@
-#/bin/bash -e
+#!/bin/bash -e
 
 # Leonardo Salicari: 2025/09
 # This wrapper solve a practival problem:
