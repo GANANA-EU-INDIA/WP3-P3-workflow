@@ -104,9 +104,11 @@ and similarly when installing it.
 </details>
 
 <details>
-<summary>Problems installing COMPSs 3.3 with gcc 13 or later</summary>
+<summary>Errors while compiling COMPSs with gcc 13 or later</summary>
 
-COMPSs/PyCOMPSs installation requires C++ compilers. For `COMPSs@3.4` and earlier, you might encounter errors while compiling with `gcc@13` and later. To solve this issue, use `gcc@12`. To ensure this you can specify a [compilation preference](https://spack.readthedocs.io/en/latest/frequently_asked_questions.html#specific-compiler-for-all-packages) (for transitive dependencies, because COMPSs does not depend on `gcc` directly). On Spack 1.0 or later, find Spack's `package.yaml` with:
+There are two possibilities. You can unsure that the C compilation is compliant with the COMPSs code by specifying the environmental variable `export CFLAGS="-std=gnu17" before installing COMPSs. This is a easy fix with recent `gcc` versions. You might need to modify the spack recipe in case the variable is not correctly used. 
+
+On the other side, one can use `gcc` 12 by specifying to spack to use it. To ensure this you can specify a [compilation preference](https://spack.readthedocs.io/en/latest/frequently_asked_questions.html#specific-compiler-for-all-packages) (for transitive dependencies, because COMPSs does not depend on `gcc` directly). On Spack 1.0 or later, find Spack's `package.yaml` with:
 ```bash
 spack config edit packages
 ```
