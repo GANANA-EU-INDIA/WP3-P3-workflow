@@ -1,15 +1,17 @@
 #!/usr/bin/env bash
 # COMPSs Monitor Runner Script, locally
 # This script helps users run the COMPSs monitor locally by:
-# 1. Checking Docker availability and pulling the COMPSs image
+# 1. Detecting container runtime (docker/podman) and pulling the COMPSs image
 # 2. Mounting remote .COMPSs directory via SSHFS
-# 3. Starting the COMPSs monitor in a Docker container
+# 3. Starting the COMPSs monitor in a container
 
 set -e
 
 # Configuration
 COMPSS_IMAGE="compss/compss:3.4"
 COMPSS_PORT="8080"
+# Prefer docker, fall back to podman (daemonless, rootless by default)
+CONTAINER_CMD=""
 
 # Colors for output
 RED='\033[0;31m'
@@ -35,34 +37,29 @@ print_error() {
     echo -e "${RED}[ERROR]${NC} $1"
 }
 
-# Check if Docker is installed and running
-check_docker() {
-    print_info "Checking Docker installation..."
-    
-    if ! command -v docker &> /dev/null; then
-        print_error "Docker is not installed. Please install Docker first."
-        echo "Visit: https://docs.docker.com/get-docker/"
+# Detect available container runtime (prefer docker, fall back to podman)
+setup_container_cmd() {
+    if command -v docker &> /dev/null && docker info &> /dev/null; then
+        CONTAINER_CMD="docker"
+    elif command -v podman &> /dev/null; then
+        CONTAINER_CMD="podman"
+    else
+        print_error "No container runtime found. Please install Docker or Podman."
         exit 1
     fi
-    
-    if ! docker info &> /dev/null; then
-        print_error "Docker daemon is not running. Please start Docker first."
-        exit 1
-    fi
-    
-    print_success "Docker is installed and running"
+    print_success "Using $CONTAINER_CMD"
 }
 
-# Pull COMPSs Docker image if not present
+# Pull COMPSs image if not present
 pull_compss_image() {
-    print_info "Checking for COMPSs Docker image: $COMPSS_IMAGE"
+    print_info "Checking for image: $COMPSS_IMAGE"
     
-    if docker image inspect "$COMPSS_IMAGE" &> /dev/null; then
-        print_success "COMPSs image already exists locally"
+    if $CONTAINER_CMD image inspect "$COMPSS_IMAGE" &> /dev/null; then
+        print_success "Image already exists locally"
         print_info "To use a different version, modify COMPSS_IMAGE in the script configuration"
     else
         print_info "Pulling $COMPSS_IMAGE..."
-        docker pull "$COMPSS_IMAGE"
+        $CONTAINER_CMD pull "$COMPSS_IMAGE"
         print_success "Image pulled successfully"
     fi
 }
@@ -183,11 +180,11 @@ mount_compss() {
     fi
 }
 
-# Start COMPSs monitor in Docker container
+# Start COMPSs monitor in container
 start_monitor() {
     local local_path=$1
     
-    print_info "Starting COMPSs monitor in Docker container..."
+    print_info "Starting COMPSs monitor in $CONTAINER_CMD container..."
     echo ""
     echo "Container configuration:"
     echo "  Image: $COMPSS_IMAGE"
@@ -196,7 +193,7 @@ start_monitor() {
     echo ""
     
     # Check if container is already running
-    if docker ps --format '{{.Names}}' | grep -q "compss-monitor"; then
+    if $CONTAINER_CMD ps --format '{{.Names}}' | grep -q "compss-monitor"; then
         print_warning "A container named 'compss-monitor' is already running"
         echo ""
         print_success "COMPSs monitor is already running!"
@@ -204,13 +201,13 @@ start_monitor() {
         echo "Login: /"
         echo ""
         echo "To restart, stop the container first:"
-        echo "  docker stop compss-monitor"
+        echo "  $CONTAINER_CMD stop compss-monitor"
         return 0
     fi
     
     # Start new container with --rm flag for automatic cleanup
-    print_info "Starting Docker container..."
-    docker run -d \
+    print_info "Starting $CONTAINER_CMD container..."
+    $CONTAINER_CMD run -d \
         --rm \
         --name compss-monitor \
         -p ${COMPSS_PORT}:8080 \
@@ -223,7 +220,7 @@ start_monitor() {
         
         # Start the monitor inside the container
         print_info "Starting COMPSs monitor service..."
-        docker exec compss-monitor /etc/init.d/compss-monitor start
+        $CONTAINER_CMD exec compss-monitor /etc/init.d/compss-monitor start
         
         echo ""
         echo -e "${GREEN}========================================${NC}"
@@ -236,36 +233,77 @@ start_monitor() {
         echo "Login: /"
         echo ""
         echo "To stop the monitor (container will auto-remove):"
-        echo "  docker stop compss-monitor"
+        echo "  $CONTAINER_CMD stop compss-monitor"
         echo ""
         echo "To unmount the remote directory when done:"
         echo "  fusermount -u $local_path"
         echo "  # or: umount $local_path"
         echo ""
     else
-        print_error "Failed to start Docker container"
+        print_error "Failed to start $CONTAINER_CMD container"
         exit 1
     fi
+}
+
+# Stop COMPSs monitor and unmount SSHFS
+stop_monitor() {
+    print_info "Stopping COMPSs monitor..."
+    
+    # Check if container is running
+    if ! $CONTAINER_CMD ps --format '{{.Names}}' | grep -q "^compss-monitor$"; then
+        print_warning "No running container named 'compss-monitor' found"
+        print_info "Nothing to stop"
+        return 0
+    fi
+    
+    # Stop the container (--rm flag means it auto-removes)
+    $CONTAINER_CMD stop compss-monitor
+    print_success "Container 'compss-monitor' stopped"
+    
+    # Find and unmount SSHFS mount
+    print_info "Looking for SSHFS mount to unmount..."
+    local mount_path
+    mount_path=$(mount | grep sshfs | awk '{print $3}' | head -1)
+    
+    if [ -z "$mount_path" ]; then
+        print_info "No SSHFS mount found (already unmounted or never mounted)"
+    else
+        print_info "Found SSHFS mount at: $mount_path"
+        if fusermount -u "$mount_path" 2>/dev/null; then
+            print_success "SSHFS unmounted"
+        else
+            print_warning "Failed to unmount. Try manually: fusermount -u $mount_path"
+        fi
+    fi
+    
+    echo ""
+    print_success "COMPSs monitor stopped"
 }
 
 # Display usage information
 usage() {
     echo "Usage: $0 <cluster> <remote_parent_path> [local_path]"
+    echo "       $0 --detach | --stop"
     echo ""
     echo "Arguments:"
     echo "  cluster            SSH alias for the cluster (configure in ~/.ssh/config)"
     echo "  remote_parent_path Parent directory path where .COMPSs lives (without /.COMPSs)"
     echo "  local_path         Local mount point (default: ~/.COMPSs)"
     echo ""
+    echo "Options:"
+    echo "  --detach, --stop   Stop the monitor container and unmount SSHFS"
+    echo "  -h, --help         Show this help message"
+    echo ""
     echo "Example:"
     echo "  $0 leonardo /leonardo_scratch/large/userinternal/lsalicar/WP3-P3-workflow"
     echo "  $0 dardel /home/user/projects ~/compss-logs"
+    echo "  $0 --detach"
     echo ""
     echo "This script will:"
-    echo "  1. Check Docker installation and pull COMPSs image if needed"
+    echo "  1. Detect container runtime (docker/podman) and pull image if needed"
     echo "  2. Check SSHFS installation"
     echo "  3. Mount remote .COMPSs directory via SSHFS"
-    echo "  4. Start COMPSs monitor in a Docker container"
+    echo "  4. Start COMPSs monitor in a container"
     echo ""
     echo "More info in the official doc: https://compss-doc.readthedocs.io/en/latest/Sections/04_Ecosystem/02_Monitor/02_Supercomputer.html"
     echo "The monitor will be available at: http://localhost:8080/compss-monitor"
@@ -281,6 +319,12 @@ main() {
     # Check for help flag
     if [[ "$1" == "-h" || "$1" == "--help" ]]; then
         usage
+        exit 0
+    fi
+    
+    # Check for detach/stop flag
+    if [[ "$1" == "--detach" || "$1" == "--stop" ]]; then
+        stop_monitor
         exit 0
     fi
     
@@ -308,8 +352,8 @@ main() {
     echo "  Local mount path: $local_path"
     echo ""
     
-    # Step 1: Check Docker
-    check_docker
+    # Step 1: Detect container runtime
+    setup_container_cmd
     echo ""
     
     # Step 2: Pull COMPSs image
