@@ -64,6 +64,7 @@ export ROOT_PATH=$(dirname "$THIS_SCRIPT_PARENT_PATH")
 # =========== ====================== =========== #
 
 # Slurm arguments first, then COMPSs ones
+# To add more flags, please use the env_config_CLUSTER.sh files
 enqueue_compss \
     --job_name=compss_${WORKFLOWNAME} \
     --exec_time=${EXEC_TIME} \
@@ -77,22 +78,9 @@ enqueue_compss \
     --pythonpath=$PYTHONPATH \
     --classpath=$WF_PATH \
     --log_dir=$OUTPUT_DIR \
-    --scheduler=es.bsc.compss.scheduler.lookahead.successors.fifo.FifoTS \
-    --checkpoint=es.bsc.compss.checkpoint.policies.CheckpointPolicyFinishedTasks \
-    --checkpoint_params=finished.tasks:1 \
-    --checkpoint_folder=$OUTPUT_DIR/.checkpoints/ \
-    --graph \
-    --summary \
-    --monitoring=1000 \
-    --log_level=debug \
     "${EXTRA_COMPSS_FLAGS[@]}" \
     $WORKFLOW_FILE -d $INPUT_DIR -o $OUTPUT_DIR
 
-# COMMENTS
+# Note:
 # - lang, despite the documentation saying that the program infers it, it fails. Probably due to the arguments
 # - be very careful with trailing white spaces after the escape char \, they cause bash to not read the following line
-# - in --extra_submit_flag, spaces has to be translated into "#"
-# - keep_workingdir keeps the temp directories used by the workers
-# --monitoring=1000 \
-# --log_level=debug both are needed to start monitoring
-

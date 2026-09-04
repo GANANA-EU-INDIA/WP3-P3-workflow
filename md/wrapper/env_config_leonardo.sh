@@ -14,14 +14,25 @@ QOS=boost_qos_dbg
 # =========== ====================== =========== #
 EXTRA_COMPSS_FLAGS=(
     --extra_submit_flag=--account#${ACCOUNT}
+    --graph
+    --summary
+    --monitoring=1000
+    --debug
     --keep_workingdir
+    --worker_working_dir=$(pwd)
 )
 
+# COMMENTS
+# - in --extra_submit_flag, spaces has to be translated into "#"
+# - keep_workingdir keeps the temp directories used by the workers
 # Possible useful flags
+# --scheduler=es.bsc.compss.scheduler.lookahead.successors.fifo.FifoTS
+# --checkpoint=es.bsc.compss.checkpoint.policies.CheckpointPolicyFinishedTasks
+# --checkpoint_params=finished.tasks:1
+# --checkpoint_folder=$OUTPUT_DIR/.checkpoints/
 # --worker_working_dir=$OUTPUT_DIR \
 # --master_working_dir=$OUTPUT_DIR \
 # --provenance=$WF_PATH/md-provenance.yaml \
-# --debug \
 # --keep_workingdir \
 # The following is a Policy that passes the compss tests
 # --checkpoint=es.bsc.compss.checkpoint.policies.CheckpointPolicyInstantiatedGroup \

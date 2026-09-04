@@ -14,6 +14,12 @@ QOS=default
 # =========== ====================== =========== #
 EXTRA_COMPSS_FLAGS=(
     --project_name=${ACCOUNT}
+    --graph
+    --summary
+    --monitoring=1000
+    --debug
+    --keep_workingdir
+    --worker_working_dir=$(pwd)
 )
 
 # =========== ====================== =========== #
