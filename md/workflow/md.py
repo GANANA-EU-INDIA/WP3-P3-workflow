@@ -62,15 +62,12 @@ def remove_heteratom(pdb_original, pdb_protein_only) -> None:
 
 
 @binary(
-    binary="pdb2gmx_wrapper.sh",
-    args=" {{protein}} {{structure}} {{topology}} {{ff}} {{water}}",
+    binary=GMXBIN_NAME,
+    args="pdb2gmx -f {{protein}} -o {{structure}} -p {{topology}} -ignh -ff {{ff}} -water {{water}} -merge all",
 )
 @task(protein=FILE_IN, structure=FILE_OUT, topology=FILE_OUT)
 def generate_topology(protein=None, structure=None, topology=None, ff=None, water=None) -> None:
     """
-    1. calls: GMXBIN_NAME pdb2gmx -f ${PROTEIN} -o ${STRUCTURE} -p ${TOPOLOGY} -ignh -ff ${FF} -water ${WATER}
-    2. substitute external itp's (created when multiple chains are
-    present in the same pdb) into .top file
     """
     pass
 
