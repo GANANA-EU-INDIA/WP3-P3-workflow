@@ -204,7 +204,7 @@ $ spack repo list
 [+] <repo name>    v2.4    /path/to/<repo name>
 ```
 
-If `builtin` is higher than you personal `<repo name>`, as in the above output, Spack might not find `compss` because it search for it in `builtins`. To solve this, you can specify the namespace from which the package should be installed:
+If `builtin` is higher than you personal `<repo name>`, as in the above output, Spack might not find `compss` because it searches for it in `builtins`. To solve this, you can specify the namespace from which the package should be installed:
 
 ```bash
 spack spec -Il <repo name>.compss
@@ -217,7 +217,7 @@ and similarly when installing it.
 <details>
 <summary>Errors while compiling COMPSs with gcc 13 or later</summary>
 
-There are two possibilities. You can unsure that the C compilation is compliant with the COMPSs code by specifying the environmental variable `export CFLAGS="-std=gnu17"` before installing COMPSs. This is a easy fix with recent `gcc` versions. You might need to modify the spack recipe in case the variable is not correctly used.
+There are two possibilities. You can unsure that the C compilation is compliant with the COMPSs code by specifying the environmental variable `export CFLAGS="-std=gnu17"` before installing COMPSs. This is an easy fix with recent `gcc` versions. You might need to modify the spack recipe in case the variable is not correctly used.
 
 On the other side, one can use `gcc` 12 by specifying to spack to use it. To ensure this you can specify a [compilation preference](https://spack.readthedocs.io/en/latest/frequently_asked_questions.html#specific-compiler-for-all-packages) (for transitive dependencies, because COMPSs does not depend on `gcc` directly). On Spack 1.0 or later, find Spack's `package.yaml` with:
 
@@ -258,7 +258,7 @@ If you cannot find the `compss` module, you need to issue first (or append to yo
 <details>
 <summary>enqueue_compss runs but it cannot find other binaries</summary>
 
-If binaries like `enqueue_compss` or related are in the `PATH` variable, but do not work when invokate, inspect the module file generated with `ml show compss`. A common problem is an incorrect `COMPSS_HOME` environmental variable.
+If binaries like `enqueue_compss` or related are in the `PATH` variable, but do not work when invoked, inspect the module file generated with `ml show compss`. A common problem is an incorrect `COMPSS_HOME` environmental variable.
 
 To fix this, you need to modify accordingly to the error the `package.py` file in the `env.set("COMPSS_HOME", compss_home)` line.
 
@@ -272,11 +272,11 @@ where `sc.cfg` is the supercomputer config file and `queue_system.cfg` is the co
 
 ### Supercomputer
 
-This file is selected during [installation](#installation-on-hpc) when calling `./install` or with the env var `COMPSS_SUPERCOMPUTER_CFG`. Afterwards, it is renamed as `default.cfg` in the COMPSs installation directory (`<targetDir>Runtime/scripts/queues/supercomputers/default.cfg` or `$COMPSS_HOME/Runtime/scripts/queues/supercomputers/default.cfg`), where config files for other clusters are.
+This file is selected during [installation](#installation-on-hpc) when calling `./install` or with the env var `COMPSS_SUPERCOMPUTER_CFG`. Afterward, it is renamed as `default.cfg` in the COMPSs installation directory (`<targetDir>Runtime/scripts/queues/supercomputers/default.cfg` or `$COMPSS_HOME/Runtime/scripts/queues/supercomputers/default.cfg`), where config files for other clusters are.
 
 Supercomputers `cfg` files contains a set of variables to indicate the queue system used by a supercomputer, paths where the shared disk is mounted, etc.
 These files are provided with the COMPSs installation, already tuned for different supercomputers by the BSC team.
-We suggest to take a look at them to have an idea of the default paramenters. If not specified in the `enqueue_compss` flags, the `default.cfg` one is picked.
+We suggest taking a look at them to have an idea of the default parameters. If not specified in the `enqueue_compss` flags, the `default.cfg` one is picked.
 
 For reproducibility, in this repo the `cfg` files stored in [`supercomputer_configs`](./supercomputer_configs/) are tested to work with the implementation of the [`md`](./../md/) workflow.
 
@@ -292,8 +292,8 @@ _The user is advice to not change them_.
 > [!NOTE]
 > These are some notes for version 3.3.3 for edge cases or non-standard behaviors.
 
-- the `bin` argument `working_dir` can lead to problems even if the file passed as arguments of the function are described by absolute paths. The example is using `pdb_delhetatom`, in which specifying the working dir as the parent to the input and output directories, messes up the paths eventhough in the `main` function these are passed as `str` of the absolute, resolved, path. (still don't know why).
-- the explicitely defined arguments to a binary inside the `binary` decorator is cleaner, hence it is best practive, than defining arguments through the python function arguments. See [`md.py`](../md/workflow/md.py).
+- the `bin` argument `working_dir` can lead to problems even if the file passed as arguments of the function are described by absolute paths. The example is using `pdb_delhetatom`, in which specifying the working dir as the parent to the input and output directories, messes up the paths even though in the `main` function these are passed as `str` of the absolute, resolved, path. (still don't know why).
+- the explicitely defined arguments to a binary inside the `binary` decorator is cleaner, hence it is best practice, than defining arguments through the python function arguments. See [`md.py`](../md/workflow/md.py).
 - shell scripts can be used to wrap another program/binary that does not a flag/way to specify which and how many files it produces (nor a directory where it outputs).
 - the `constraint` decorator instruct the task on the OMP threads to allocate for the task, among many other things. This implies that it set the `OMP_NUM_THREADS` environmental variable that, otherwise, cannot be exported before the `enqueue_compss` invocation.
 - when using `gmx mdrun` you should always check the `mdp` file that starts the simulation to know which file will be produced. A common error is the fact that, [if you don't specify the keywords `nstxout` and similar, you won't get a trajectory file](https://gromacs.bioexcel.eu/t/no-trajectory-trr-file-produced/6964). Only a checkpoint file will be produced. Hence, if in the workflow you specified to output a `trr` file but it does not appear, COMPSs will exit with an error, causing you headaches.
