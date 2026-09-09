@@ -324,6 +324,7 @@ main() {
     
     # Check for detach/stop flag
     if [[ "$1" == "--detach" || "$1" == "--stop" ]]; then
+        setup_container_cmd
         stop_monitor
         exit 0
     fi
