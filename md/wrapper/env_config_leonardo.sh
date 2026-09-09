@@ -43,13 +43,12 @@ EXTRA_COMPSS_FLAGS=(
 # =========== ====================== =========== #
 ml purge
 #  COMPSs
-module use --append $PUBLIC/spack/share/spack/modules/linux-rhel8-icelake
-module use --append $PUBLIC/spack/share/spack/modules/linux-rhel8-x86_64
-ml compss
+module use --append $PUBLIC/modules/
+ml compss/3.4
 
 #  GROMACS
 # add gmx_mpi bin path to PATH
-ml gromacs
+ml gromacs/2026.3
 # Flags for GPU usage of gromacs
 export GMX_GPU_DD_COMMS=true  # not require from Gromacs 2025 onward. Kept for retrocompatibility
 export GMX_GPU_PME_PP_COMMS=true
