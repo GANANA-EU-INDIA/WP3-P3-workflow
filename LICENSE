@@ -1,0 +1,13 @@
+European Union Public Licence v1.2 (EUPL)
+
+This project is licensed under the EUPL v1.2, except for:
+
+- md/examples/\*_/_.mdp — CC BY 4.0 (GROMACS tutorial)
+  https://creativecommons.org/licenses/by/4.0/
+  Source: https://gitlab.com/gromacs/online-tutorials/md-intro-tutorial
+
+- docs/supercomputer_configs/\*.cfg — Apache 2.0 (PyCOMPSs)
+  https://www.apache.org/licenses/LICENSE-2.0
+  Source: https://github.com/bsc-wdc/compss
+
+Full EUPL text: https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
