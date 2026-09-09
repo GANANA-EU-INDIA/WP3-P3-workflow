@@ -65,10 +65,11 @@ def remove_heteratom(pdb_original, pdb_protein_only) -> None:
     binary=GMXBIN_NAME,
     args="pdb2gmx -f {{protein}} -o {{structure}} -p {{topology}} -ignh -ff {{ff}} -water {{water}} -merge all",
 )
-@task(protein=FILE_IN, structure=FILE_OUT, topology=FILE_OUT)
-def generate_topology(protein=None, structure=None, topology=None, ff=None, water=None) -> None:
-    """
-    """
+@task(protein=FILE_IN, structure=FILE_OUT, topology=FILE_OUT, posre=FILE_OUT)
+def generate_topology(
+    protein=None, structure=None, topology=None, posre=None, ff=None, water=None
+) -> None:
+    """Generate topology file and posre.itp. the -merge all optino is used to have a single top"""
     pass
 
 
@@ -185,10 +186,13 @@ def enmin(
 @task(
     nvt_mdp=FILE_IN,
     protein_eq=FILE_IN,
+    posre=FILE_IN,
     topology=FILE_INOUT,
     nvt_tpr=FILE_OUT,
 )
-def nvt_preprocess(nvt_mdp=None, protein_eq=None, topology=None, nvt_tpr=None) -> None:
+def nvt_preprocess(
+    nvt_mdp=None, protein_eq=None, posre=None, topology=None, nvt_tpr=None
+) -> None:
     """Preprocess for NVT equilibratrion simulation"""
     pass
 
@@ -232,12 +236,14 @@ def eq_nvt(
 @task(
     npt_mdp=FILE_IN,
     protein_eq=FILE_IN,
+    posre=FILE_IN,
     topology=FILE_INOUT,
     npt_tpr=FILE_OUT,
 )
 def npt_preprocess(
     npt_mdp=None,
     protein_eq=None,
+    posre=None,
     topology=None,
     npt_tpr=None,
 ) -> None:
@@ -308,9 +314,15 @@ def main() -> None:
 
         # +++++++++++ Generate Topology files
         topology = str(output_subdir / "topology.top")
+        posre = str(output_subdir / "posre.itp")
         structure_processed = str(output_subdir / "structure_processed.gro")
         generate_topology(
-            protein=pdb_protein_only, topology=topology, structure=structure_processed, ff="charmm36-jul2022", water="tip3p"
+            protein=pdb_protein_only,
+            topology=topology,
+            posre=posre,
+            structure=structure_processed,
+            ff="charmm36-jul2022",
+            water="tip3p",
         )
 
         # +++++++++++ Solvation
@@ -377,6 +389,7 @@ def main() -> None:
             nvt_mdp=nvt_mdp,
             protein_eq=protein_emin,
             topology=topology,
+            posre=posre,
             nvt_tpr=nvt_tpr,
         )
 
@@ -398,6 +411,7 @@ def main() -> None:
         npt_preprocess(
             npt_mdp=npt_mdp,
             protein_eq=protein_nvt,
+            posre=posre,
             topology=topology,
             npt_tpr=npt_tpr,
         )
@@ -440,9 +454,8 @@ def main() -> None:
             npt_energy=prod_npt_energy,
         )
 
-
-    #compss_barrier()
-    #compss_snapshot()
+    # compss_barrier()
+    # compss_snapshot()
 
     # for pdb in pdb_files:
     #     output_subdir = output_dir / pdb.stem
