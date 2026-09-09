@@ -3,9 +3,16 @@
 - [Quickstart Guide](#quickstart-guide)
   - [1. Get the repository](#1-get-the-repository)
   - [2. Install PyCOMPSs on HPC](#2-install-pycompss-on-hpc)
+      - [Dependencies](#dependencies)
+      - [Manual installation](#manual-installation)
+      - [Spack (experimental)](#spack-experimental)
+      - [Verify](#verify)
   - [4. Set up and run the workflow](#4-set-up-and-run-the-workflow)
+      - [Python environment](#python-environment)
+      - [File structure](#file-structure)
+      - [Submit](#submit)
+      - [Clean up](#clean-up)
   - [5. Contribute back](#5-contribute-back)
-
 
 ## 1. Get the repository
 
@@ -25,86 +32,72 @@ git switch -c new-branch-name
 ## 2. Install PyCOMPSs on HPC
 
 > [!NOTE]
-> More post-installation configurations and troubleshoots can be found in the extended version: [PyCOMPSs installation documentation](./PyCOMPSs.md)
+> Full details: [PyCOMPSs installation](./PyCOMPSs.md).
 
-The recommended method is via **Spack**. Make sure Spack is available in your shell (e.g. `module load spack`).
+#### Dependencies
 
-**Step 1 — Create a personal Spack repo** (skip if you already have one):
+Java (11+), Boost, Python (3.11+), gcc, autotools. Load via your cluster's module system.
 
-```bash
-spack repo create path/to/root/repos <repo-name>
-spack repo add path/to/root/repos/<repo-name>
-```
-
-**Step 2 — Add COMPSs to the repo:**
+#### Manual installation
 
 ```bash
-spack create --name compss -N <repo-name>
-cp <this-repo>/docs/spack/<spack_version>/compss/package.py \
-   path/to/root/repos/<repo-name>/packages/compss/
+wget https://compss.bsc.es/repo/sc/stable/COMPSs_<version>.tar.gz
+tar -xvzf COMPSs_<version>.tar.gz
+cd COMPSs
+./install -T <targetDir> [<supercomputer.cfg>]
 ```
 
-> Two `package.py` variants are provided: `0_22/` for Spack `<= 0.22.x` and `1_00/` for Spack `1.0–1.2`.
+Create a TCL module file to expose `$COMPSS_HOME`, `PATH`, `CLASSPATH`, `PYTHONPATH`. See [PyCOMPSs.md](./PyCOMPSs.md) for a template.
 
-**Step 3 — Install**, specifying the supercomputer config:
+#### Spack (experimental)
+
+Not officially supported by COMPSs team. Requires personal Spack repo, custom `package.py` (provided in `docs/spack/`), and `COMPSS_SUPERCOMPUTER_CFG` env var. See [PyCOMPSs.md § Experimental](./PyCOMPSs.md#experimental-installation-using-spack).
+
+#### Verify
 
 ```bash
-spack spec -Il compss
-COMPSS_SUPERCOMPUTER_CFG=leonardo.cfg spack install compss
+enqueue_compss -h
 ```
-
-**Step 4 — Generate and load the module:**
-
-```bash
-spack module tcl refresh -y
-module load compss
-```
-
-Verify the installation:
-
-```bash
-enqueue_compss --version
-```
-
 
 ## 4. Set up and run the workflow
 
 > [!NOTE]
-> For a full description, see the extended version: [`workflow setup and usage`](./workflow_setup_and_usage.md).
+> Full details: [`workflow setup and usage`](./workflow_setup_and_usage.md).
 
-**Python environment** — create a Python environment for your workflow:
+#### Python environment
 
 ```bash
 python -m venv ../envs/<venv_name> --system-site-packages
-. ../envs/<venv_name>/bin/activate
+source ../envs/<venv_name>/bin/activate
 pip install -r requirements.txt
 ```
 
-The `--system-site-packages` flag is required to expose the PyCOMPSs package inside the venv.
+`--system-site-packages` exposes PyCOMPSs to the venv.
 
-**Adapt the workflow** — Inside the workflow directory (e.g.`md`), these files control the workflow execution:
+#### File structure
 
-- `workflow/md.py` — tasks and pipeline logic. This is the main file to modify when changing the workflow.
-- `wrapper/env_config_<cluster>.sh` — Slurm, PyCOMPSs `enqueue_compss` arguments, and modules to load before execution.
-- `wrapper/submit_workflow.sh` — wraps `enqueue_compss`.
-- `Makefile` — main file to trigger workflow submission. Contains some workflow arguments.
+| File                              | Purpose                                 | When to edit                       |
+| --------------------------------- | --------------------------------------- | ---------------------------------- |
+| `Makefile`                        | Entry point, default arguments          | Change workflow execution defaults |
+| `workflow/md.py`                  | Task definitions, pipeline logic        | Adapt workflow steps               |
+| `wrapper/env_config_<cluster>.sh` | Cluster modules, `enqueue_compss` flags | New cluster or queue settings      |
+| `wrapper/submit_workflow.sh`      | Submission wrapper to `enqueue_compss`  | Rarely                             |
 
-These are the one to modify.
-
-**Submit**:
+#### Submit
 
 ```bash
-make                                # list available targets and arguments
-make <workflow-name>                # default arguments
-make CLUSTERNAME=dardel NODES=4     # override specific arguments
+make                                # list targets
+make md                             # default run
+make CLUSTERNAME=dardel NODES=4     # override defaults
 ```
 
-**Clean up** produced files:
+Outputs and `.COMPSs/` runtime logs appear in the workflow directory.
+
+#### Clean up
 
 ```bash
 make clean
 ```
-
 
 ## 5. Contribute back
 
@@ -114,7 +107,7 @@ make clean
 Made an improvement? Open a Pull Request:
 
 ```bash
-git add *
+git add -A
 git commit -m "Describe your changes"
 git push origin feat-branch-name
 ```

@@ -267,7 +267,9 @@ To fix this, you need to modify accordingly to the error the `package.py` file i
 ## Post-installation configuration
 
 COMPSs uses [configuration files to adapt to different clusters](https://compss-doc.readthedocs.io/en/stable/Sections/01_Installation_Configuration/03_Configuration/02_Supercomputer.html). The general structure is the following:
+
 ![compss configs](https://compss-doc.readthedocs.io/en/stable/_images/queue_scripts_structure.png)
+
 where `sc.cfg` is the supercomputer config file and `queue_system.cfg` is the confif file for the job scheduler.
 
 ### Supercomputer
