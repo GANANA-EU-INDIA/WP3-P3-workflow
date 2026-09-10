@@ -26,20 +26,13 @@ EXTRA_COMPSS_FLAGS=(
 # ===========    HPC modules load    =========== #
 # =========== ====================== =========== #
 #  COMPSs
-#ml purge
-#export SPACK_USER_PREFIX=/cfs/klemming/projects/supr/naiss2025-5-614/lsalicar/.local/spack
-ml PDC
-ml spack-user
-unset SPACK_DISABLE_LOCAL_CONFIG
-export SPACK_USER_PREFIX=/cfs/klemming/projects/supr/naiss2025-5-614/lsalicar/.local/spack
-module use --prepend /cfs/klemming/projects/supr/naiss2025-5-614/lsalicar/.local/spack/modules/tcl/linux-sles15-zen2
-ml compss
-
-ml openmpi
+module use /cfs/klemming/projects/supr/naiss2025-5-614/lsalicar/modules
+ml compss/3.4
 
 #  GROMACS
 # add gmx_mpi bin path to PATH
-ml gromacs/2026.1-gpu
+ml openmpi/5.0.8-gcc12.2.0-multi-node
+ml gromacs/2026.1-cpeGNU-24.11
 # Flags for GPU usage of gromacs
 #export GMX_GPU_DD_COMMS=true  # not require from Gromacs 2025 onward. Kept for retrocompatibility
 #export GMX_GPU_PME_PP_COMMS=true

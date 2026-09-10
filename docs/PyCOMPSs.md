@@ -119,6 +119,86 @@ To test out the installation, after loading the module, run:
 enqueue_compss -h
 ```
 
+<details>
+<summary><b>Dardel Installation</b></summary>
+
+We use a custom Java 21 JRE installation because of dependencies mismatch with the OpenJDK available in Dardel. Hence, we use the Oracle JRE LTS 21:
+
+```bash
+cd # perform operation in the user home
+wget https://download.oracle.com/java/21/latest/jdk-21_linux-x64_bin.tar.gz
+tar -xvf jdk-21_linux-x64_bin.tar.gz
+rm jdk-21_linux-x64_bin.tar.gz
+```
+
+The relative **lua** module saved in `<pathToModules>/modules/java/21.lua` is:
+
+```lua
+-- -*- lua -*-
+-- Module: jdk
+-- -- Sets up Java 21 (JDK 21.0.12.1)
+
+help([[
+This module sets up the Java Development Kit (JDK) 21.0.12.1.
+
+It sets JAVA_HOME and adds $JAVA_HOME/bin to PATH.
+]])
+
+whatis("Name: JDK")
+whatis("Version: 21.0.12.1")
+whatis("Description: Java Development Kit")
+whatis("Sets JAVA_HOME and prepends $JAVA_HOME/bin to PATH")
+
+local HOME = "<userHomePathAbsolute>/jdk-21.0.12.1"
+
+setenv("JAVA_HOME", HOME)
+prepend_path("PATH", pathJoin(HOME, "bin"))
+```
+
+Then we can install COMPSs with:
+
+```bash
+# Load order might be important
+ml PDCOLD/24.11
+module use <pathToModules>/modules
+ml java/21
+ml boost/1.85.0-cpeGNU-24.11
+ml all-spack-modules/0.23.1 # required for the following Python version
+ml python/3.13.0-gcc-cgo
+ml gcc/12.2.0
+python -m ensurepip --upgrade
+python -m pip install --user wheel setuptools --upgrade
+
+wget https://compss.bsc.es/repo/sc/stable/COMPSs_3.4.tar.gz
+tar -xvzf COMPSs_3.4.tar.gz
+cd COMPSs
+./install -T <proj>/installation/compss_3_4 dardel.cfg
+```
+
+And generated the following **Lua** module (for the `Lmod` system) in `<pathToModules>/modules/compss/3.4.lua`:
+
+```lua
+-- -*- lua -*-
+
+local compss_home = "<pathToInstallation>/installation/compss_3_4/"
+
+prepend_path("MODULEPATH", "<pathToModules>/modules")
+
+depends_on("PDCOLD/24.11")
+depends_on("all-spack-modules/0.23.1")
+depends_on("boost/1.85.0-cpeGNU-24.11")
+depends_on("python/3.13.0-gcc-cgo")
+depends_on("java/21")
+
+source_sh("bash", pathJoin(compss_home, "compssenv"))
+
+setenv("COMPSS_HOME", compss_home)
+```
+
+The Gromacs version tested is `gromacs/2026.1-cpeGNU-24.11`.
+
+</details>
+
 ### [Experimental] Installation using Spack
 
 > [!WARNING]
