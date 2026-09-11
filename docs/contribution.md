@@ -3,9 +3,11 @@
 There are two possible ways to exploit this repo. The first one is to fork, i.e. copy, this repo and use it as a template or starting point to generate your workflow. On the other hand, if you want to improve it, you can copy, modify it and then open a Pull Request to the original repo.
 
 ## Open issues
+
 If you find bugs or have feature requests, please [open an issue](https://github.com/GANANA-EU-INDIA/WP3-P3-md-workflow/issues). We provide issue templates to guide the process.
 
 ## Contribute to the code (a.k.a. open a Pull Request)
+
 > [!NOTE]
 > This guide assumes that you are able to clone repositories from your GitHub account. One way to do this is by means of [ssh keys](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent#generating-a-new-ssh-key), however other [ways are possible](https://docs.github.com/en/authentication).
 
@@ -33,10 +35,47 @@ To contribute code improvements or new features, follow these steps:
 7. Wait for a review before merge.
 
 ### Python style
+
 Python code uses the [`ruff` linter and formatter](https://docs.astral.sh/ruff/) in its defauilt configuration. This can be installed, used through a supported IDE, used with a container etc.
 
 To ensure uniform style, format your code using:
+
 ```bash
 ruff format path/to/file.py
 ```
+
 to format `file.py`.
+
+## Contribute to documentation
+
+Documentation is built with [MkDocs](https://www.mkdocs.org/) using the Material theme and hosted on GitHub Pages.
+
+### Preview locally
+
+```bash
+uvx --with mkdocs-material mkdocs serve
+```
+
+or
+
+```bash
+python -m venv .venv
+. .venv/bin/activate
+python -m pip install -r docs/requirements.txt
+```
+
+Open http://127.0.0.1:8000
+
+`uvx` runs MkDocs in an ephemeral environment — no setup needed.
+
+### Edit workflow
+
+1. Edit `.md` files in `docs/`
+2. Preview changes with `mkdocs serve` (auto-reloads)
+3. Commit and push — docs deploy automatically
+
+### Style
+
+- Use GitHub Flavored Markdown (tables, callouts, code blocks)
+- Keep filenames lowercase with underscores
+- One `#` heading per file (becomes page title)
