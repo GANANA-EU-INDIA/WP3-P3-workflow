@@ -1,8 +1,11 @@
 site_name: pMHC-TCR MD and Free Energy Workflow
 repo_url: https://github.com/GANANA-EU-INDIA/WP3-P3-Workflow
 repo_name: WP3-P3-Workflow
+extra_css:
+  - stylesheets/footer-extra.css
 theme:
   name: material
+  custom_dir: docs/overrides
   logo: img/favicon.png
   favicon: img/favicon.png
   icon:
