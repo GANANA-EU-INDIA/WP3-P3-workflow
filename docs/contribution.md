@@ -8,8 +8,8 @@ If you find bugs or have feature requests, please [open an issue](https://github
 
 ## Contribute to the code (a.k.a. open a Pull Request)
 
-> [!NOTE]
-> This guide assumes that you are able to clone repositories from your GitHub account. One way to do this is by means of [ssh keys](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent#generating-a-new-ssh-key), however other [ways are possible](https://docs.github.com/en/authentication).
+!!! info
+      This guide assumes that you are able to clone repositories from your GitHub account. One way to do this is by means of [ssh keys](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent#generating-a-new-ssh-key), however other [ways are possible](https://docs.github.com/en/authentication).
 
 To contribute code improvements or new features, follow these steps:
 
@@ -46,17 +46,19 @@ ruff format path/to/file.py
 
 to format `file.py`.
 
-## Contribute to documentation
+## Contribute to the documentation
 
 Documentation is built with [MkDocs](https://www.mkdocs.org/) using the Material theme and hosted on GitHub Pages.
+Documentation is built to be displayed both on GitHub and in a HTML form, hence graphical artifacs might be present.
 
 ### Preview locally
 
+If using [`uv`](https://docs.astral.sh/uv/):
 ```bash
 uvx --with mkdocs-material mkdocs serve
 ```
 
-or
+otherwise
 
 ```bash
 python -m venv .venv
@@ -64,18 +66,17 @@ python -m venv .venv
 python -m pip install -r docs/requirements.txt
 ```
 
-Open http://127.0.0.1:8000
-
-`uvx` runs MkDocs in an ephemeral environment — no setup needed.
+Then, open [http://127.0.0.1:8000](http://127.0.0.1:8000).
 
 ### Edit workflow
 
 1. Edit `.md` files in `docs/`
-2. Preview changes with `mkdocs serve` (auto-reloads)
+2. Preview changes as described above
 3. Commit and push — docs deploy automatically
 
 ### Style
 
-- Use GitHub Flavored Markdown (tables, callouts, code blocks)
+- Use [Material alerts](https://squidfunk.github.io/mkdocs-material/reference/admonitions/#supported-types)
+- Use GitHub Flavored Markdown (tables, code blocks)
 - Keep filenames lowercase with underscores
 - One `#` heading per file (becomes page title)

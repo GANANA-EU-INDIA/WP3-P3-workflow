@@ -23,8 +23,7 @@ python -m venv ../envs/<venv_name> --system-site-packages
 . ../envs/<venv_name>/bin/activate
 ```
 
-> [!NOTE]
-> `--system-site-packages` is fundamental to make the pycompss package available when the venv is sourced.
+`--system-site-packages` is fundamental to make the pycompss package available when the venv is sourced.
 
 Add to the [`requirements.txt` file](./requirements.txt) the Python packages required by your workflow. Then, install them:
 
@@ -32,8 +31,8 @@ Add to the [`requirements.txt` file](./requirements.txt) the Python packages req
 python -m pip install -r requirements.txt
 ```
 
-> [!NOTE]
-> For more info on how this environment is sourced before execution, see [`./wrapper/env_config_<cluster>.sh`](./wrapper/env_config_leonardo.sh). The venv name should match the workflow name (e.g., `md_env` for `md.py`) for automatic sourcing.
+!!! info
+      For more info on how this environment is sourced before execution, see [`./wrapper/env_config_<cluster>.sh`](./wrapper/env_config_leonardo.sh). The venv name should match the workflow name (e.g., `md_env` for `md.py`) for automatic sourcing.
 
 `uv` or `conda` can be used too.
 
@@ -49,12 +48,10 @@ The procedure is usually the following:
 
 More information on the files used to control and execute the workflow can be found in the [configuration section](#configuration).
 
-> [!NOTE]
-> Some references to get started with PyCOMPSs:
->
-> - [PyCOMPSs quickstart](https://compss-doc.readthedocs.io/en/stable/Sections/00_Quickstart.html#write-your-first-app)
-> - [PyCOMPSs application development](https://compss-doc.readthedocs.io/en/stable/Sections/02_App_Development/02_Python.html)
-> - [Example of a Lysozyme in water MD simulation setup with PyCOMPSs](https://compss-doc.readthedocs.io/en/stable/Sections/05_Sample_Applications/02_Python/05_Lysozyme_in_water.html)
+??? info "Some references to get started with PyCOMPSs"
+      - [PyCOMPSs quickstart](https://compss-doc.readthedocs.io/en/stable/Sections/00_Quickstart.html#write-your-first-app)
+      - [PyCOMPSs application development](https://compss-doc.readthedocs.io/en/stable/Sections/02_App_Development/02_Python.html)
+      - [Example of a Lysozyme in water MD simulation setup with PyCOMPSs](https://compss-doc.readthedocs.io/en/stable/Sections/05_Sample_Applications/02_Python/05_Lysozyme_in_water.html)
 
 ## Usage
 
@@ -80,7 +77,7 @@ Just type `make` to have more info or inspect the `Makefile`.
 make clean
 ```
 
-### Monitor the workflow
+## Monitor workflow execution
 
 To monitor a running workflow **locally**, use the [COMPSs Monitor Runner](./run_compss_monitor.md). Hence, from your local machine (_not the cluster!_):
 
@@ -106,11 +103,10 @@ In this setup, the workflow is managed through a `Makefile`.
 The arguments that change often (such as input/output directories, number of cores per task, workflow name etc) are passed directly to `make` while more "stable" arguments are configured in `./wrapper`.
 The main files for the workflow specification are stored inside `./wrapper/env_config_<cluster>.sh` and `./wrapper/submit_workflow.sh`.
 
-> [!WARNING]
-> Currently, not all Slurm/COMPSs arguments are wrapped. See [`submit_workflow.sh`](./wrapper/submit_workflow.sh) for the full list of supported arguments.
+!!! warning
+      Currently, not all Slurm/COMPSs arguments are wrapped. See [`submit_workflow.sh`](./wrapper/submit_workflow.sh) for the full list of supported arguments.
 
-> [!WARNING]
-> All arguments that are not set either in `make` nor `env_config.sh` use the default values as expressed in the COMPSs queue config file `$COMPSS_HOME/Runtime/scripts/queues/supercomputers/default.cfg`. See [COMPSs documentation](https://compss-doc.readthedocs.io/en/stable/Sections/01_Installation_Configuration/03_Configuration/02_Supercomputer.html) for more info.
+      All arguments that are not set either in `make` nor `env_config.sh` use the default values as expressed in the COMPSs queue config file `$COMPSS_HOME/Runtime/scripts/queues/supercomputers/default.cfg`. See [COMPSs documentation](https://compss-doc.readthedocs.io/en/stable/Sections/01_Installation_Configuration/03_Configuration/02_Supercomputer.html) for more info.
 
 ## Development
 

@@ -1,5 +1,49 @@
-site_name: WP3-P3 Workflow Docs
+site_name: pMHC-TCR MD and Free Energy Workflow
+repo_url: https://github.com/GANANA-EU-INDIA/WP3-P3-Workflow
+repo_name: WP3-P3-Workflow
 theme:
   name: material
+  logo: img/favicon.png
+  favicon: img/favicon.png
+  icon:
+    repo: fontawesome/brands/github
+  palette:
+    - scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: Dark mode
+    - scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Light mode
+  features:
+    - search
+    - search.highlight
+    - search.suggest
+    - content.code.copy
+    - toc.integrate
+nav:
+  - Home: index.md
+  - Quickstart: quickstart.md
+  - PyCOMPSs Installation: PyCOMPSs.md
+  - GROMACS Installation: gromacs/leonardo_installation.md
+  - Workflow Setup and usage: workflow_setup_and_usage.md
+  - Run Monitor: run_compss_monitor.md
+  - Contribute: contribution.md
 markdown_extensions:
-  - toc
+  - attr_list
+  - admonition
+  - pymdownx.details
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.superfences
+extra:
+  generator: false
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/GANANA-EU-INDIA
+      name: Github Repo
+    - icon: fontawesome/solid/globe
+      link: https://ganana.eu/
+      name: ganana.eu

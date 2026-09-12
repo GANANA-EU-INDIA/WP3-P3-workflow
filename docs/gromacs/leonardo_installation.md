@@ -1,11 +1,12 @@
-## Manual installation on Leonardo (no spack)
+!!! warning
 
-Rationale:
+      We suggest to follow [the official documentation](https://manual.gromacs.org/current/install-guide/index.html)
 
-- mport as many library from Leonardo as possible
-- avoid nvhpc-based libraries
+## Example of manual installation on [Leonardo](https://docs.hpc.cineca.it/hpc/leonardo.html#leonardo-card)
 
-Since I've loaded `cuda`, `nvcc` will be available to Gromacs. I've also checked that `cmake` is able to find cuFFT in the `cuda` libraries.
+The main idea is to have GROMACS relying on installed libraries and softwares to exploit their optimization for the specific cluster.
+
+By loading the `cuda` module, `nvcc` will be available to GROMACS. Moreover, `cmake` is able to find cuFFT from the `LD_LIBRARY_PATH`.
 
 Procedure:
 
@@ -25,14 +26,14 @@ mkdir build
 cd build
 cmake .. -DGMX_MPI=on -DGMX_GPU=CUDA -DCMAKE_INSTALL_PREFIX=$PUBLIC/gromacs/gromacs_2026_3 -DGMX_FFT_LIBRARY=fftw3 -DCMAKE_CUDA_ARCHITECTURES=80 -DREGRESSIONTEST_DOWNLOAD=ON
 
-# enter a Leonardo compute node
+# entering a Leonardo DCGP compute node
 srun -A cin_staff -p dcgp_usr_prod -N1 -n16 -t 02:00:00 --pty /bin/bash
-make -j 16 
+make -j 16
 make check -j 16
 make install
 ```
 
-Then, one needs to prepare a module file in `<pathToModules>/gromacs/2026.3`:
+Then, one needs to prepare a module file in `<pathToModules>/gromacs/2026.3`, such as:
 
 ```tcl
 #%Module
@@ -56,4 +57,4 @@ prereq netlib-scalapack/2.2.0--openmpi--4.1.6--gcc--12.2.0-spack0.22
 prereq hdf5/1.14.3--openmpi--4.1.6--gcc--12.2.0-spack0.22
 ```
 
-Note that we need to make all the dynamically linked libraries available at runtime. Moreover, we just need to source with [`source-sh`](https://modules.readthedocs.io/en/latest/modulefile.html#mfcmd-source-sh) the bash script provided by Gromacs.
+Note that we need to make all the dynamically linked libraries available at runtime. Moreover, we just need to source with [`source-sh`](https://modules.readthedocs.io/en/latest/modulefile.html#mfcmd-source-sh) the bash script provided by GROMACS.

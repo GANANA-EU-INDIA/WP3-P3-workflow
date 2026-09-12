@@ -1,18 +1,6 @@
 # Quickstart Guide
 
-- [Quickstart Guide](#quickstart-guide)
-  - [1. Get the repository](#1-get-the-repository)
-  - [2. Install PyCOMPSs on HPC](#2-install-pycompss-on-hpc)
-      - [Dependencies](#dependencies)
-      - [Manual installation](#manual-installation)
-      - [Spack (experimental)](#spack-experimental)
-      - [Verify](#verify)
-  - [4. Set up and run the workflow](#4-set-up-and-run-the-workflow)
-      - [Python environment](#python-environment)
-      - [File structure](#file-structure)
-      - [Submit](#submit)
-      - [Clean up](#clean-up)
-  - [5. Contribute back](#5-contribute-back)
+This workflow uses [PyCOMPSs](https://www.bsc.es/research-and-development/software-and-apps/software-list/comp-superscalar/) as Workflow Managment System and [GROMACS](https://www.gromacs.org/) with [PMX](https://degrootlab.github.io/pmx/) for MD and Free Energy evaluations.
 
 ## 1. Get the repository
 
@@ -31,8 +19,8 @@ git switch -c new-branch-name
 
 ## 2. Install PyCOMPSs on HPC
 
-> [!NOTE]
-> Full details: [PyCOMPSs installation](./PyCOMPSs.md).
+!!! info
+    Full details in [PyCOMPSs installation section](./PyCOMPSs.md).
 
 #### Dependencies
 
@@ -49,20 +37,16 @@ cd COMPSs
 
 Create a TCL module file to expose `$COMPSS_HOME`, `PATH`, `CLASSPATH`, `PYTHONPATH`. See [PyCOMPSs.md](./PyCOMPSs.md) for a template.
 
-#### Spack (experimental)
-
-Not officially supported by COMPSs team. Requires personal Spack repo, custom `package.py` (provided in `docs/spack/`), and `COMPSS_SUPERCOMPUTER_CFG` env var. See [PyCOMPSs.md § Experimental](./PyCOMPSs.md#experimental-installation-using-spack).
-
 #### Verify
 
 ```bash
 enqueue_compss -h
 ```
 
-## 4. Set up and run the workflow
+## 3. Set up and run the workflow
 
-> [!NOTE]
-> Full details: [`workflow setup and usage`](./workflow_setup_and_usage.md).
+!!! info
+    Full details: [`workflow setup and usage`](./workflow_setup_and_usage.md).
 
 #### Python environment
 
@@ -73,6 +57,10 @@ pip install -r requirements.txt
 ```
 
 `--system-site-packages` exposes PyCOMPSs to the venv.
+
+#### Gromacs
+
+The user is responsable to install Gromacs in the machine. Please refear to the [official installation guide](https://manual.gromacs.org/current/install-guide/index.html) or [an example for the Leonardo cluster](./gromacs/leonardo_installation.md).
 
 #### File structure
 
@@ -99,10 +87,10 @@ Outputs and `.COMPSs/` runtime logs appear in the workflow directory.
 make clean
 ```
 
-## 5. Contribute back
+## 4. Contribute back
 
-> [!NOTE]
-> See more info in the [contribution documentation](./contribution.md)
+!!! info
+    See more info in the [contribution documentation](./contribution.md)
 
 Made an improvement? Open a Pull Request:
 

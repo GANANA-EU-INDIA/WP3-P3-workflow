@@ -6,6 +6,9 @@ This document describes the usage of:
 tools/run_compss_monitor.sh
 ```
 
+!!! info
+    Based on the [COMPSs Monitor Documentation](https://compss-doc.readthedocs.io/en/latest/Sections/04_Ecosystem/02_Monitor/02_Supercomputer.html)
+
 ## Overview
 
 A convenience script for running the COMPSs Monitor locally by:
@@ -63,7 +66,3 @@ Login: `/`
 docker stop compss-monitor   # Container auto-removes on stop
 fusermount -u ~/.COMPSs       # Unmount remote directory
 ```
-
-## More Info
-
-[COMPSs Monitor Documentation](https://compss-doc.readthedocs.io/en/latest/Sections/04_Ecosystem/02_Monitor/02_Supercomputer.html)
