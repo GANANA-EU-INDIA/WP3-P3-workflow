@@ -1,6 +1,6 @@
-# WP3 - Project 3 Workflows
+# Framework for AI-driven Immunogenic Peptide Prediction workflows on HPC
 
-**Framework for AI-driven Immunogenic Peptide Prediction workflows on HPC.**
+**Workflows for Molecular Dynamics and Free energy calculations**
 
 [![GANANA](https://img.shields.io/badge/GANANA-project-orange?style=for-the-badge)](https://ganana.eu/)
 [![PyCOMPSs](https://img.shields.io/badge/PyCOMPSs-workflow-blue?style=for-the-badge)](https://compss-doc.readthedocs.io/)
@@ -9,7 +9,7 @@
 > [!WARNING]
 > This repo is a work in progress. Contact authors for more info.
 
-Repository containing workflows and documentation for the [GANANA](https://ganana.eu/) WP3 - Project 3 "Framework for AI-driven Immunogenic Peptide Prediction".
+Repository containing workflows and documentation for the [GANANA](https://ganana.eu/) WP3 - Project 3 "Framework for AI-driven Immunogenic Peptide Prediction". This repo contains the automated workflows for conformational simulations and free energy computations of pMHC-TCR proteins complexes using GROMACS and PyCOMPSs.
 
 ## Documentation
 
@@ -23,11 +23,8 @@ Workflow for MD simulations of the pMHC-CDR3 complex, based on the official [GRO
 
 ## Authors
 
-Leonardo Salicari (CINECA)
-
-Cathrine Bergh (KTH)
+See [AUTHORS](./AUTHORS).
 
 ## License
 
-EUPL 1.2 for original code. See [LICENSE](LICENSE) for upstream notices
-(GROMACS tutorial: CC BY 4.0; PyCOMPSs configs: Apache 2.0).
+GPL-3.0 for original code. See [LICENSE](LICENSE) for upstream notices.

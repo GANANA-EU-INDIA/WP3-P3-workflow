@@ -1,0 +1,28 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: >-
+  GANANA WP3 P3 - Workflows for Molecular Dynamics and Free
+  energy calculations
+message: >-
+  Repository containing workflows and documentation for the
+  GANANA WP3 - Project 3 "Framework for AI-driven
+  Immunogenic Peptide Prediction". This repo contains the
+  automated workflows for conformational simulations and
+  free energy computations of pMHC-TCR proteins complexes
+  using GROMACS and PyCOMPSs.
+type: software
+authors:
+  - given-names: Leonardo
+    family-names: Salicari
+    email: l.salicari@cineca.it
+    affiliation: CINECA
+    orcid: 'https://orcid.org/0000-0003-4444-3885'
+  - given-names: Cathrine
+    family-names: Bergh
+    email: cabergh@kth.se
+    affiliation: KTH Center for Scientific Computing (KCSC)
+    orcid: 'https://orcid.org/0000-0001-7540-5887'
+repository-code: 'https://github.com/GANANA-EU-INDIA/WP3-P3-workflow'
+license: GPL-3.0-or-later
