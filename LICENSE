@@ -1,6 +1,6 @@
-GNU General Public License v3.0 (GPL-3.0)
+GNU Affero General Public License v3.0 (AGPL-3.0)
 
-This project is licensed under the GPL-3.0, except for:
+This project is licensed under the AGPL-3.0, except for:
 
 - md/examples/\*_/_.mdp — CC BY 4.0 (GROMACS tutorial)
   https://creativecommons.org/licenses/by/4.0/
@@ -10,5 +10,5 @@ This project is licensed under the GPL-3.0, except for:
   https://www.apache.org/licenses/LICENSE-2.0
   Source: https://github.com/bsc-wdc/compss
 
-Full GPL-3.0 text: https://www.gnu.org/licenses/gpl-3.0.txt
+Full AGPL-3.0 text: https://www.gnu.org/licenses/agpl-3.0.txt
 or see COPYING
