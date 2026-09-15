@@ -32,7 +32,7 @@ nav:
   - GROMACS Installation: gromacs/leonardo_installation.md
   - Workflow Setup and usage: workflow_setup_and_usage.md
   - Run Monitor: run_compss_monitor.md
-  - Contribute: contribution.md
+  - Contribute: contributing.md
 markdown_extensions:
   - attr_list
   - admonition
