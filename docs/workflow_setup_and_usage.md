@@ -30,11 +30,10 @@ Add to the [`requirements.txt` file](./requirements.txt) the Python packages req
 ```bash
 python -m pip install -r requirements.txt
 ```
+`uv` or `conda` can be used too.
 
 !!! info
       For more info on how this environment is sourced before execution, see [`./wrapper/env_config_<cluster>.sh`](./wrapper/env_config_leonardo.sh). The venv name should match the workflow name (e.g., `md_env` for `md.py`) for automatic sourcing.
-
-`uv` or `conda` can be used too.
 
 ### Adapt the workflow
 
