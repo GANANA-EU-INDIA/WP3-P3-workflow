@@ -27,4 +27,4 @@ See [AUTHORS](./AUTHORS).
 
 ## License
 
-GPL-3.0 for original code. See [LICENSE](LICENSE) for upstream notices.
+See [LICENSE](LICENSE) for more info and upstream notices.
