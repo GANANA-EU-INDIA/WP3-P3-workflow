@@ -36,20 +36,19 @@ To contribute code improvements or new features, follow these steps:
 
 ### Python style
 
-Python code uses the [`ruff` linter and formatter](https://docs.astral.sh/ruff/) in its default configuration. This can be installed, used through a supported IDE, used within a container etc.
-
-To ensure uniform style, format your code using:
+Python codes use the [`ruff` formatter](https://docs.astral.sh/ruff/) in its [default configuration](https://docs.astral.sh/ruff/configuration/).
+[Install ruff](https://docs.astral.sh/ruff/installation/) (once) and format before committing:
 
 ```bash
-ruff format path/to/file.py
+ruff format md/workflow/md.py
 ```
 
-to format `file.py`.
+IDE integration: Most editors (VS Code, PyCharm, Neovim) support ruff natively through extensions.
 
 ## Contribute to the documentation
 
 Documentation is built with [MkDocs](https://www.mkdocs.org/) using the Material theme and hosted on GitHub Pages.
-Documentation is built to be displayed both on GitHub and in a HTML form, hence graphical artifacs might be present.
+Documentation is built to be displayed both on GitHub and in an HTML form, hence graphical artifacts might be present.
 
 ### Preview locally
 
