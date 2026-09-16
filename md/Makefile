@@ -1,4 +1,3 @@
-WORKFLOWNAME = md
 CLUSTERNAME = leonardo
 # Prefer absolute paths
 INPUT_DIR = $(shell pwd)/examples/pdb/input
@@ -8,6 +7,8 @@ CPUS_PER_NODE = 16
 EXEC_TIME = 30
 GRES_GPUS = 1
 
+WORKFLOWS := $(basename $(notdir $(wildcard workflow/*.py)))
+
 # Usage: make
 help:
 	@echo ""
@@ -15,8 +16,8 @@ help:
 	@echo ""
 	@./wrapper/submit_workflow.sh --help
 
-$(WORKFLOWNAME):
-	./wrapper/submit_workflow.sh $(WORKFLOWNAME) $(CLUSTERNAME) $(INPUT_DIR) $(OUTPUT_DIR) $(NODES) $(CPUS_PER_NODE) $(EXEC_TIME) $(GRES_GPUS)
+$(WORKFLOWS):
+	./wrapper/submit_workflow.sh $@ $(CLUSTERNAME) $(INPUT_DIR) $(OUTPUT_DIR) $(NODES) $(CPUS_PER_NODE) $(EXEC_TIME) $(GRES_GPUS)
 
 clean-except-rocrate:
 	rm -f compss*
