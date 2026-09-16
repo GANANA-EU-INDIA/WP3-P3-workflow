@@ -37,8 +37,10 @@ To use the Free Energy workflow, install `pmx` in the same venv:
 git clone -b develop --depth=2 https://github.com/deGrootLab/pmx
 cd pmx
 git checkout develop # use the python 3 version
+sed -i '/setup_requires=\["setuptools~=46\.0\.0"\]/d' setup.py
 pip install .
 ```
+The `sed` command removes an old setup requirement that might make the installation fail with recent `setuptools` versions.
 
 !!! info
       For more info on how this environment is sourced before execution, see [`./wrapper/env_config_<cluster>.sh`](./wrapper/env_config_leonardo.sh). The venv name should match the workflow name (e.g., `md_env` for `md.py`) for automatic sourcing.
