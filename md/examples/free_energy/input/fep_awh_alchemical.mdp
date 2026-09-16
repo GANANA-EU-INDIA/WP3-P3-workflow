@@ -1,0 +1,71 @@
+; we'll use the sd integrator (an accurate and efficient leap-frog stochastic dynamics integrator)
+integrator               = sd
+nsteps                   = 700000 ; equilivate to 100000 step for 7 lambda points
+dt                       = 0.002
+nstenergy                = 1000
+nstcalcenergy            = 50 ; should be a divisor of nstdhdl 
+nstlog                   = 5000
+; cut-offs at 1.0nm
+rlist                    = 1.1
+rvdw                     = 1.1
+; Coulomb interactions
+coulombtype              = pme
+rcoulomb                 = 1.1
+fourierspacing           = 0.13
+; Constraints
+constraints              = h-bonds
+; set temperature to 300K
+tc-grps                  = system
+tau-t                    = 2.0
+ref-t                    = 300
+; set pressure to 1 bar with a thermostat that gives a correct
+; thermodynamic ensemble
+pcoupl                   = C-rescale
+ref-p                    = 1.0
+compressibility          = 4.5e-5
+tau-p                    = 5.0
+
+; and set the free energy parameters
+free-energy              = yes
+nstdhdl                  = 50 ; frequency for writing energy difference in dhdl.xvg, 0 means no ouput, should be a multiple of nstcalcenergy. 
+; these 'soft-core' parameters make sure we never get overlapping
+; charges as lambda goes to 0
+; soft-core function
+sc-power                 = 1
+sc-sigma                 = 0.3
+sc-alpha                 = 1.0
+; we still want the molecule to interact with itself at lambda=0
+init-lambda-state        = 12
+calc-lambda-neighbors    = -1 ; A value of -1 means all lambda points will be written out
+; NOTE for BAR a value of 1 is sufficient, 
+; while for MBAR or AWH -1 should be used.
+;
+; These are the lambda states at which we simulate
+; for separate LJ and Coulomb decoupling, use
+fep-lambdas              = 0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.85 0.9 0.95 1.0
+;
+; awh setting
+awh                        = yes
+; we apply  potential bias by controlling the position of an 
+; harmonic potential using Monte-Carlo sampling. 
+awh-potential              = umbrella ; 
+awh-nstout                 = 50000 ; save frequency to energy file (multiple of nstenergy)
+awh-nbias                  = 1  ; n. of bias
+awh-nstsample              = 50 ; multiple of nstcalcenergy
+awh-nsamples-update        = 10
+; initial biasing rate is determited by awh1-error-init together with 
+; the given diffusion constant(s) awh1-dim1-diffusion  
+awh1-error-init            = 10.0 ; 
+awh1-dim1-diffusion        = 0.001 ; as high as possible (10^2 to 10^4 ps^(-1))
+;
+awh1-growth                = exp-linear ; 
+awh1-equilibrate-histogram = no ; 
+; bias tuned towards a constant (uniform) coordinate distribution
+awh1-target                = constant ; 
+; awh1-user-data             = no
+; Number of dimensions of the coordinate
+awh1-ndim                  = 1
+awh1-dim1-coord-provider   = fep-lambda  ; free energy lambda state = reaction coordinate
+awh1-dim1-coord-index      = 1 ; might not be necessary with fep-lambda
+awh1-dim1-start            = 0
+awh1-dim1-end              = 12    

@@ -313,6 +313,7 @@ def main() -> None:
         remove_heteratom(str(pdb), pdb_protein_only)
 
         # +++++++++++ Generate Topology files
+        ff = "charmm36-jul2022"
         topology = str(output_subdir / "topology.top")
         posre = str(output_subdir / "posre.itp")
         structure_processed = str(output_subdir / "structure_processed.gro")
@@ -321,7 +322,7 @@ def main() -> None:
             topology=topology,
             posre=posre,
             structure=structure_processed,
-            ff="charmm36-jul2022",
+            ff=ff,
             water="tip3p",
         )
 

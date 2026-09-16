@@ -32,6 +32,14 @@ python -m pip install -r requirements.txt
 ```
 `uv` or `conda` can be used too.
 
+To use the Free Energy workflow, install `pmx` in the same venv:
+```bash
+git clone -b develop --depth=2 https://github.com/deGrootLab/pmx
+cd pmx
+git checkout develop # use the python 3 version
+pip install .
+```
+
 !!! info
       For more info on how this environment is sourced before execution, see [`./wrapper/env_config_<cluster>.sh`](./wrapper/env_config_leonardo.sh). The venv name should match the workflow name (e.g., `md_env` for `md.py`) for automatic sourcing.
 
