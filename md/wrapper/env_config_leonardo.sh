@@ -67,7 +67,7 @@ fi
 # =========== ====================== =========== #
 # ===========   Python environment   =========== #
 # =========== ====================== =========== #
-. $ROOT_PATH/${WORKFLOWNAME}_env/bin/activate
+. $ROOT_PATH/.venv/bin/activate
 
 # =========== ====================== =========== #
 # =========== DATA and WORKFLOW PATH =========== #
