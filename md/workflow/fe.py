@@ -41,7 +41,7 @@ args = parser.parse_args()
 
 @binary(
     binary="pmx",
-    args="mutate -f {{pdb_in}} -o {{pdb_out}} -ff {{ff}} --keep_resid --script {{mutation_list}}",
+    args="mutate -f {{pdb_in}} -o {{pdb_out}} -ff {{ff}} --script {{mutation_list}}",
 )
 @task(pdb_in=FILE_IN, mutation_list=FILE_IN, pdb_out=FILE_OUT)
 def mutate(pdb_in, mutation_list, pdb_out, ff) -> None:
