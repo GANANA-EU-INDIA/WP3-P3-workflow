@@ -1,12 +1,12 @@
 WORKFLOWNAME = md
 CLUSTERNAME = leonardo
 # Prefer absolute paths
-INPUT_DIR = $(shell pwd)/examples/pdb/input
-OUTPUT_DIR = $(shell pwd)/examples/pdb/output
-NODES = 2
-CPUS_PER_NODE = 16
-EXEC_TIME = 30
-GRES_GPUS = 1
+INPUT_DIR = $(shell pwd)/examples/from_modelling/input
+OUTPUT_DIR = $(shell pwd)/examples/from_modelling/output
+NODES = 1
+CPUS_PER_NODE = 32
+EXEC_TIME = 60
+GRES_GPUS = 2
 
 # Usage: make
 help:

@@ -26,7 +26,7 @@ GMXBIN_NAME = os.environ["GMXBIN_NAME"]
 
 # Arguments to control OpenMP threads etc.
 # NOTE: it can be changed in the Worflow, placed here for convinience
-OPENMP_THREADS = 8
+OPENMP_THREADS = 16
 
 
 parser = argparse.ArgumentParser()
@@ -63,11 +63,11 @@ def remove_heteratom(pdb_original, pdb_protein_only) -> None:
 
 @binary(
     binary=GMXBIN_NAME,
-    args="pdb2gmx -f {{protein}} -o {{structure}} -p {{topology}} -ignh -ff {{ff}} -water {{water}} -merge all",
+    args="pdb2gmx -f {{protein}} -o {{structure}} -p {{topology}} -ignh -ff {{ff}} -water {{water}} -merge all < {{select}}",
 )
-@task(protein=FILE_IN, structure=FILE_OUT, topology=FILE_OUT, posre=FILE_OUT)
+@task(protein=FILE_IN, structure=FILE_OUT, topology=FILE_OUT, posre=FILE_OUT, select=FILE_IN)
 def generate_topology(
-    protein=None, structure=None, topology=None, posre=None, ff=None, water=None
+    protein=None, structure=None, topology=None, posre=None, ff=None, water=None, select=None
 ) -> None:
     """Generate topology file and posre.itp. the -merge all optino is used to have a single top"""
     pass
@@ -298,15 +298,22 @@ def main() -> None:
     if not output_dir.exists():
         output_dir.mkdir(parents=True, exist_ok=True)
 
-    pdb_files = list(dataset.glob("*.pdb"))
-    print(f"PDBs found:\n{pdb_files}")
+    input_dirs = [d for d in dataset.iterdir() if d.is_dir()]
+    print(f"Input directories found:\n{input_dirs}")
 
     out = {}
 
-    for pdb in pdb_files:
+    for input_dir in input_dirs:
         # create sub-directory for each protein
-        output_subdir = output_dir / pdb.stem
+        output_subdir = output_dir / input_dir.name
         output_subdir.mkdir(parents=True, exist_ok=True)
+
+        # Find PDB file in the input directory
+        pdb_files = list(input_dir.glob("*.pdb"))
+        if not pdb_files:
+            print(f"Warning: No PDB file found in {input_dir}, skipping.")
+            continue
+        pdb = pdb_files[0]
 
         # +++++++++++ Cleaning input structures
         pdb_protein_only = str(output_subdir / "protein_only.pdb")
@@ -316,6 +323,7 @@ def main() -> None:
         topology = str(output_subdir / "topology.top")
         posre = str(output_subdir / "posre.itp")
         structure_processed = str(output_subdir / "structure_processed.gro")
+        select_file = str(input_dir / "select.txt")
         generate_topology(
             protein=pdb_protein_only,
             topology=topology,
@@ -323,6 +331,7 @@ def main() -> None:
             structure=structure_processed,
             ff="charmm36-jul2022",
             water="tip3p",
+            select=select_file,
         )
 
         # +++++++++++ Solvation
@@ -361,7 +370,7 @@ def main() -> None:
         )
 
         # +++++++++++ Energy Minimization
-        emin_mdp = str(dataset / "emin-charmm.mdp")
+        emin_mdp = str(input_dir / "emin-charmm.mdp")
         emin_tpr = str(output_subdir / "em.tpr")
         emin_preprocess(
             emin_mdp=emin_mdp,
@@ -383,7 +392,7 @@ def main() -> None:
 
         # +++++++++++ Equilibration run
         # NVT
-        nvt_mdp = str(dataset / "nvt-charmm.mdp")
+        nvt_mdp = str(input_dir / "nvt-charmm.mdp")
         nvt_tpr = str(output_subdir / "nvt.tpr")
         nvt_preprocess(
             nvt_mdp=nvt_mdp,
@@ -406,7 +415,7 @@ def main() -> None:
         )
 
         # NPT
-        npt_mdp = str(dataset / "npt-charmm.mdp")
+        npt_mdp = str(input_dir / "npt-charmm.mdp")
         npt_tpr = str(output_subdir / "npt.tpr")
         npt_preprocess(
             npt_mdp=npt_mdp,
@@ -433,7 +442,7 @@ def main() -> None:
 
         # +++++++++++ Production run
         # Note: same structure and functions as eq
-        prod_npt_mdp = str(dataset / "md-charmm.mdp")
+        prod_npt_mdp = str(input_dir / "md-charmm.mdp")
         prod_npt_tpr = str(output_subdir / "prod_npt.tpr")
         npt_preprocess(
             npt_mdp=prod_npt_mdp,
