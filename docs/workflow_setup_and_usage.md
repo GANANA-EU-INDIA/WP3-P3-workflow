@@ -80,6 +80,30 @@ make CLUSTERNAME=leonardo NODES=4 INPUT_DIR=./data/inputs
 
 Just type `make` to have more info or inspect the `Makefile`.
 
+!!! info "Input directory structure"
+    The workflow expects input directories organized as follows:
+    ```
+    dataset/
+    ├── protein1/
+    │   ├── structure.pdb
+    │   ├── select.txt
+    │   ├── emin-charmm.mdp
+    │   ├── nvt-charmm.mdp
+    │   ├── npt-charmm.mdp
+    │   └── md-charmm.mdp
+    ├── protein2/
+    │   ├── structure.pdb
+    │   ├── select.txt
+    │   ├── emin-charmm.mdp
+    │   ├── nvt-charmm.mdp
+    │   ├── npt-charmm.mdp
+    │   └── md-charmm.mdp
+    ```
+    Each protein directory must contain:
+    - One PDB file (the input structure)
+    - `select.txt` (selection file for `pdb2gmx`, see examples/)
+    - MD parameter files: `emin-charmm.mdp`, `nvt-charmm.mdp`, `npt-charmm.mdp`, `md-charmm.mdp`
+
 ### Remove output files
 
 ```bash

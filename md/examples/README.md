@@ -4,6 +4,11 @@
 ## pdb
 A couple of globular proteins that are fast to test.
 
+Each protein directory contains:
+- A PDB file (input structure)
+- `select.txt` (selection file for `pdb2gmx` chain termini protonation states)
+- MD parameter files: `emin-charmm.mdp`, `nvt-charmm.mdp`, `npt-charmm.mdp`, `md-charmm.mdp`
+
 ## haddock
 A set of structures derived from HADDOCK predictions.
 
