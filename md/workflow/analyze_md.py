@@ -117,7 +117,7 @@ def visualize_contact_map(contact_map_MHC, contact_map_TCR, peptide, MHC, TCR, c
     return
 
 def get_residue_info(group, chain_map):
-    """resindex -> (resid, resname, chain) for every residue in group."""
+    # resindex -> (resid, resname, chain) for every residue in group
     info = {}
     for res in group.residues:
         ca = res.atoms.select_atoms("name CA")
@@ -195,6 +195,7 @@ def assign_chains_from_file(ca, structure_file):
 def identify_molecules(chains):
 
     # TODO: Update this function to make use of get_residue_info to avoid silent failure for more than five chains.
+    # TODO: Change to a shape-based destinction of MHC and TCR molecules
 
     # WARNING: This heuristic might not work on all data formats!
     # WARNING: This assumes pMHC-TCR systems consists of 5 chains!
@@ -269,67 +270,63 @@ def write_CSV(filename, datasets, chain_map):
 
     return
 
-# Take the input from the command line
-args = parse_input()
+def main():
 
-topology = args.topology
-trajectory = args.trajectory
-md_input = args.reference
-contacts_filename = args.contact_output
+    # Take the input from the command line
+    args = parse_input()
 
-# For testing:
-#topology = "/home/cathrine/Projects/GANANA_3.10_immunology_workflow/Data/2NX5_2_original/REP3/2NX5_2_md_rep3.gro"
-#trajectory = "/home/cathrine/Projects/GANANA_3.10_immunology_workflow/Data/2NX5_2_original/REP3/2NX5_2_md_rep3.xtc"
-# We need the input file used to create the MD simulation files in order to keep track of chain IDs
-#md_input = "/home/cathrine/Projects/GANANA_3.10_immunology_workflow/Data/2NX5_2_original/prep/2NX5_2_nowater.pdb"
+    topology = args.topology
+    trajectory = args.trajectory
+    md_input = args.reference
+    contacts_filename = args.contact_output
 
-ContactDataset = namedtuple("ContactDataset", "mol1 group1 mol2 group2 contactMap")
+    ContactDataset = namedtuple("ContactDataset", "mol1 group1 mol2 group2 contactMap")
 
-u = mda.Universe(topology, trajectory)
+    u = mda.Universe(topology, trajectory)
 
-# Split protein into chains since this information is lost in the GRO file
-protein = u.select_atoms("protein")
-ca = protein.select_atoms("name CA")
+    # Split protein into chains since this information is lost in the GRO file
+    protein = u.select_atoms("protein")
+    ca = protein.select_atoms("name CA")
 
-# Identify the different molecules (peptide, MHC, TCR)
-#ordered_molecules = identify_molecules_from_breaks(distances)
-#ordered_molecules = assign_chains_from_file(ca, md_input)
-chains, chain_map = assign_chains_from_file(ca, md_input)
-ordered_molecules = identify_molecules(chains)
+    # Identify the different molecules (peptide, MHC, TCR)
+    chains, chain_map = assign_chains_from_file(ca, md_input)
+    ordered_molecules = identify_molecules(chains)
 
-# Convert the ResidueGroup into an AtomGroup
-peptide = ordered_molecules[0].atoms
-MHC = sum([mol.atoms for mol in ordered_molecules[1]], mda.AtomGroup([], u))
-TCR = sum([mol.atoms for mol in ordered_molecules[2]], mda.AtomGroup([], u))
+    # Convert the ResidueGroup into an AtomGroup
+    peptide = ordered_molecules[0].atoms
+    MHC = sum([mol.atoms for mol in ordered_molecules[1]], mda.AtomGroup([], u))
+    TCR = sum([mol.atoms for mol in ordered_molecules[2]], mda.AtomGroup([], u))
 
-# Calculate the closest atoms to the peptide, contacts are re-evaluated every frame
-# We use this to avoid calculating too many contacts in the trajectory
-MHC_peptide_contacts = (MHC + peptide).select_atoms("byres around 6 group peptide", peptide=peptide, updating=True, periodic=True)
-TCR_peptide_contacts = (TCR + peptide).select_atoms("byres around 6 group peptide", peptide=peptide, updating=True, periodic=True)
+    # Calculate the closest atoms to the peptide, contacts are re-evaluated every frame
+    # We use this to avoid calculating too many contacts in the trajectory
+    MHC_peptide_contacts = (MHC + peptide).select_atoms("byres around 6 group peptide", peptide=peptide, updating=True, periodic=True)
+    TCR_peptide_contacts = (TCR + peptide).select_atoms("byres around 6 group peptide", peptide=peptide, updating=True, periodic=True)
 
-# Map PDB residue numbers to global residue indices (needed when updating=True)
-peptide_residue_mapping = create_global_residue_map(peptide)
-MHC_residue_mapping = create_global_residue_map(MHC)
-TCR_residue_mapping = create_global_residue_map(TCR)
+    # Map PDB residue numbers to global residue indices (needed when updating=True)
+    peptide_residue_mapping = create_global_residue_map(peptide)
+    MHC_residue_mapping = create_global_residue_map(MHC)
+    TCR_residue_mapping = create_global_residue_map(TCR)
 
-# Function calls
-cmap_avg_MHC = np.zeros((len(peptide.residues), len(MHC.residues)))
-cmap_avg_TCR = np.zeros((len(peptide.residues), len(TCR.residues)))
+    # Function calls
+    cmap_avg_MHC = np.zeros((len(peptide.residues), len(MHC.residues)))
+    cmap_avg_TCR = np.zeros((len(peptide.residues), len(TCR.residues)))
 
-for ts in u.trajectory:
-    # Compute the box dimension for each ts since it might fluctuate during a NPT simulation
-    cmap_avg_MHC = compute_contact_matrix(cmap_avg_MHC, peptide, MHC_peptide_contacts, peptide_residue_mapping, MHC_residue_mapping, box=ts.dimensions)
-    cmap_avg_TCR = compute_contact_matrix(cmap_avg_TCR, peptide, TCR_peptide_contacts, peptide_residue_mapping, TCR_residue_mapping, box=ts.dimensions)
-    #print(len(MHC_peptide_contacts.residues))
+    for ts in u.trajectory:
+        # Compute the box dimension for each ts since it might fluctuate during a NPT simulation
+        cmap_avg_MHC = compute_contact_matrix(cmap_avg_MHC, peptide, MHC_peptide_contacts, peptide_residue_mapping, MHC_residue_mapping, box=ts.dimensions)
+        cmap_avg_TCR = compute_contact_matrix(cmap_avg_TCR, peptide, TCR_peptide_contacts, peptide_residue_mapping, TCR_residue_mapping, box=ts.dimensions)
 
-cmap_avg_MHC /= len(u.trajectory)
-cmap_avg_TCR /= len(u.trajectory)
+    cmap_avg_MHC /= len(u.trajectory)
+    cmap_avg_TCR /= len(u.trajectory)
 
-# Visualize the contact map (good for testing)
-visualize_contact_map(cmap_avg_MHC, cmap_avg_TCR, peptide, MHC, TCR, chain_map)
+    # Visualize the contact map (good for testing)
+    visualize_contact_map(cmap_avg_MHC, cmap_avg_TCR, peptide, MHC, TCR, chain_map)
 
-# Write contact maps to a CSV file
-write_CSV(contacts_filename, [ContactDataset("peptide", peptide, "MHC", MHC, cmap_avg_MHC), ContactDataset("peptide", peptide, "TCR", TCR, cmap_avg_TCR)], chain_map)
+    # Write contact maps to a CSV file
+    write_CSV(contacts_filename, [ContactDataset("peptide", peptide, "MHC", MHC, cmap_avg_MHC), ContactDataset("peptide", peptide, "TCR", TCR, cmap_avg_TCR)], chain_map)
+
+if __name__ == "__main__":
+    main()
 
 # TODO: plot MHC-TCR contacts as well?
 # TODO: remove hard-coded numbers
