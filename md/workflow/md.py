@@ -63,7 +63,7 @@ def remove_heteratom(pdb_original, pdb_protein_only) -> None:
 
 @binary(
     binary=GMXBIN_NAME,
-    args="pdb2gmx -f {{protein}} -o {{structure}} -p {{topology}} -ignh -ff {{ff}} -water {{water}} -merge all < {{select}}",
+    args="pdb2gmx -f {{protein}} -o {{structure}} -p {{topology}} -ignh -ff {{ff}} -water {{water}} -ter -merge all < {{select}}",
 )
 @task(protein=FILE_IN, structure=FILE_OUT, topology=FILE_OUT, posre=FILE_OUT, select=FILE_IN)
 def generate_topology(
