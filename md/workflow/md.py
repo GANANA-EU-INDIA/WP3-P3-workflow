@@ -261,7 +261,7 @@ def npt_preprocess(
     runner="mpirun",
     binary=GMXBIN_NAME,
     processes_per_node=1,
-    args="mdrun -s {{npt_tpr}} -ntomp {{omp}} -pin on -nb gpu -pme gpu -pmefft gpu -bonded gpu -update gpu -g {{log}} -c {{protein_npt}} -cpo {{npt_cpt}} -e {{npt_energy}}",
+    args="mdrun -s {{npt_tpr}} -ntomp {{omp}} -pin on -nb gpu -pme gpu -pmefft gpu -bonded gpu -update gpu -g {{log}} -c {{protein_npt}} -cpo {{npt_cpt}} -e {{npt_energy}} -x {{npt_traj}}",
 )
 @task(
     npt_tpr=FILE_IN,
@@ -270,6 +270,7 @@ def npt_preprocess(
     protein_npt=FILE_OUT,
     npt_cpt=FILE_OUT,
     npt_energy=FILE_OUT,
+    npt_traj=FILE_OUT
 )
 def npt(
     npt_tpr=None,
@@ -278,6 +279,7 @@ def npt(
     protein_npt=None,
     npt_cpt=None,
     npt_energy=None,
+    npt_traj=None
 ) -> None:
     """Perform the equilibration NPT simulation"""
     pass
@@ -455,12 +457,14 @@ def main() -> None:
         protein_prod_npt = str(output_subdir / "protein_prod_npt.gro")
         prod_npt_cpt = str(output_subdir / "prod_npt_traj.cpt")
         prod_npt_energy = str(output_subdir / "prod_npt_energy.edr")
+        prod_npt_traj = str(output_subdir / "traj.xtc")
         npt(
             npt_tpr=prod_npt_tpr,
             log=prod_npt_log,
             protein_npt=protein_prod_npt,
             npt_cpt=prod_npt_cpt,
             npt_energy=prod_npt_energy,
+            npt_traj=prod_npt_traj,
         )
 
     # compss_barrier()
