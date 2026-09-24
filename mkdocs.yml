@@ -31,6 +31,7 @@ nav:
   - PyCOMPSs Installation: PyCOMPSs.md
   - GROMACS Installation: gromacs/leonardo_installation.md
   - Workflow Setup and usage: workflow_setup_and_usage.md
+  - Free Energy Workflow: free_energy.md
   - Run Monitor: run_compss_monitor.md
   - Contribute: contributing.md
 markdown_extensions:
