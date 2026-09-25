@@ -1,5 +1,7 @@
 import argparse
 import os
+import re
+import sys
 from pathlib import Path
 
 from pycompss.api.api import compss_barrier, compss_snapshot
@@ -29,20 +31,6 @@ GMXBIN_NAME = os.environ["GMXBIN_NAME"]
 OPENMP_THREADS = 16
 
 
-parser = argparse.ArgumentParser()
-parser.add_argument(
-    "--dataset",
-    "-d",
-    type=str,
-    required=True,
-    help="Dataset absolute path with PDBs and Gromacs mdm files",
-)
-parser.add_argument(
-    "--output", "-o", type=str, required=True, help="Output absolute path"
-)
-args = parser.parse_args()
-
-
 # =========== ====================== =========== #
 # ===========          TASKS         =========== #
 # =========== ====================== =========== #
@@ -65,9 +53,21 @@ def remove_heteratom(pdb_original, pdb_protein_only) -> None:
     binary=GMXBIN_NAME,
     args="pdb2gmx -f {{protein}} -o {{structure}} -p {{topology}} -ignh -ff {{ff}} -water {{water}} -ter -merge all < {{select}}",
 )
-@task(protein=FILE_IN, structure=FILE_OUT, topology=FILE_OUT, posre=FILE_OUT, select=FILE_IN)
+@task(
+    protein=FILE_IN,
+    structure=FILE_OUT,
+    topology=FILE_OUT,
+    posre=FILE_OUT,
+    select=FILE_IN,
+)
 def generate_topology(
-    protein=None, structure=None, topology=None, posre=None, ff=None, water=None, select=None
+    protein=None,
+    structure=None,
+    topology=None,
+    posre=None,
+    ff=None,
+    water=None,
+    select=None,
 ) -> None:
     """Generate topology file and posre.itp. the -merge all optino is used to have a single top"""
     pass
@@ -270,7 +270,7 @@ def npt_preprocess(
     protein_npt=FILE_OUT,
     npt_cpt=FILE_OUT,
     npt_energy=FILE_OUT,
-    npt_traj=FILE_OUT
+    npt_traj=FILE_OUT,
 )
 def npt(
     npt_tpr=None,
@@ -279,16 +279,120 @@ def npt(
     protein_npt=None,
     npt_cpt=None,
     npt_energy=None,
-    npt_traj=None
+    npt_traj=None,
 ) -> None:
-    """Perform the equilibration NPT simulation"""
+    """Perform the NPT simulation"""
     pass
+
+
+@binary(
+    binary=GMXBIN_NAME,
+    args="energy -f {{edr_file}}",
+)
+@task(
+    quantity={Type: FILE_IN_STDIN},
+    edr_file=FILE_IN,
+    std_out=FILE_OUT_STDOUT,
+)
+def gmx_energy(quantity=None, edr_file=None, std_out=None):
+    """Run gmx energy < quantity"""
+
+
+@task(
+    gmx_energy_output=FILE_IN,
+    mdp=FILE_IN,
+    quantity=IN,
+    returns=bool,
+)
+def check_equilibration(gmx_energy_output=None, mdp=None, quantity=None) -> bool:
+    """
+    Check if equilibration is reached. Returns False if not, True otherwise.
+
+    If quantity == Pressure, density is also checked to be >1000 and <1100
+    """
+
+    def parse_mdp(path, required_keys):
+        """Parse values used by the user. Raises ValueError if required keys missing."""
+        vals = {}
+        with open(path) as f:
+            for line in f:
+                line = line.split(";")[0].strip()
+                if "=" in line:
+                    k, v = line.split("=", 1)
+                    vals[k.strip()] = v.strip()
+        for key in required_keys:
+            if key not in vals:
+                raise ValueError(f"Required parameter '{key}' not found in {path}")
+        return vals
+
+    def get_energy_stats(stream, term_name):
+        # Parse statistics output
+        # GROMACS energy output format:
+        # Energy                      Average   Err.Est.       RMSD  Tot-Drift
+        # -------------------------------------------------------------------------------
+        # Pressure                   -44.0889         41    172.325     220.86  (bar)
+        with open(stream, "r") as result:
+            for line in result:
+                line_stripped = line.strip()
+                # Match line starting with term_name (case-insensitive, flexible whitespace)
+                if line_stripped.lower().startswith(term_name.lower()):
+                    # Extract all floating-point numbers from the line (handles negative, scientific notation)
+                    numbers = re.findall(r"[-+]?\d*\.?\d+(?:[eE][-+]?\d+)?", line_stripped)
+                    if len(numbers) >= 4:
+                        avg, err, rmsd, drift = map(float, numbers[:4])
+                        return avg, err, rmsd, drift
+        return None, None, None, None
+
+    if quantity == "Temperature":
+        params = parse_mdp(mdp, ["ref_t"])
+        ref_t = float(params["ref_t"])
+        temp_avg, temp_err, _, _ = get_energy_stats(gmx_energy_output, "Temperature")
+        temp_ok = abs(temp_avg - ref_t) <= 2 * temp_err
+    elif quantity == "Pressure":
+        params = parse_mdp(mdp, ["ref_p"])
+        ref_p = float(params["ref_p"])
+        press_avg, press_err, _, _ = get_energy_stats(gmx_energy_output, "Pressure")
+        press_ok = abs(press_avg - ref_p) <= 2 * press_err
+        dens_avg, _, _, _ = get_energy_stats(gmx_energy_output, "Density")
+        dens_ok = 1000 < dens_avg < 1100
+    else:
+        raise ValueError("you need to specify a Quantity that can be extracted with gmx energy from the edr file")
+
+
+    if quantity == "Temperature":
+        check = temp_ok
+        str_err = f"T={temp_avg:.2f}±{temp_err:.2f} (ref={ref_t})"
+    elif quantity == "Pressure":
+        check = (press_ok and dens_ok)
+        str_err = f"P={press_avg:.2f}±{press_err:.2f} (ref={ref_p}), Density={dens_avg:.2f}"
+
+    if not check:
+        print(
+            f"WARNING: Equilibration not reached:"
+            f"{str_err}",
+            file=sys.stderr,
+        )
+        return False
+    return True
 
 
 # =========== ====================== =========== #
 # =========== WORKFLOW SPECIFICATION =========== #
 # =========== ====================== =========== #
 def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--dataset",
+        "-d",
+        type=str,
+        required=True,
+        help="Dataset absolute path with PDBs and Gromacs mdm files",
+    )
+    parser.add_argument(
+        "--output", "-o", type=str, required=True, help="Output absolute path"
+    )
+    args = parser.parse_args()
+
     dataset = args.dataset
     output_dir = args.output
 
@@ -438,6 +542,28 @@ def main() -> None:
             npt_cpt=npt_cpt,
             npt_energy=npt_energy,
         )
+
+        eq_temp = str(output_subdir / "eq_temp.txt")
+        q_temp = "Temperature"
+        quantity_file = output_subdir / "quantity_temperature.txt"
+        with open(quantity_file, "w") as gf:
+            gf.write(q_temp + "\n")
+        gmx_energy(quantity=str(quantity_file), edr_file=npt_energy, std_out=eq_temp)
+        temp_check = check_equilibration(gmx_energy_output=eq_temp, mdp=nvt_mdp, quantity=q_temp)
+
+        # eq_p_rho = str(output_subdir / "eq_p_rho.txt")
+        # q_p_rho = "Pressure\nDensity"
+        # quantity_file = output_subdir / "quantity_p_rho.txt"
+        # with open(quantity_file, "w") as gf:
+        #     gf.write(q_p_rho + "\n")
+        # gmx_energy(quantity=str(quantity_file), edr_file=npt_energy, std_out=eq_p_rho)
+        # p_rho_check = check_equilibration(gmx_energy_output=eq_p_rho, mdp=npt_mdp, quantity=q_p_rho)
+
+        # if not (temp_check and p_rho_check):
+        #     print(f"Skipping production run for {pdb.stem}.", file=sys.stderr)
+        #     continue
+
+        compss_barrier()  # barrier to wait for equilibration to be checked
 
         # save out variables
         out[pdb.stem] = [topology, protein_npt]
