@@ -75,8 +75,7 @@ enqueue_compss \
     --qos=${QOS} \
     --wall_clock_limit=$WALL_CLOCK_LIMIT \
     --lang=python \
-    --pythonpath=$PYTHONPATH \
-    --classpath=$WF_PATH \
+    --pythonpath=${WF_PATH}:${PYTHONPATH} \
     --log_dir=$OUTPUT_DIR \
     "${EXTRA_COMPSS_FLAGS[@]}" \
     $WORKFLOW_FILE -d $INPUT_DIR -o $OUTPUT_DIR
