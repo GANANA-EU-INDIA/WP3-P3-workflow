@@ -494,8 +494,6 @@ def main() -> None:
             energy_file=emin_file,
         )
 
-        # +++++++++++ Energy Minimization Analysis
-
         # +++++++++++ Equilibration run
         # NVT
         nvt_mdp = str(input_dir / "nvt-charmm.mdp")
@@ -545,25 +543,25 @@ def main() -> None:
 
         eq_temp = str(output_subdir / "eq_temp.txt")
         q_temp = "Temperature"
-        quantity_file = output_subdir / "quantity_temperature.txt"
-        with open(quantity_file, "w") as gf:
+        quantity_t_file = output_subdir / "quantity_temperature.txt"
+        with open(quantity_t_file, "w") as gf:
             gf.write(q_temp + "\n")
-        gmx_energy(quantity=str(quantity_file), edr_file=npt_energy, std_out=eq_temp)
+        gmx_energy(quantity=str(quantity_t_file), edr_file=npt_energy, std_out=eq_temp)
         temp_check = check_equilibration(gmx_energy_output=eq_temp, mdp=nvt_mdp, quantity=q_temp)
 
-        # eq_p_rho = str(output_subdir / "eq_p_rho.txt")
-        # q_p_rho = "Pressure\nDensity"
-        # quantity_file = output_subdir / "quantity_p_rho.txt"
-        # with open(quantity_file, "w") as gf:
-        #     gf.write(q_p_rho + "\n")
-        # gmx_energy(quantity=str(quantity_file), edr_file=npt_energy, std_out=eq_p_rho)
-        # p_rho_check = check_equilibration(gmx_energy_output=eq_p_rho, mdp=npt_mdp, quantity=q_p_rho)
-
-        # if not (temp_check and p_rho_check):
-        #     print(f"Skipping production run for {pdb.stem}.", file=sys.stderr)
-        #     continue
+        eq_p_rho = str(output_subdir / "eq_p_rho.txt")
+        q_p_rho = "Pressure\nDensity"
+        quantity_pr_file = output_subdir / "quantity_p_rho.txt"
+        with open(quantity_pr_file, "w") as gf:
+            gf.write(q_p_rho + "\n")
+        gmx_energy(quantity=str(quantity_pr_file), edr_file=npt_energy, std_out=eq_p_rho)
+        p_rho_check = check_equilibration(gmx_energy_output=eq_p_rho, mdp=npt_mdp, quantity="Pressure")
 
         compss_barrier()  # barrier to wait for equilibration to be checked
+
+        if not (temp_check and p_rho_check):
+            print(f"Skipping production run for {pdb.stem}.", file=sys.stderr)
+            continue
 
         # save out variables
         out[pdb.stem] = [topology, protein_npt]
