@@ -1,3 +1,7 @@
+---
+hide:
+  - navigation
+---
 # pMHC-TCR MD and Free Energy Workflow Documentation
 
 
