@@ -1,6 +1,6 @@
-# PyCOMPSs installation
+## PyCOMPSs
 
-## Installation on HPC
+### Installation on HPC
 
 This documentation guides the user on installing COMPSs, and its Python bindings PyCOMPSs.
 The COMPSs documentation provides already a good overview of the process and the user is advised to read it beforehand to understand what is installed.
@@ -10,16 +10,16 @@ The COMPSs documentation provides already a good overview of the process and the
     - [COMPSs documentation on dependencies](https://compss-doc.readthedocs.io/en/stable/Sections/01_Installation_Configuration/01_Dependencies/02_Supercomputer.html)
     - [COMPSs documentation on HPC installation](https://compss-doc.readthedocs.io/en/stable/Sections/01_Installation_Configuration/02_Installation/03_Supercomputers.html).
 
-### **[Recommended]** Manual installation: example on [CINECA's Leonardo](https://www.hpc.cineca.it/systems/hardware/leonardo/)
+#### **[Recommended]** Manual installation: example
 
-This installation follows the [official one](https://compss-doc.readthedocs.io/en/stable/Sections/01_Installation_Configuration.html).
+This installation follows the [official one](https://compss-doc.readthedocs.io/en/stable/Sections/01_Installation_Configuration.html). It shows the main passages as done in the [CINECA's cluster Leonardo](https://www.hpc.cineca.it/systems/hardware/leonardo/).
 
 !!! warning
     Please, refer to COMPSs documentation for more info and guidance on your cluster.
 
 We assume that the user is connected to the cluster.
 
-#### Step 1: Load dependencies
+##### 1: Load dependencies
 
 Load the required dependencies. In Leonardo, using modules:
 
@@ -58,7 +58,7 @@ Load the required dependencies. In Leonardo, using modules:
 
     For more info on gcc compilation, see the [Troubleshoot section](#troubleshoot).
 
-#### Step 2: Setup environment variables
+##### 2: Setup environment variables
 
 Make sure the following environment variables are set:
 
@@ -72,7 +72,7 @@ Make sure the following environment variables are set:
 
     These are the default flags of the B2 building system for that version.
 
-#### Step 3: Download and install COMPSs
+##### 3: Download and install COMPSs
 
 From the [download page](https://compss.bsc.es/repo/sc/stable/) select the COMPSs version:
 
@@ -83,11 +83,11 @@ cd COMPSs
 ./install -T <targetDir> [<supercomputer.cfg>]
 ```
 
-Note that `supercomputer.cfg` refers to the config file used for that HPC and Scheduler (more info on the [Configuration section](#infrastructure-configuration), example files can be found in `COMPSs/Runtime/scripts/queues/supercomputers`). `<targetDir>` is where to install COMPSs, be aware that the content of that directory will be erased. `-T` excludes the tracing system, however it can be included if the supercomputer supports `extrae` (for more info see the [official documentation](https://compss-doc.readthedocs.io/en/stable/Sections/04_Ecosystem/03_Tracing/01_Apps_tracing.html)). More info on the available flags with `./install --help`.
+Note that `supercomputer.cfg` refers to the config file used for that HPC and Scheduler (more info on the [Configuration section](#post-installation-configuration), example files can be found in `COMPSs/Runtime/scripts/queues/supercomputers`). `<targetDir>` is where to install COMPSs, be aware that the content of that directory will be erased. `-T` excludes the tracing system, however it can be included if the supercomputer supports `extrae` (for more info see the [official documentation](https://compss-doc.readthedocs.io/en/stable/Sections/04_Ecosystem/03_Tracing/01_Apps_tracing.html)). More info on the available flags with `./install --help`.
 
 A correct installation prints the successful installation of COMPSs and all its bindings to stdout.
 
-#### Step 4: Create a (tcl) module
+##### 4: Create a (tcl) module
 
 To make binaries available and set the right environment variables in the shell, create a [tcl module](https://modules.readthedocs.io/en/latest/index.html):
 
@@ -128,8 +128,7 @@ To test out the installation, after loading the module, run:
 enqueue_compss -h
 ```
 
-<details>
-<summary><b>Dardel Installation</b></summary>
+#### Dardel Installation
 
 We use a custom Java 21 JRE installation because of dependencies mismatch with the OpenJDK available in Dardel. Hence, we use the Oracle JRE LTS 21:
 
@@ -206,17 +205,16 @@ setenv("COMPSS_HOME", compss_home)
 
 The Gromacs version tested is `gromacs/2026.1-cpeGNU-24.11`.
 
-</details>
 
-### **[Experimental]** Installation using Spack
+#### **[Experimental]** Installation using Spack
 
 !!! warning
-    This installation is experimental and not directly supported by the COMPSs' Team. If issues arises, please refer to the officially supported [manual installation](#example-of-manual-installation-on-cinecas-leonardo)
+    This installation is experimental and not directly supported by the COMPSs' Team. If issues arises, please refer to the officially supported [manual installation](#recommended-manual-installation-example)
 
 ??? info "Spack references"
     - [Add a package to Spack](https://spack-tutorial.readthedocs.io/en/latest/tutorial_packaging.html#package-creation-tutorial)
     - [Advance packaging tutorial](https://spack-tutorial.readthedocs.io/en/latest/tutorial_advanced_packaging.html)
-    - Reference files in directory [spack](./spack/)
+    - Reference files in directory [spack](https://github.com/GANANA-EU-INDIA/WP3-P3-workflow/tree/main/docs/spack)
 
 !!! info
     This repository contains two `package.py` depending on the Spack version. `0_22/compss/package.py` has been tested with Spack `<= 0.22.x`. `1_00/compss/package.py` has been tested with Spack `1.0 > <= 1.2`.
@@ -227,7 +225,7 @@ These steps assume that Spack is available in your shell. It might be loaded in 
 
 If you already have a Spack custom repo (in this example, the namespace is called `<repo name>`), skip to step 2, otherwise start from 1 creating a custom repo. Custom repos are required because most probably you won't have the permission to add software to the main repo of your cluster.
 
-#### Step 1: Create a personal repo
+**1. Create a personal repo**
 
 ```bash
 spack repo create path/to/root/repos <repo name>
@@ -236,7 +234,7 @@ spack repo add path/to/root/repos/<repo name>
 
 This will create a new repository, and a namespace, where to add recipes for softwares called `<repo name>`.
 
-#### Step 2: Add COMPSs to the repo
+**2. Add COMPSs to the repo**
 
 ```bash
 spack create --name compss -N <repo name>
@@ -248,7 +246,7 @@ Then you will be prompted with the default editor to update the `package.py` of 
 cp <this repo>/docs/spack/<spack_version>/compss/package.py path/to/root/repos/<repo name>/packages/compss/
 ```
 
-#### Step 3: Install COMPSs
+**3. Install COMPSs**
 
 Concretize the spec and install COMPSs, specifying the `cfg` through the environment variable `COMPSS_SUPERCOMPUTER_CFG` (only the filename):
 
@@ -260,7 +258,7 @@ spack spec -Il compss
 COMPSS_SUPERCOMPUTER_CFG=leonardo.cfg spack install compss
 ```
 
-#### Step 4: Generate the Tcl module
+**4. Generate the Tcl module**
 
 Load environment variables and add binaries to `PATH`:
 
@@ -283,7 +281,7 @@ spack load compss
 To test the installation just type `enqueue_compss --version`.
 
 
-### Troubleshoot
+#### Troubleshoot
 
 ??? note "The user cannot create a personal repo in the cluster"
 
@@ -343,7 +341,7 @@ To test the installation just type `enqueue_compss --version`.
 
     To fix this, you need to modify accordingly to the error the `package.py` file in the `env.set("COMPSS_HOME", compss_home)` line.
 
-## Post-installation configuration
+### Post-installation configuration
 
 COMPSs uses [configuration files to adapt to different clusters](https://compss-doc.readthedocs.io/en/stable/Sections/01_Installation_Configuration/03_Configuration/02_Supercomputer.html). The general structure is the following:
 
@@ -351,7 +349,7 @@ COMPSs uses [configuration files to adapt to different clusters](https://compss-
 
 where `sc.cfg` is the supercomputer config file and `queue_system.cfg` is the confif file for the job scheduler.
 
-### Supercomputer
+#### Supercomputer
 
 This file is selected during [installation](#installation-on-hpc) when calling `./install` or with the env var `COMPSS_SUPERCOMPUTER_CFG`. Afterward, it is renamed as `default.cfg` in the COMPSs installation directory (`<targetDir>Runtime/scripts/queues/supercomputers/default.cfg` or `$COMPSS_HOME/Runtime/scripts/queues/supercomputers/default.cfg`), where config files for other clusters are.
 
@@ -359,28 +357,76 @@ Supercomputers `cfg` files contains a set of variables to indicate the queue sys
 These files are provided with the COMPSs installation, already tuned for different supercomputers by the BSC team.
 We suggest taking a look at them to have an idea of the default parameters. If not specified in the `enqueue_compss` flags, the `default.cfg` one is picked.
 
-For reproducibility, in this repo the `cfg` files stored in [`supercomputer_configs`](./supercomputer_configs/) are tested to work with the implementation of the [`md`](./../md/) workflow.
+For reproducibility, in this repo the `cfg` files stored in [`supercomputer_configs`](https://github.com/GANANA-EU-INDIA/WP3-P3-workflow/tree/main/docs/supercomputer_configs) are tested to work with the implementation of the [`md`](https://github.com/GANANA-EU-INDIA/WP3-P3-workflow/tree/main/md) workflow.
 
-### Queue system (scheduler)
+#### Queue system (scheduler)
 
 The `cfg` files contain a set of variables which are used by the other scripts. On one hand, the queue system `cfg`s contain variables to indicate the commands used by the system to submit and spawn processes, the commands or variables to get the allocated nodes and the directives to indicate the number of nodes, processes, etc.
 These are container in `$COMPSS_HOME/Runtime/scripts/queues/queue_systems/`.
 
 _The user is advice to not change them_.
 
-## Miscellaneous notes
+---
 
-!!! note
-    These are some notes for version `3.3.3` for edge cases or non-standard behaviors.
+## GROMACS
 
-- the `bin` argument `working_dir` can lead to problems even if the file passed as arguments of the function are described by absolute paths. The example is using `pdb_delhetatom`, in which specifying the working dir as the parent to the input and output directories, messes up the paths even though in the `main` function these are passed as `str` of the absolute, resolved, path. (still don't know why).
-- the explicitely defined arguments to a binary inside the `binary` decorator is cleaner, hence it is best practice, than defining arguments through the python function arguments. See [`md.py`](../md/workflow/md.py).
-- shell scripts can be used to wrap another program/binary that does not a flag/way to specify which and how many files it produces (nor a directory where it outputs).
-- the `constraint` decorator instruct the task on the OMP threads to allocate for the task, among many other things. This implies that it set the `OMP_NUM_THREADS` environmental variable that, otherwise, cannot be exported before the `enqueue_compss` invocation.
-- when using `gmx mdrun` you should always check the `mdp` file that starts the simulation to know which file will be produced. A common error is the fact that, [if you don't specify the keywords `nstxout` and similar, you won't get a trajectory file](https://gromacs.bioexcel.eu/t/no-trajectory-trr-file-produced/6964). Only a checkpoint file will be produced. Hence, if in the workflow you specified to output a `trr` file but it does not appear, COMPSs will exit with an error, causing you headaches.
-- COMPSs search for **checkpoints** and loads them! It avoids running the same task multiple times
-  - you have to pass to the `enqueue_compss` the checkpoint related flags, specifically `checkpoint_folder`.
-  - you can run the workflow one time configuring checkpoints. When you run it again with the same checkpoint folder config you'll see in the `runtime.log` (inside `.COMPSs` dir) the loading of the checkpoints.
-  - in the summary, obtained through the `--summary` flag, you can see that in the second run no computations are performed.
-  - one **unresolved issues** (as in the 3.3.3 version): in the second identical run, the runtime waits indefinetly with the line `[LAUNCH_COMPSS] Waiting for application completion` in `compss-[id-job].out`.
-- `print` statements in the main code that write on the STOUT, are catched by the `.COMPSs/jobs/job-[JOBID].out` files.
+!!! warning
+
+      We strongly suggest to follow [the official documentation](https://manual.gromacs.org/current/install-guide/index.html), the following are demostrations for specific systems that are not necessarly the best configuration for that system
+
+??? Example "Example of manual installation on [Leonardo](https://docs.hpc.cineca.it/hpc/leonardo.html#leonardo-card)"
+
+    The main idea is to have GROMACS relying on installed libraries and softwares to exploit their optimization for the specific cluster.
+
+    By loading the `cuda` module, `nvcc` will be available to GROMACS. Moreover, `cmake` is able to find cuFFT from the `LD_LIBRARY_PATH`.
+
+    Procedure:
+
+    ```bash
+    ml gcc/12.2
+    ml cuda/12.2
+    ml openmpi/4.1.6--gcc--12.2.0-cuda-12.2
+    ml fftw/3.3.10--openmpi--4.1.6--gcc--12.2.0-spack0.22
+    ml cmake/4.1.2
+    ml openblas/0.3.26--gcc--12.2.0
+    ml netlib-scalapack/2.2.0--openmpi--4.1.6--gcc--12.2.0-spack0.22
+    ml hdf5/1.14.3--openmpi--4.1.6--gcc--12.2.0-spack0.22
+
+    tar xfz gromacs-2026.3.tar.gz
+    cd gromacs-2026.3
+    mkdir build
+    cd build
+    cmake .. -DGMX_MPI=on -DGMX_GPU=CUDA -DCMAKE_INSTALL_PREFIX=$PUBLIC/gromacs/gromacs_2026_3 -DGMX_FFT_LIBRARY=fftw3 -DCMAKE_CUDA_ARCHITECTURES=80 -DREGRESSIONTEST_DOWNLOAD=ON
+
+    # entering a Leonardo DCGP compute node
+    srun -A cin_staff -p dcgp_usr_prod -N1 -n16 -t 02:00:00 --pty /bin/bash
+    make -j 16
+    make check -j 16
+    make install
+    ```
+
+    Then, one needs to prepare a module file in `<pathToModules>/gromacs/2026.3`, such as:
+
+    ```tcl
+    #%Module
+
+    module-whatis "GROMACS is a molecular dynamics package primarily designed for simulations of proteins, lipids and nucleic acids. It was originally developed in the Biophysical Chemistry department of University of Groningen, and is now maintained by contributors in universities and research centers across the world."
+
+
+    proc ModulesHelp { } {
+    puts stderr "Loads GROMACS 2026.3"
+    }
+
+    set GROMACS_HOME "$PUBLIC/gromacs/gromacs_2026_3"
+    source-sh bash ${GROMACS_HOME}/bin/GMXRC
+
+    prereq gcc
+    prereq cuda/12.2
+    prereq openmpi/4.1.6--gcc--12.2.0-cuda-12.2
+    prereq fftw/3.3.10--openmpi--4.1.6--gcc--12.2.0-spack0.22
+    prereq openblas/0.3.26--gcc--12.2.0
+    prereq netlib-scalapack/2.2.0--openmpi--4.1.6--gcc--12.2.0-spack0.22
+    prereq hdf5/1.14.3--openmpi--4.1.6--gcc--12.2.0-spack0.22
+    ```
+
+    Note that we need to make all the dynamically linked libraries available at runtime. Moreover, we just need to source with [`source-sh`](https://modules.readthedocs.io/en/latest/modulefile.html#mfcmd-source-sh) the bash script provided by GROMACS.

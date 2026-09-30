@@ -20,7 +20,7 @@ git switch -c new-branch-name
 ## 2. Install PyCOMPSs on HPC
 
 !!! info
-    Full details in [PyCOMPSs installation section](./PyCOMPSs.md).
+    Full details in [PyCOMPSs installation section](./installation.md).
 
 #### Dependencies
 
@@ -35,7 +35,7 @@ cd COMPSs
 ./install -T <targetDir> [<supercomputer.cfg>]
 ```
 
-Create a TCL module file to expose `$COMPSS_HOME`, `PATH`, `CLASSPATH`, `PYTHONPATH`. See [PyCOMPSs.md](./PyCOMPSs.md) for a template.
+Create a TCL module file to expose `$COMPSS_HOME`, `PATH`, `CLASSPATH`, `PYTHONPATH`. See [PyCOMPSs.md](./installation.md) for a template.
 
 #### Verify
 
@@ -60,7 +60,7 @@ pip install -r requirements.txt
 
 #### Gromacs
 
-The user is responsable to install Gromacs in the machine. Please refear to the [official installation guide](https://manual.gromacs.org/current/install-guide/index.html) or [an example for the Leonardo cluster](./gromacs/leonardo_installation.md).
+The user is responsible to install Gromacs in the machine. Please refer to the [official installation guide](https://manual.gromacs.org/current/install-guide/index.html) or [an example for the Leonardo cluster](./installation.md).
 
 #### File structure
 
@@ -90,7 +90,7 @@ make clean
 ## 4. Contribute back
 
 !!! info
-    See more info in the [contribution documentation](./contribution.md)
+    See more info in the [contribution documentation](./contributing.md)
 
 Made an improvement? Open a Pull Request:
 
