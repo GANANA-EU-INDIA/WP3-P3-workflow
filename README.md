@@ -1,19 +1,15 @@
 # Framework for AI-driven Immunogenic Peptide Prediction workflows on HPC
 
-**Workflows for Molecular Dynamics and Free energy calculations**
-
-[![GANANA](https://img.shields.io/badge/GANANA-project-orange?style=for-the-badge)](https://ganana.eu/)
-[![PyCOMPSs](https://img.shields.io/badge/PyCOMPSs-workflow-blue?style=for-the-badge)](https://compss-doc.readthedocs.io/)
-[![GROMACS](https://img.shields.io/badge/GROMACS-md-black?style=for-the-badge)](https://www.gromacs.org/)
+### Workflows for Molecular Dynamics and Free energy calculations
 
 > [!WARNING]
-> This repo is a work in progress. Contact authors for more info.
+> This repo is not production-ready. Contact authors for more info.
 
-Repository containing workflows and documentation for the [GANANA](https://ganana.eu/) WP3 - Project 3 "Framework for AI-driven Immunogenic Peptide Prediction". This repo contains the automated workflows for conformational simulations and free energy computations of pMHC-TCR proteins complexes using GROMACS and PyCOMPSs.
+Repository containing workflows and documentation for the [GANANA](https://ganana.eu/) WP3 - Project 3 "Framework for AI-driven Immunogenic Peptide Prediction": MD simulations and free energy computations using [GROMACS](https://www.gromacs.org/) of pMHC-TCR complexes using the [PyCOMPSs](https://compss-doc.readthedocs.io/) framework.
 
-## Documentation
+## [Documentation](https://ganana-eu-india.github.io/WP3-P3-workflow/)
 
-[Quickstart](./docs/quickstart.md) · [PyCOMPSs Install](./docs/PyCOMPSs.md) · [Workflow Setup](./docs/workflow_setup_and_usage.md) · [Contributing](./docs/contribution.md) · [GANANA](https://ganana.eu/)
+[Quickstart](https://ganana-eu-india.github.io/WP3-P3-workflow/quickstart/) · [Installation](https://ganana-eu-india.github.io/WP3-P3-workflow/installation/) · [Usage](https://ganana-eu-india.github.io/WP3-P3-workflow/workflow_setup_and_usage/)
 
 ## Workflows
 

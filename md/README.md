@@ -7,4 +7,4 @@ Features:
 - integration with Slurm (using alla available resourses)
 - checkpoints for resilience against failures and re-runs
 
-### [Documentation to setup and use](../docs/workflow_setup_and_usage.md).
+### [Quickstart to use this workflow](https://ganana-eu-india.github.io/WP3-P3-workflow/quickstart/)
