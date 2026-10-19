@@ -19,8 +19,9 @@ This guide assumes that you have [PyCOMPSs installed](./installation.md).
 Load the same Python that was used to install PyCOMPSs. If you followed the [installation](./installation.md), load the `compss` module with the Python interpreter as dependency. The precise procedure changes from cluster to cluster, it can be as simple as `ml compss`. Then, create a Python virtual environment using:
 
 ```bash
-python -m venv ../envs/<venv_name> --system-site-packages
-. ../envs/<venv_name>/bin/activate
+cd md
+python -m venv .venv --system-site-packages
+. .venv/bin/activate
 ```
 
 `--system-site-packages` is fundamental to make the PyCOMPSs package available when the venv is sourced.
@@ -30,10 +31,51 @@ Add to the [`requirements.txt` file](./requirements.txt) the Python packages req
 ```bash
 python -m pip install -r requirements.txt
 ```
-`uv` or `conda` can be used too.
+Setups using `uv` or `conda` are also possible.
 
-!!! info
-      For more info on how this environment is sourced when submitting a workflow, see [`md/wrapper/env_config_<cluster>.sh`](https://github.com/GANANA-EU-INDIA/WP3-P3-workflow/blob/main/md/wrapper/env_config_leonardo.sh).
+??? info "What if your cluster does not have nodes with internet connection?"
+    Find the precise Python version and architecture. In the cluster, get:
+    ```bash
+    python --version
+    uname -m
+    ```
+
+    Give the requirements and the system info, download locally (or in the machine with internet connection) the required wheels:
+    ```bash
+    pip download -d index \
+          --only-binary=:all: \
+          --platform manylinux2014_x86_64 \
+          --implementation cp --python-version 3.12.1 --abi cp312 \
+          dill guppy3 numpy pyyaml rocrate pytz pdb-tools
+    ```
+    This is an example of requirements.
+
+    Then, move the downloaded wheels inside a directory (e.g., `index`) from the local machine to the cluster:
+    ```bash
+    rsync -PravzHS index cluster:/path/to/project
+    ```
+
+    Finally, on the cluster install the wheels inside a venv and specifying to `pip` where to find the pre-downloaded wheels:
+    ```bash
+    ssh machine
+    # load python interpreter
+    python -m venv .venv
+    . .venv/bin/activate
+    pip install --no-index --find-links=./index dill guppy3 numpy pyyaml rocrate pytz pdb-tools
+    ```
+
+### Shell environment or "Does you cluster have a setup `md/wrapper/env_setup_XXX.sh` file?"
+
+To prepare the shell environment for a workflow submition, a file `md/wrapper/env_setup_XXX.sh`, where `XXX` is the nickname of your cluster, it sourced before anything (more details on [repository structure](#repository-structure)). In a nutshell, this bash file contains:
+
+- setup to use `enqueue_compss`: this can be a [module load](https://ganana-eu-india.github.io/WP3-P3-workflow/installation/#4-create-a-tcl-module) or sourcing the [`compssenv` file](https://compss-doc.readthedocs.io/en/stable/Sections/03_Execution/02_Supercomputer.html#compss-environment-script)
+- setup to use `gmx`: [same as above](https://manual.gromacs.org/current/install-guide/index.html#getting-access-to-gromacs-after-installation)
+- configuration of various Slurm and COMPSs flags
+- etc.
+
+In the repo, [setup files are present for various clusters](https://github.com/GANANA-EU-INDIA/WP3-P3-workflow/tree/main/md/wrapper) (Leonardo Booster, Marenostrum5 ACC, Dardel gpu, Lumi-G), however these files need to be adapted to the user own environment.
+For new clusters, use the above mentioned files as templates. We suggest to test the setup on an interactive shell session before try to submit workflows.
+
 
 ## Usage
 
