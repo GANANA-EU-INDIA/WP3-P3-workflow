@@ -48,7 +48,7 @@ Setups using `uv` or `conda` are also possible.
           --implementation cp --python-version 3.12.1 --abi cp312 \
           dill guppy3 numpy pyyaml rocrate pytz pdb-tools
     ```
-    This is an example of requirements.
+    This is an example of requirements and system info.
 
     Then, move the downloaded wheels inside a directory (e.g., `index`) from the local machine to the cluster:
     ```bash

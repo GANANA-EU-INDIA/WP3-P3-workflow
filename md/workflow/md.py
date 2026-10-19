@@ -157,9 +157,10 @@ def emin_preprocess(
     pass
 
 
-# Note that computing units here are used to specify
+# NOTE that computing units here are used to specify
 # the number of cores available for the task (< than the available CPUS_PER_NODE).
 # In this case, it is use to specify the number of OpenMP threads
+# NOTE: on some Gromacs installation, you might need the additional flag "-ntmpi 1" in all mdrun commands
 @constraint(computing_units=OPENMP_THREADS)
 @binary(
     binary=GMXBIN_NAME,
