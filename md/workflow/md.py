@@ -30,6 +30,15 @@ GMXBIN_NAME = os.environ["GMXBIN_NAME"]
 # NOTE: it can be changed in the Worflow, placed here for convinience
 OPENMP_THREADS = 16
 
+# Dynamic selection of MPI executable
+CLUSTERNAME = os.environ.get("CLUSTERNAME", "")
+if CLUSTERNAME == "lumi":
+  MPI_RUNNER = "srun"
+elif CLUSTERNAME in ("leonardo", "mn5", "dardel"):
+  MPI_RUNNER = "mpirun"
+else:
+  raise ValueError("Did you set CLUSTERNAME?")
+
 
 # =========== ====================== =========== #
 # ===========          TASKS         =========== #
@@ -205,7 +214,7 @@ def nvt_preprocess(
     ]
 )
 @mpi(
-    runner="mpirun",
+    runner=MPI_RUNNER,
     binary=GMXBIN_NAME,
     processes_per_node=1,
     args="mdrun -s {{nvt_tpr}} -ntomp {{omp}} -pin on -nb gpu -pme gpu -pmefft gpu -bonded gpu -update gpu -g {{log}} -c {{protein_nvt}} -cpo {{nvt_cpt}} -e {{nvt_energy}}",
@@ -259,7 +268,7 @@ def npt_preprocess(
     ]
 )
 @mpi(
-    runner="mpirun",
+    runner=MPI_RUNNER,
     binary=GMXBIN_NAME,
     processes_per_node=1,
     args="mdrun -s {{npt_tpr}} -ntomp {{omp}} -pin on -nb gpu -pme gpu -pmefft gpu -bonded gpu -update gpu -g {{log}} -c {{protein_npt}} -cpo {{npt_cpt}} -e {{npt_energy}} -x {{npt_traj}}",
