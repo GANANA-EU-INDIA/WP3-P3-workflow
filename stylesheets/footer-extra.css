@@ -1,0 +1,28 @@
+.md-footer-meta__inner {
+  align-items: center; /* vertically centers the two columns against each other */
+}
+
+.md-footer-left {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: .2rem;
+}
+
+.md-footer-collaborators {
+  font-size: .64rem;
+  opacity: .7;
+}
+
+.md-footer-collaborators__label {
+  margin-right: .4rem;
+}
+
+.md-footer-collaborators a {
+  color: inherit;
+  margin-right: .6rem;
+}
+
+.md-footer-collaborators a:last-child {
+  margin-right: 0;
+}
