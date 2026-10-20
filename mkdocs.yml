@@ -32,7 +32,10 @@ theme:
 nav:
   - Home: index.md
   - Quickstart: quickstart.md
-  - Installation: installation.md
+  - Installation:
+      - Overview: installation.md
+      - Clusters: clusters.md
+#  - Installation: installation.md
   - Usage: workflow_setup_and_usage.md
   - Tools: tools.md
   - Contribute: contributing.md

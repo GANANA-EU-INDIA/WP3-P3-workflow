@@ -159,7 +159,7 @@ The GROMACS version tested is `gromacs/2026.1-cpeGNU-24.11`, a module provided b
 
 ### PyCOMPSs
 
-Already provided as a module by the BSC team.
+Already provided as a module by the BSC team. The configuration file used is the one provided by default by COMPSs `mn5_acc.cfg`.
 
 ### GROMACS
 
