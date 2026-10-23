@@ -64,6 +64,9 @@ if [ ! -d "$GMXLIB/charmm36-jul2022.ff" ] || [ -z "$(ls -A $GMXLIB/charmm36-jul2
     exit 1
 fi
 
+export OMP_NUM_THREADS=8
+export GPU_VENDOR=nvidia
+
 # =========== ====================== =========== #
 # ===========   Python environment   =========== #
 # =========== ====================== =========== #
