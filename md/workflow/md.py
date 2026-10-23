@@ -28,7 +28,7 @@ GMXBIN_NAME = os.environ["GMXBIN_NAME"]
 
 # Arguments to control OpenMP threads etc.
 # NOTE: it can be changed in the Worflow, placed here for convinience
-OPENMP_THREADS = 16
+OPENMP_THREADS = os.environ.get("OMP_NUM_THREADS", "1")
 
 # Dynamic selection of MPI executable
 CLUSTERNAME = os.environ.get("CLUSTERNAME", "")
@@ -269,9 +269,9 @@ def npt_preprocess(
 )
 @mpi(
     runner=MPI_RUNNER,
-    binary=GMXBIN_NAME,
+    binary="gpu_wrap.sh",
     processes_per_node=1,
-    args="mdrun -s {{npt_tpr}} -ntomp {{omp}} -pin on -nb gpu -pme gpu -pmefft gpu -bonded gpu -update gpu -g {{log}} -c {{protein_npt}} -cpo {{npt_cpt}} -e {{npt_energy}} -x {{npt_traj}}",
+    args=GMXBIN_NAME + " mdrun -s {{npt_tpr}} -ntomp {{omp}} -pin on -nb gpu -pme gpu -pmefft gpu -bonded gpu -update gpu -g {{log}} -c {{protein_npt}} -cpo {{npt_cpt}} -e {{npt_energy}} -x {{npt_traj}}",
 )
 @task(
     npt_tpr=FILE_IN,
@@ -599,6 +599,48 @@ def main() -> None:
             npt_cpt=prod_npt_cpt,
             npt_energy=prod_npt_energy,
             npt_traj=prod_npt_traj,
+        )
+
+        prod_npt_log2 = str(output_subdir / "prod_npt_log2.log")
+        protein_prod_npt2 = str(output_subdir / "protein_prod_npt2.gro")
+        prod_npt_cpt2 = str(output_subdir / "prod_npt_traj2.cpt")
+        prod_npt_energy2 = str(output_subdir / "prod_npt_energy2.edr")
+        prod_npt_traj2 = str(output_subdir / "traj2.xtc")
+        npt(
+            npt_tpr=prod_npt_tpr,
+            log=prod_npt_log2,
+            protein_npt=protein_prod_npt2,
+            npt_cpt=prod_npt_cpt2,
+            npt_energy=prod_npt_energy2,
+            npt_traj=prod_npt_traj2,
+        )
+
+        prod_npt_log3 = str(output_subdir / "prod_npt_log3.log")
+        protein_prod_npt3 = str(output_subdir / "protein_prod_npt3.gro")
+        prod_npt_cpt3 = str(output_subdir / "prod_npt_traj3.cpt")
+        prod_npt_energy3 = str(output_subdir / "prod_npt_energy3.edr")
+        prod_npt_traj3 = str(output_subdir / "traj3.xtc")
+        npt(
+            npt_tpr=prod_npt_tpr,
+            log=prod_npt_log3,
+            protein_npt=protein_prod_npt3,
+            npt_cpt=prod_npt_cpt3,
+            npt_energy=prod_npt_energy3,
+            npt_traj=prod_npt_traj3,
+        )
+
+        prod_npt_log4 = str(output_subdir / "prod_npt_log4.log")
+        protein_prod_npt4 = str(output_subdir / "protein_prod_npt4.gro")
+        prod_npt_cpt4 = str(output_subdir / "prod_npt_traj4.cpt")
+        prod_npt_energy4 = str(output_subdir / "prod_npt_energy4.edr")
+        prod_npt_traj4 = str(output_subdir / "traj4.xtc")
+        npt(
+            npt_tpr=prod_npt_tpr,
+            log=prod_npt_log4,
+            protein_npt=protein_prod_npt4,
+            npt_cpt=prod_npt_cpt4,
+            npt_energy=prod_npt_energy4,
+            npt_traj=prod_npt_traj4,
         )
 
     # compss_barrier()
