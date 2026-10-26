@@ -71,7 +71,7 @@ Note that we need to make all the dynamically linked libraries available at runt
 ## [Dardel](https://www.pdc.kth.se/hpc-services/computing-systems/dardel-hpc-system/about-the-dardel-system-1.1053338) gpu
 
 !!! info "Last update"
-    2026/09/01
+    2026/10/31
 
 ### PyCOMPSs
 
@@ -112,20 +112,17 @@ Then we can install COMPSs with:
 
 ```bash
 # Load order might be important
-ml PDCOLD/24.11
+ml PDC/26.03
 module use <pathToModules>/modules
 ml java/21
-ml boost/1.85.0-cpeGNU-24.11
-ml all-spack-modules/0.23.1 # required for the following Python version
-ml python/3.13.0-gcc-cgo
+ml boost/1.90.0-cpeGNU-26.03
+ml cray-python/3.12.12
 ml gcc/12.2.0
-python -m ensurepip --upgrade
-python -m pip install --user wheel setuptools --upgrade
 
 wget https://compss.bsc.es/repo/sc/stable/COMPSs_3.4.tar.gz
 tar -xvzf COMPSs_3.4.tar.gz
 cd COMPSs
-./install -T <proj>/installation/compss_3_4 dardel.cfg
+./install -T <pathToInstallation>/installation/compss_3_4 dardel.cfg
 ```
 
 And generated the following **Lua** module (for the `Lmod` system) in `<pathToModules>/modules/compss/3.4.lua`:
@@ -137,10 +134,9 @@ local compss_home = "<pathToInstallation>/installation/compss_3_4/"
 
 prepend_path("MODULEPATH", "<pathToModules>/modules")
 
-depends_on("PDCOLD/24.11")
-depends_on("all-spack-modules/0.23.1")
-depends_on("boost/1.85.0-cpeGNU-24.11")
-depends_on("python/3.13.0-gcc-cgo")
+depends_on("PDC/26.03")
+depends_on("boost/1.90.0-cpeGNU-26.03")
+depends_on("cray-python/3.12.12")
 depends_on("java/21")
 
 source_sh("bash", pathJoin(compss_home, "compssenv"))
@@ -150,7 +146,7 @@ setenv("COMPSS_HOME", compss_home)
 
 ### GROMACS
 
-The GROMACS version tested is `gromacs/2026.1-cpeGNU-24.11`, a module provided by the sysadmin.
+The GROMACS version tested is `gromacs/2026.1-gpu-cpe2603-rocm7.0.2`, a module provided by the sysadmin.
 
 ## [Marenostrum5](https://www.bsc.es/marenostrum/marenostrum-5) ACC
 
