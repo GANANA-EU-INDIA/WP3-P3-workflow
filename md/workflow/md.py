@@ -32,9 +32,9 @@ OPENMP_THREADS = os.environ.get("OMP_NUM_THREADS", "1")
 
 # Dynamic selection of MPI executable
 CLUSTERNAME = os.environ.get("CLUSTERNAME", "")
-if CLUSTERNAME == "lumi":
+if CLUSTERNAME in ("lumi", "dardel"):
   MPI_RUNNER = "srun"
-elif CLUSTERNAME in ("leonardo", "mn5", "dardel"):
+elif CLUSTERNAME in ("leonardo", "mn5"):
   MPI_RUNNER = "mpirun"
 else:
   raise ValueError("Did you set CLUSTERNAME?")
