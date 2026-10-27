@@ -1,0 +1,1182 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://GANANA-EU-INDIA.github.io/WP3-P3-Workflow/installation/">
+      
+      
+        <link rel="prev" href="../quickstart/">
+      
+      
+        <link rel="next" href="../clusters/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../img/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
+    
+    
+      
+        <title>Overview - pMHC-TCR MD and Free Energy Workflow</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/footer-extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#pycompss" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="pMHC-TCR MD and Free Energy Workflow" class="md-header__button md-logo" aria-label="pMHC-TCR MD and Free Energy Workflow" data-md-component="logo">
+      
+  <img src="../img/favicon.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            pMHC-TCR MD and Free Energy Workflow
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Overview
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/GANANA-EU-INDIA/WP3-P3-Workflow" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    WP3-P3-Workflow
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../quickstart/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Quickstart
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
+          
+  
+  
+  Installation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../workflow_setup_and_usage/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Usage
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../tools/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Tools
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../contributing/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Contribute
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="pMHC-TCR MD and Free Energy Workflow" class="md-nav__button md-logo" aria-label="pMHC-TCR MD and Free Energy Workflow" data-md-component="logo">
+      
+  <img src="../img/favicon.png" alt="logo">
+
+    </a>
+    pMHC-TCR MD and Free Energy Workflow
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/GANANA-EU-INDIA/WP3-P3-Workflow" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    WP3-P3-Workflow
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quickstart
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Installation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#pycompss" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PyCOMPSs
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="PyCOMPSs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#installation-on-hpc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Installation on HPC
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Installation on HPC">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#recommended-manual-installation-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [Recommended] Manual installation: example
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[Recommended] Manual installation: example">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-load-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1: Load dependencies
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-setup-environment-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2: Setup environment variables
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-download-and-install-compss" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3: Download and install COMPSs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-create-a-tcl-module" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4: Create a (tcl) module
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#experimental-installation-using-spack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [Experimental] Installation using Spack
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#troubleshoot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshoot
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#post-installation-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Post-installation configuration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Post-installation configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#supercomputer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Supercomputer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#queue-system-scheduler" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Queue system (scheduler)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gromacs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GROMACS
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../clusters/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Clusters
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../workflow_setup_and_usage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Usage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tools
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contribute
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+  <h1>Overview</h1>
+
+<h2 id="pycompss">PyCOMPSs</h2>
+<h3 id="installation-on-hpc">Installation on HPC</h3>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>The <a href="../clusters/">Clusters page</a> documents PyCOMPSs installation/configuration for various clusters. It might be interesting to check out if you need to setup on these machines.</p>
+</div>
+<p>This documentation guides the user on installing COMPSs, and its Python bindings PyCOMPSs.
+The COMPSs documentation provides already a good overview of the process and the user is advised to read it beforehand to understand what is installed.</p>
+<details class="info">
+<summary>PyCOMPSs documentation links</summary>
+<ul>
+<li><a href="https://compss-doc.readthedocs.io/en/stable/Sections/01_Installation_Configuration.html">Installation overview</a></li>
+<li><a href="https://compss-doc.readthedocs.io/en/stable/Sections/01_Installation_Configuration/01_Dependencies/02_Supercomputer.html">COMPSs documentation on dependencies</a></li>
+<li><a href="https://compss-doc.readthedocs.io/en/stable/Sections/01_Installation_Configuration/02_Installation/03_Supercomputers.html">COMPSs documentation on HPC installation</a>.</li>
+</ul>
+</details>
+<h4 id="recommended-manual-installation-example"><strong>[Recommended]</strong> Manual installation: example</h4>
+<p>This installation follows the <a href="https://compss-doc.readthedocs.io/en/stable/Sections/01_Installation_Configuration.html">official one</a>. It shows the main passages as done in the <a href="https://www.hpc.cineca.it/systems/hardware/leonardo/">CINECA's cluster Leonardo</a>.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Please, refer to COMPSs documentation for more info and guidance on your cluster.</p>
+</div>
+<p>We assume that the user is connected to the cluster.</p>
+<h5 id="1-load-dependencies">1: Load dependencies</h5>
+<p>Load the required dependencies. In Leonardo, using modules:</p>
+<ul>
+<li>
+<p>Java:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>module<span class="w"> </span>load<span class="w"> </span>openjdk/11.0.20.1_1
+</code></pre></div>
+</li>
+<li>
+<p>Boost:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>module<span class="w"> </span>load<span class="w"> </span>boost/1.85.0--openmpi--4.1.6--gcc--12.2.0
+</code></pre></div>
+</li>
+<li>
+<p>Python:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>module<span class="w"> </span>load<span class="w"> </span>python/3.11.7
+</code></pre></div>
+<p>In Leonardo, you need to install <code>pip</code> and other required building tools for the user. <a href="https://pip.pypa.io/en/stable/installation/#supported-methods">For example</a>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>python<span class="w"> </span>-m<span class="w"> </span>ensurepip<span class="w"> </span>--upgrade
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>--user<span class="w"> </span>wheel<span class="w"> </span>setuptools<span class="w"> </span>--upgrade
+</code></pre></div>
+</li>
+<li>
+<p>Autotools: usually already available. Testable with <code>autoconf --version</code>.</p>
+</li>
+<li>
+<p>gcc:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>module<span class="w"> </span>load<span class="w"> </span>gcc/12.2.0
+</code></pre></div>
+<p>For more info on gcc compilation, see the <a href="#troubleshoot">Troubleshoot section</a>.</p>
+</li>
+</ul>
+<h5 id="2-setup-environment-variables">2: Setup environment variables</h5>
+<p>Make sure the following environment variables are set:</p>
+<ul>
+<li>
+<p><code>JAVA_HOME</code>: should be set by the <code>openjdk</code> module. Check with <code>echo $JAVA_HOME</code>.</p>
+</li>
+<li>
+<p><code>BOOST_CPPFLAGS</code>: check the one used for the <code>boost</code> library compilation. On Leonardo, inspect <code>$BOOST_HOME/.spack/spack-build-out.txt</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">BOOST_CPPFLAGS</span><span class="o">=</span><span class="s2">"-std=c++11 -pthread -O2 -s"</span>
+</code></pre></div>
+<p>These are the default flags of the B2 building system for that version.</p>
+</li>
+</ul>
+<h5 id="3-download-and-install-compss">3: Download and install COMPSs</h5>
+<p>From the <a href="https://compss.bsc.es/repo/sc/stable/">download page</a> select the COMPSs version:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>wget<span class="w"> </span>https://compss.bsc.es/repo/sc/stable/COMPSs_&lt;version&gt;.tar.gz
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>tar<span class="w"> </span>-xvzf<span class="w"> </span>COMPSs_&lt;version&gt;.tar.gz
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nb">cd</span><span class="w"> </span>COMPSs
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>./install<span class="w"> </span>-T<span class="w"> </span>&lt;targetDir&gt;<span class="w"> </span><span class="o">[</span>&lt;supercomputer.cfg&gt;<span class="o">]</span>
+</code></pre></div>
+<p>Note that <code>supercomputer.cfg</code> refers to the config file used for that HPC and Scheduler (more info on the <a href="#post-installation-configuration">Configuration section</a>, example files can be found in <code>COMPSs/Runtime/scripts/queues/supercomputers</code>). <code>&lt;targetDir&gt;</code> is where to install COMPSs, be aware that the content of that directory will be erased. <code>-T</code> excludes the tracing system, however it can be included if the supercomputer supports <code>extrae</code> (for more info see the <a href="https://compss-doc.readthedocs.io/en/stable/Sections/04_Ecosystem/03_Tracing/01_Apps_tracing.html">official documentation</a>). More info on the available flags with <code>./install --help</code>.</p>
+<p>A correct installation prints the successful installation of COMPSs and all its bindings to stdout.</p>
+<h5 id="4-create-a-tcl-module">4: Create a (tcl) module</h5>
+<p>To make binaries available and set the right environment variables in the shell, create a <a href="https://modules.readthedocs.io/en/latest/index.html">tcl module</a>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>touch<span class="w"> </span>&lt;path/to/modules&gt;/compss/&lt;version&gt;
+</code></pre></div>
+<p>A minimal example:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c">#%Module</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="k">set</span><span class="w"> </span>COMPSS_HOME<span class="w"> </span><span class="s2">"&lt;targetDir&gt;"</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="nv">prepend-path</span><span class="w"> </span>PATH<span class="w"> </span><span class="s2">"${COMPSS_HOME}/Runtime/scripts/user:${COMPSS_HOME}/Runtime/scripts/utils"</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="nv">prepend-path</span><span class="w"> </span>CLASSPATH<span class="w"> </span><span class="s2">"${COMPSS_HOME}/Runtime/compss-engine.jar"</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="nv">prepend-path</span><span class="w"> </span>PATH<span class="w"> </span><span class="s2">"${COMPSS_HOME}/Bindings/c/bin"</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="nv">prepend-path</span><span class="w"> </span>PYTHONPATH<span class="w"> </span><span class="s2">"${COMPSS_HOME}/Bindings/python/</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="s2">export R_LIBS_USER=${COMPSS_HOME}/Bindings/RCOMPSs/user_libs/:$R_LIBS_USER</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="s2">setenv COMPSS_HOME $COMPSS_HOME</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="s2">prereq python/3.11.7</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="s2">prereq openjdk/11.0.20.1_1</span>
+</code></pre></div>
+<p><code>R_LIBS_USER</code> is used in case of R bindings installation.</p>
+<p>Save it in <code>&lt;path/to/modules&gt;/compss/[version]</code> and load it using:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>module<span class="w"> </span>use<span class="w"> </span>--append<span class="w"> </span>&lt;path/to/modules&gt;<span class="w"> </span><span class="c1"># that can be added in ~/.bashrc or before a workflow run</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>module<span class="w"> </span>load<span class="w"> </span>compss/<span class="o">[</span>version<span class="o">]</span>
+</code></pre></div>
+<p>To test out the installation, after loading the module, run:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>enqueue_compss<span class="w"> </span>-h
+</code></pre></div>
+<h4 id="experimental-installation-using-spack"><strong>[Experimental]</strong> Installation using Spack</h4>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This installation is experimental and not directly supported by the COMPSs' Team. If issues arises, please refer to the officially supported <a href="#recommended-manual-installation-example">manual installation</a></p>
+</div>
+<details class="info">
+<summary>Spack references</summary>
+<ul>
+<li><a href="https://spack-tutorial.readthedocs.io/en/latest/tutorial_packaging.html#package-creation-tutorial">Add a package to Spack</a></li>
+<li><a href="https://spack-tutorial.readthedocs.io/en/latest/tutorial_advanced_packaging.html">Advance packaging tutorial</a></li>
+<li>Reference files in directory <a href="https://github.com/GANANA-EU-INDIA/WP3-P3-workflow/tree/main/docs/spack">spack</a></li>
+</ul>
+</details>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>This repository contains two <code>package.py</code> depending on the Spack version. <code>0_22/compss/package.py</code> has been tested with Spack <code>&lt;= 0.22.x</code>. <code>1_00/compss/package.py</code> has been tested with Spack <code>1.0 &gt; &lt;= 1.2</code>.</p>
+<p>If you encounter any issues in the process, read the <a href="#troubleshoot">troubleshooting section</a> before open an issue.</p>
+</div>
+<p>These steps assume that Spack is available in your shell. It might be loaded in your HPC environment, for example using <code>module load spack</code>.</p>
+<p>If you already have a Spack custom repo (in this example, the namespace is called <code>&lt;repo name&gt;</code>), skip to step 2, otherwise start from 1 creating a custom repo. Custom repos are required because most probably you won't have the permission to add software to the main repo of your cluster.</p>
+<p><strong>1. Create a personal repo</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>spack<span class="w"> </span>repo<span class="w"> </span>create<span class="w"> </span>path/to/root/repos<span class="w"> </span>&lt;repo<span class="w"> </span>name&gt;
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>spack<span class="w"> </span>repo<span class="w"> </span>add<span class="w"> </span>path/to/root/repos/&lt;repo<span class="w"> </span>name&gt;
+</code></pre></div>
+<p>This will create a new repository, and a namespace, where to add recipes for softwares called <code>&lt;repo name&gt;</code>.</p>
+<p><strong>2. Add COMPSs to the repo</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>spack<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>compss<span class="w"> </span>-N<span class="w"> </span>&lt;repo<span class="w"> </span>name&gt;
+</code></pre></div>
+<p>Then you will be prompted with the default editor to update the <code>package.py</code> of COMPSs that you can close. Overwrite the content of <code>spack edit compss</code> with the <code>package.py</code> from this repo:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>cp<span class="w"> </span>&lt;this<span class="w"> </span>repo&gt;/docs/spack/&lt;spack_version&gt;/compss/package.py<span class="w"> </span>path/to/root/repos/&lt;repo<span class="w"> </span>name&gt;/packages/compss/
+</code></pre></div>
+<p><strong>3. Install COMPSs</strong></p>
+<p>Concretize the spec and install COMPSs, specifying the <code>cfg</code> through the environment variable <code>COMPSS_SUPERCOMPUTER_CFG</code> (only the filename):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>spack<span class="w"> </span>spec<span class="w"> </span>-Il<span class="w"> </span>compss
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="nv">COMPSS_SUPERCOMPUTER_CFG</span><span class="o">=</span>leonardo.cfg<span class="w"> </span>spack<span class="w"> </span>install<span class="w"> </span>compss
+</code></pre></div>
+<p><strong>4. Generate the Tcl module</strong></p>
+<p>Load environment variables and add binaries to <code>PATH</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>spack<span class="w"> </span>module<span class="w"> </span>tcl<span class="w"> </span>refresh<span class="w"> </span>-y
+</code></pre></div>
+<p>Now, load COMPSs in the current shell:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>module<span class="w"> </span>load<span class="w"> </span>compss
+</code></pre></div>
+<p>The full name will look something like <code>compss/3.3.3--gcc--12.2.0</code>. Alternatively:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>spack<span class="w"> </span>load<span class="w"> </span>compss
+</code></pre></div>
+<p>To test the installation just type <code>enqueue_compss --version</code>.</p>
+<h4 id="troubleshoot">Troubleshoot</h4>
+<details class="note">
+<summary>The user cannot create a personal repo in the cluster</summary>
+<p>If this operation results in permission errors in your cluster, probably the user is not allowed to have a personal <code>repo.yaml</code> file.
+In this case, contact your system administrator. A possible solution could be <a href="https://spack.readthedocs.io/en/latest/configuration.html#overriding-local-configuration">re-enable the user to perform such operation</a> specifying <code>unset SPACK_DISABLE_LOCAL_CONFIG</code></p>
+</details>
+<details class="note">
+<summary>COMPSs cannot be found when creating the Spack spec</summary>
+<p>In a cluster, is customary to have a system Spack repository called <code>builtin</code>. This can be checked using:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>$<span class="w"> </span>spack<span class="w"> </span>repo<span class="w"> </span>list
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="o">[</span>+<span class="o">]</span><span class="w"> </span><span class="nb">builtin</span><span class="w">     </span>v2.2<span class="w">    </span>/path/to/builtin
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="o">[</span>+<span class="o">]</span><span class="w"> </span>&lt;repo<span class="w"> </span>name&gt;<span class="w">    </span>v2.4<span class="w">    </span>/path/to/&lt;repo<span class="w"> </span>name&gt;
+</code></pre></div>
+If <code>builtin</code> is higher than you personal <code>&lt;repo name&gt;</code>, as in the above output, Spack might not find <code>compss</code> because it searches for it in <code>builtins</code>. To solve this, you can specify the namespace from which the package should be installed:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>spack<span class="w"> </span>spec<span class="w"> </span>-Il<span class="w"> </span>&lt;repo<span class="w"> </span>name&gt;.compss
+</code></pre></div>
+and similarly when installing it.</p>
+</details>
+<details class="note">
+<summary>Errors while compiling COMPSs with gcc 13 or later</summary>
+<p>There are two possibilities. You can unsure that the C compilation is compliant with the COMPSs code by specifying the environmental variable <code>export CFLAGS="-std=gnu17"</code> before installing COMPSs. This is an easy fix with recent <code>gcc</code> versions. You might need to modify the spack recipe in case the variable is not correctly used.</p>
+<p>On the other side, one can use <code>gcc</code> 12 by specifying to spack to use it. To ensure this you can specify a <a href="https://spack.readthedocs.io/en/latest/frequently_asked_questions.html#specific-compiler-for-all-packages">compilation preference</a> (for transitive dependencies, because COMPSs does not depend on <code>gcc</code> directly). On Spack 1.0 or later, find Spack's <code>package.yaml</code> with:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>spack<span class="w"> </span>config<span class="w"> </span>edit<span class="w"> </span>packages
+</code></pre></div>
+and add:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>packages:
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="w">  </span>c:
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="w">    </span>prefer:
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="w">    </span>-<span class="w"> </span>gcc@12
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a><span class="w">  </span>cxx:
+<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a><span class="w">    </span>prefer:
+<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a><span class="w">    </span>-<span class="w"> </span>gcc@12
+</code></pre></div></p>
+</details>
+<details class="note">
+<summary>Cannot install PyCOMPSs because no <code>pip</code> available</summary>
+<p>In this case, you need to install <code>pip</code> within the Python interpreter that you use to install PyCOMPSs and run workflows. Follow the <a href="https://pip.pypa.io/en/stable/installation/">official documentation</a> for this.</p>
+<p>Be aware that if you install <code>pip</code> and PyCOMPSs within a <code>venv</code>, PyCOMPSs will be installed <strong>only</strong> on that virtual environment. Therefore, you will need to always source it to run a workflow. We discourage the latter approach.</p>
+</details>
+<details class="note">
+<summary>No module compss when using module load</summary>
+<p>If you cannot find the <code>compss</code> module, you need to issue first (or append to your shell config file, e.g. <code>~/.bashrc</code>, to make it permanent) <code>module use --append $SPACK_HOME/modules/</code> or the location where Spack creates modules.</p>
+</details>
+<details class="note">
+<summary><code>enqueue_compss</code> runs but it cannot find other binaries</summary>
+<p>If binaries like <code>enqueue_compss</code> or related are in the <code>PATH</code> variable, but do not work when invoked, inspect the module file generated with <code>ml show compss</code>. A common problem is an incorrect <code>COMPSS_HOME</code> environmental variable.</p>
+<p>To fix this, you need to modify accordingly to the error the <code>package.py</code> file in the <code>env.set("COMPSS_HOME", compss_home)</code> line.</p>
+</details>
+<h3 id="post-installation-configuration">Post-installation configuration</h3>
+<p>COMPSs uses <a href="https://compss-doc.readthedocs.io/en/stable/Sections/01_Installation_Configuration/03_Configuration/02_Supercomputer.html">configuration files to adapt to different clusters</a>. The general structure is the following:</p>
+<p><img alt="compss configs" src="https://compss-doc.readthedocs.io/en/stable/_images/queue_scripts_structure.png" /></p>
+<p>where <code>sc.cfg</code> is the supercomputer config file and <code>queue_system.cfg</code> is the confif file for the job scheduler.</p>
+<h4 id="supercomputer">Supercomputer</h4>
+<p>This file is selected during <a href="#installation-on-hpc">installation</a> when calling <code>./install</code> or with the env var <code>COMPSS_SUPERCOMPUTER_CFG</code>. Afterward, it is renamed as <code>default.cfg</code> in the COMPSs installation directory (<code>&lt;targetDir&gt;Runtime/scripts/queues/supercomputers/default.cfg</code> or <code>$COMPSS_HOME/Runtime/scripts/queues/supercomputers/default.cfg</code>), where config files for other clusters are.</p>
+<p>Supercomputers <code>cfg</code> files contains a set of variables to indicate the queue system used by a supercomputer, paths where the shared disk is mounted, etc.
+These files are provided with the COMPSs installation, already tuned for different supercomputers by the BSC team.
+We suggest taking a look at them to have an idea of the default parameters. If not specified in the <code>enqueue_compss</code> flags, the <code>default.cfg</code> one is picked.</p>
+<p>For reproducibility, in this repo the <code>cfg</code> files stored in <a href="https://github.com/GANANA-EU-INDIA/WP3-P3-workflow/tree/main/docs/supercomputer_configs"><code>supercomputer_configs</code></a> are tested to work with the implementation of the <a href="https://github.com/GANANA-EU-INDIA/WP3-P3-workflow/tree/main/md"><code>md</code></a> workflow.</p>
+<h4 id="queue-system-scheduler">Queue system (scheduler)</h4>
+<p>The <code>cfg</code> files contain a set of variables which are used by the other scripts. On one hand, the queue system <code>cfg</code>s contain variables to indicate the commands used by the system to submit and spawn processes, the commands or variables to get the allocated nodes and the directives to indicate the number of nodes, processes, etc.
+These are container in <code>$COMPSS_HOME/Runtime/scripts/queues/queue_systems/</code>.</p>
+<p><em>The user is advice to not change them</em>.</p>
+<hr />
+<h2 id="gromacs">GROMACS</h2>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>We strongly suggest to follow <a href="https://manual.gromacs.org/current/install-guide/index.html">the official documentation</a>, the following are demostrations for specific systems that are not necessarly the best configuration for that system</p>
+</div>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>The <a href="../clusters/">Clusters page</a> documents PyCOMPSs installation/configuration for various clusters. It might be interesting to check out if you need to setup on these machines.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        
+<footer class="md-footer">
+  
+
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-left">
+        <div class="md-copyright">
+  
+  
+</div>
+        <div class="md-footer-collaborators">
+          <span class="md-footer-collaborators__label">Collaborators:</span>
+          <a href="https://www.hpc.cineca.it/" target="_blank" rel="noopener">CINECA HPC</a>
+          <a href="https://www.kth.se/kcsc" target="_blank" rel="noopener">KTH CSC</a>
+        </div>
+      </div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://github.com/GANANA-EU-INDIA" target="_blank" rel="noopener" title="Github Repo" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="https://ganana.eu/" target="_blank" rel="noopener" title="ganana.eu" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M351.9 280H161c2.9 64.5 17.2 123.9 37.5 167.4 11.4 24.5 23.7 41.8 35.1 52.4 11.2 10.5 18.9 12.2 22.9 12.2s11.7-1.7 22.9-12.2c11.4-10.6 23.7-28 35.1-52.4 20.3-43.5 34.6-102.9 37.5-167.4zm-191-48h190.9c-2.8-64.5-17.1-123.9-37.4-167.4-11.4-24.4-23.7-41.8-35.1-52.4C268.1 1.7 260.4 0 256.4 0s-11.7 1.7-22.9 12.2c-11.4 10.6-23.7 28-35.1 52.4-20.3 43.5-34.6 102.9-37.5 167.4m-48 0c3.5-85.6 25.6-165.1 57.9-217.3C78.7 47.3 10.9 131.2 1.5 232zM1.5 280c9.4 100.8 77.2 184.7 169.3 217.3-32.3-52.2-54.4-131.7-57.9-217.3zm398.4 0c-3.5 85.6-25.6 165.1-57.9 217.3 92.1-32.7 159.9-116.5 169.3-217.3zm111.4-48C501.9 131.2 434.1 47.3 342 14.7c32.3 52.2 54.4 131.7 57.9 217.3z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["search", "search.highlight", "search.suggest", "content.code.copy", "toc.integrate", "navigation.tabs", "navigation.tabs.sticky", "navigation.top"], "search": "../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.c21346df.min.js"></script>
+      
+    
+  </body>
+</html>
