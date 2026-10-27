@@ -166,6 +166,24 @@ The main files for the workflow specification are stored inside `./wrapper/env_c
 
       All arguments that are not set either in `make` nor `env_config_<cluster>.sh` use the default values as expressed in the COMPSs queue config file `$COMPSS_HOME/Runtime/scripts/queues/supercomputers/default.cfg`. See [COMPSs documentation](https://compss-doc.readthedocs.io/en/stable/Sections/01_Installation_Configuration/03_Configuration/02_Supercomputer.html) for more info.
 
+### Scripts
+
+#### `gpu_wrap.sh`
+
+Some of the tasks that spawn MD simulations, for long production runs, might be wrapped by a custom shell script as:
+```python
+@mpi(
+    runner=MPI_RUNNER,
+    binary="gpu_wrap.sh",
+    processes_per_node=1,
+    args=GMXBIN_NAME + " mdrun -s {{npt_tpr}} -ntomp {{omp}} -pin on -nb gpu -pme gpu -pmefft gpu -bonded gpu -update gpu",
+)
+```
+`gpu_wrap.sh` wrapper enables to spawn multiple, concurrent, MD simulations for a single input structure, to assign 1 GPU for each simulation. In a nutshell, it pins GPUs and cores IDs to each single jobs, trying to avoid overlaps and optimized cores pinning for the tested architectures (see [clusters](./clusters.md) for a list).
+
+The user is responsible to allocate enough resources for the requested simulations. It is advised to check the machine architecture and set `GRES_GPUS` (GPUs per node) and `NODES` (total number of nodes) in the Makefile and `OMP_THREADS_NUM` (OpenMP threads for each MD simulation) in the `env_setup_<clustername>.sh` in order to allocate correctly the MD jobs. For example, on Leonardo Booster one node has 4 GPUs and 32 cores, hence, to spawn 4 parallel MD jobs one need to set `GRES_GPUS=4`, `NODES=1`, and `OMP_THREADS_NUM=8` to fill the total number of cores.
+
+
 ### Miscellaneous notes
 
 !!! note
